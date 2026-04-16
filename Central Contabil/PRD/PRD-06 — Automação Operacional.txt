@@ -1,0 +1,259 @@
+# PRD-06 — Automação Operacional
+# Central Contábil
+
+---
+
+## 1. Objetivo do Módulo
+
+Automatizar tarefas repetitivas do sistema, principalmente relacionadas às obrigações, garantindo:
+
+- redução de trabalho manual
+- consistência operacional
+- previsibilidade
+
+---
+
+## 2. Princípio da Automação (CRÍTICO)
+
+A automação deve:
+
+- executar regras simples e determinísticas
+- nunca tomar decisões complexas
+- nunca substituir o usuário
+
+---
+
+## 3. Escopo da Automação
+
+A automação atua em:
+
+- geração de obrigações
+- definição de prazos
+- definição de responsável
+- identificação de atraso
+- disparo de notificações
+
+---
+
+## 4. Geração Automática de Obrigações
+
+---
+
+### 4.1 Quando executar
+
+- execução automática mensal (ex: dia 1)
+- execução manual sob demanda
+
+---
+
+### 4.2 Regra de geração
+
+Para cada cliente ativo:
+
+1. identificar:
+   - perfil
+   - tributação
+
+2. buscar:
+   - tipos de obrigação aplicáveis
+
+3. gerar:
+   - obrigação para a competência atual
+
+---
+
+### 4.3 Regras obrigatórias
+
+- não gerar duplicidade (cliente + obrigação + competência)
+- gerar apenas obrigações ativas
+- respeitar aplicabilidade
+
+---
+
+## 5. Definição automática de prazos
+
+---
+
+### Regra
+
+Ao gerar obrigação:
+
+- prazo_fiscal = padrão do tipo
+- prazo_interno = padrão do tipo
+
+---
+
+### Flexibilidade
+
+- permitir edição manual após geração
+
+---
+
+## 6. Definição automática de responsável
+
+---
+
+### Regra
+
+- herdar do cliente (assigned_user_id)
+
+---
+
+### Flexibilidade
+
+- permitir alteração manual
+
+---
+
+## 7. Identificação automática de atraso
+
+---
+
+### Regras
+
+O sistema deve identificar automaticamente:
+
+---
+
+#### Atraso interno
+
+- data atual > prazo interno
+- status ≠ concluído
+
+---
+
+#### Atraso fiscal
+
+- data atual > prazo fiscal
+- status ≠ concluído
+
+---
+
+### Importante
+
+- NÃO alterar status automaticamente
+- apenas gerar indicador visual
+
+---
+
+## 8. Integração com Notificações
+
+---
+
+### Eventos disparados
+
+- obrigação criada
+- obrigação próxima do prazo
+- obrigação atrasada
+
+---
+
+### Regra
+
+- seguir regras do PRD-04
+- evitar duplicidade
+
+---
+
+## 9. Integração com Dashboard
+
+---
+
+### Regra
+
+Toda obrigação gerada deve:
+
+- aparecer automaticamente no dashboard
+- respeitar ordenação por prioridade
+
+---
+
+## 10. Geração Manual (Sob Demanda)
+
+---
+
+### Usuário pode:
+
+- gerar obrigações para um cliente
+- gerar para uma competência específica
+
+---
+
+### Uso
+
+- correção de dados
+- novos clientes
+- reprocessamento
+
+---
+
+## 11. Reprocessamento
+
+---
+
+### Objetivo
+
+Permitir corrigir dados sem quebrar o sistema
+
+---
+
+### Regras
+
+- não sobrescrever obrigações existentes
+- gerar apenas o que está faltando
+
+---
+
+## 12. Logs de Automação (CRÍTICO)
+
+---
+
+### Sistema deve registrar:
+
+- quando executou automação
+- quantas obrigações foram criadas
+- quais clientes foram afetados
+
+---
+
+### Objetivo
+
+- auditoria
+- rastreabilidade
+- confiança no sistema
+
+---
+
+## 13. Transparência para o Usuário
+
+---
+
+### Regra
+
+Usuário deve conseguir entender:
+
+- o que foi gerado automaticamente
+- quando foi gerado
+- por qual regra
+
+---
+
+## 14. Performance
+
+- execução em background
+- não impactar uso do sistema
+- processamento eficiente
+
+---
+
+## 15. Fora de Escopo (por enquanto)
+
+- decisões baseadas em comportamento do usuário
+- inteligência artificial
+- integração com APIs fiscais externas
+
+---
+
+## 16. Regra de Ouro
+
+Automação deve ajudar o usuário, nunca tomar controle do sistema.

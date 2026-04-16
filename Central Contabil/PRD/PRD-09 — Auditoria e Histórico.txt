@@ -1,0 +1,256 @@
+# PRD-09 — Auditoria e Histórico
+# Central Contábil
+
+---
+
+## 1. Objetivo do Módulo
+
+Registrar todas as ações relevantes do sistema, garantindo:
+
+- rastreabilidade completa
+- transparência operacional
+- confiança no sistema
+- apoio à análise de erros
+
+---
+
+## 2. Princípio da Auditoria (CRÍTICO)
+
+A auditoria deve permitir que qualquer usuário entenda:
+
+→ o que aconteceu  
+→ quem fez  
+→ quando aconteceu  
+→ por que aconteceu  
+
+---
+
+## 3. Princípios do Sistema de Auditoria
+
+---
+
+### 3.1 Não intrusiva
+
+- não impactar performance
+- não atrapalhar a operação
+
+---
+
+### 3.2 Completa
+
+- registrar todas as ações críticas
+
+---
+
+### 3.3 Imutável
+
+- não permitir edição
+- não permitir exclusão
+
+---
+
+### 3.4 Legível
+
+- linguagem amigável
+- evitar termos técnicos
+
+---
+
+## 4. Estrutura de Auditoria
+
+Cada registro deve conter:
+
+- id
+- office_id
+
+- usuario_id
+- usuario_nome (snapshot)
+
+- entidade (cliente, obrigação, documento, acesso, usuário)
+- entidade_id
+
+- acao (CREATE, UPDATE, DELETE, STATUS_CHANGE, ASSIGNMENT_CHANGE)
+
+- campo_alterado (quando aplicável)
+
+- valor_anterior
+- valor_novo
+
+- descricao (texto amigável)
+
+- origem (manual | automatica)
+
+- created_at
+
+---
+
+## 5. Origem da Ação (NOVO — CRÍTICO)
+
+Cada registro deve indicar:
+
+- manual → ação feita por usuário
+- automatica → ação feita pelo sistema
+
+---
+
+### Objetivo
+
+- diferenciar erro humano de automação
+- aumentar confiança
+
+---
+
+## 6. Eventos que DEVEM ser auditados
+
+---
+
+### 6.1 Clientes
+
+- criação
+- edição de dados
+- alteração de responsável
+
+---
+
+### 6.2 Obrigações
+
+- criação (manual ou automática)
+- alteração de status
+- alteração de prazo
+- alteração de responsável
+
+---
+
+### 6.3 Documentos
+
+- upload
+- substituição
+- exclusão
+
+---
+
+### 6.4 Acessos
+
+- criação
+- edição
+- exclusão
+
+---
+
+### 6.5 Usuários
+
+- criação
+- edição
+- ativação/inativação
+- transferência de carteira
+
+---
+
+## 7. Formato de Exibição
+
+---
+
+### 7.1 Timeline (OBRIGATÓRIO)
+
+Exibir em formato de linha do tempo:
+
+Exemplos:
+
+- "João alterou status de 'Em andamento' para 'Concluído'"
+- "Sistema gerou obrigação EFD Fiscal (03/2026)"
+- "Maria alterou prazo interno de 10 para 08"
+
+---
+
+### 7.2 Destaques
+
+- destacar valores alterados
+- destacar ações críticas (exclusão, atraso)
+
+---
+
+## 8. Local de Exibição
+
+---
+
+### 8.1 Dentro do Cliente
+
+Aba:
+
+👉 "Histórico"
+
+---
+
+### 8.2 Comportamento
+
+- ordenação por data (mais recente primeiro)
+- carregamento sob demanda
+
+---
+
+## 9. Integração com Automação
+
+---
+
+### Regras
+
+Toda ação automática deve ser registrada:
+
+- geração de obrigação
+- identificação de atraso
+- disparo de eventos relevantes
+
+---
+
+### Exemplo
+
+- "Sistema marcou obrigação como atrasada (prazo interno vencido)"
+
+---
+
+## 10. Integração com Operação
+
+---
+
+### Regra
+
+Toda ação relevante do usuário deve ser auditada
+
+---
+
+### Objetivo
+
+- permitir investigação de erros
+- permitir acompanhamento de equipe
+
+---
+
+## 11. Segurança
+
+- respeitar office_id
+- respeitar permissões do usuário
+
+---
+
+## 12. Performance
+
+- armazenar de forma eficiente
+- carregar sob demanda
+- evitar carregamento completo
+
+---
+
+## 13. Evolução futura
+
+- filtros por usuário
+- filtros por período
+- exportação de histórico
+- auditoria por entidade
+
+---
+
+## 14. Regra de Ouro
+
+Se algo mudar no sistema:
+
+👉 deve existir um registro claro, legível e confiável explicando o que aconteceu

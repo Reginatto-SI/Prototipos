@@ -1,0 +1,222 @@
+# PRD-04 — Notificações e Alertas
+# Central Contábil
+
+---
+
+## 1. Objetivo do Módulo
+
+Permitir que o sistema atue de forma ativa, avisando o usuário sobre eventos importantes e direcionando ação imediata.
+
+O módulo deve reduzir:
+
+- esquecimentos
+- atrasos
+- dependência de controle manual
+
+---
+
+## 2. Princípio das Notificações
+
+Notificações NÃO são apenas informativas.
+
+Elas devem:
+
+- alertar
+- priorizar
+- direcionar ação
+
+---
+
+## 3. Tipos de Notificação
+
+---
+
+### 3.1 Obrigações
+
+- obrigação próxima do prazo interno
+- obrigação próxima do prazo fiscal
+- obrigação atrasada
+- obrigação atribuída ao usuário
+- obrigação em revisão
+
+---
+
+### 3.2 Sistema
+
+- novo cliente atribuído
+- transferência de carteira
+- alterações relevantes
+
+---
+
+## 4. Prioridade das Notificações (CRÍTICO)
+
+Cada notificação deve possuir prioridade:
+
+---
+
+### 🔴 Alta (AÇÃO IMEDIATA)
+
+- obrigação atrasada
+- obrigação vence hoje
+
+---
+
+### 🟠 Média
+
+- obrigação próxima do prazo
+
+---
+
+### 🔵 Baixa
+
+- informativas
+- mudanças de status
+
+---
+
+## 5. Comportamento das Notificações
+
+---
+
+### 5.1 Notificação de atraso (IMPORTANTE)
+
+- disparar no dia seguinte ao vencimento
+- repetir diariamente até conclusão
+
+👉 isso é obrigatório para evitar esquecimento
+
+---
+
+### 5.2 Notificação de prazo
+
+- disparar X dias antes (configurável)
+- apenas se status ≠ concluído
+
+---
+
+### 5.3 Regra
+
+- não duplicar notificações iguais no mesmo momento
+- mas permitir repetição controlada (caso atraso)
+
+---
+
+## 6. Estrutura da Notificação
+
+- id
+- usuario_id
+- titulo
+- descricao
+- tipo
+- prioridade
+
+- referencia_id
+- referencia_tipo
+
+- lida
+- created_at
+
+---
+
+## 7. Interface (UX)
+
+---
+
+### 7.1 Sino no Header
+
+- sempre visível
+- contador de não lidas
+- destaque visual para prioridade alta
+
+---
+
+### 7.2 Lista de notificações
+
+Cada item deve exibir:
+
+- título
+- descrição
+- tempo (ex: "há 2h")
+- prioridade visual
+
+---
+
+### 7.3 Destaque visual
+
+- 🔴 fundo leve vermelho → alta
+- 🟠 fundo leve laranja → média
+- 🔵 neutro → baixa
+
+---
+
+## 8. Ação Direta (CRÍTICO)
+
+---
+
+### Regra principal
+
+Toda notificação deve levar diretamente à ação.
+
+---
+
+### Clique na notificação
+
+👉 deve abrir o cliente (drawer)
+
+ou
+
+👉 abrir a obrigação específica
+
+---
+
+### Objetivo
+
+- evitar navegação
+- resolver rápido
+
+---
+
+## 9. Integração com Dashboard
+
+---
+
+### Regras
+
+- notificações reforçam o dashboard
+- dashboard mostra o geral
+- notificações puxam ação imediata
+
+---
+
+## 10. Regras de Envio
+
+- não notificar obrigações concluídas
+- respeitar responsável
+- respeitar permissões
+
+---
+
+## 11. Performance
+
+- carregamento rápido
+- limitar histórico (ex: últimos 30 dias)
+- evitar excesso de notificações
+
+---
+
+## 12. Evolução futura
+
+- envio por e-mail
+- notificações push
+- configuração por usuário
+
+---
+
+## 13. Regra de Ouro
+
+Toda notificação deve responder:
+
+→ O que aconteceu  
+→ O que precisa ser feito  
+→ Onde clicar para resolver

@@ -1,0 +1,324 @@
+# PRD-01 — Clientes (Módulo Principal / Hub do Sistema)
+# Central Contábil
+
+---
+
+## 1. Objetivo do Módulo
+
+O módulo de Clientes é o núcleo do sistema.
+
+Ele deve permitir que o usuário acesse e opere TODAS as informações de um cliente sem sair da mesma interface.
+
+O cliente funciona como um HUB centralizador de informações e operações.
+
+---
+
+## 2. Conceito de Cliente
+
+Cada cliente representa uma entidade contábil:
+
+- Pessoa Física (PF)
+- Pessoa Jurídica (PJ)
+
+---
+
+## 3. Estrutura de Dados (Conceitual)
+
+### 3.1 Campos principais
+
+- id
+- office_id
+
+- tipo_pessoa (PF | PJ)
+
+- nome
+- documento (CPF/CNPJ — armazenado sem formatação)
+
+- razao_social (PJ)
+- nome_fantasia (PJ)
+
+- inscricao_estadual (opcional)
+
+---
+
+### 3.2 Campos ENUM
+
+#### perfil
+- Empresa
+- Produtor Rural
+- Cooperativa
+- Outros
+
+#### tributacao
+- Simples Nacional
+- Lucro Real
+- Presumido
+- MEI
+
+---
+
+### 3.3 Outros campos
+
+- assigned_user_id
+- created_at
+- updated_at
+
+---
+
+## 4. Regras de Negócio
+
+### 4.1 Documento
+- único por cliente dentro do escritório
+- armazenado sem máscara
+- exibido formatado
+- busca ignora formatação
+
+---
+
+### 4.2 Responsável
+- define organização da carteira
+- não limita acesso (permissões tratadas no módulo de usuários)
+
+---
+
+## 5. Tela de Listagem de Clientes
+
+### 5.1 Estrutura
+
+Tabela com colunas:
+
+- Apelido
+- Nome / Razão Social
+- CPF/CNPJ
+- Perfil
+- Tributação
+- Responsável
+- Ações (menu “…")
+
+---
+
+### 5.2 Comportamentos
+
+- Clique na linha → abre drawer do cliente
+- CPF/CNPJ:
+  - botão de cópia rápida
+  - não abre drawer ao clicar no ícone
+- Menu “…”:
+  - Ver cliente
+  - Editar
+  - Excluir
+
+---
+
+### 5.3 Filtros
+
+- Nome / Razão Social
+- CPF/CNPJ
+- Responsável
+- Perfil
+- Tributação
+
+---
+
+## 6. Abertura do Cliente (PADRÃO OFICIAL)
+
+### 6.1 Tipo de navegação
+
+O cliente NÃO abre em nova página.
+
+Deve abrir em um:
+
+👉 Drawer lateral (painel deslizante à direita)
+
+---
+
+### 6.2 Objetivo do Drawer
+
+- evitar navegação entre páginas
+- permitir consulta rápida
+- permitir edição sem sair da listagem
+
+---
+
+## 7. Estrutura do Drawer
+
+O drawer deve conter:
+
+### Header
+- Nome / Razão Social
+- CPF/CNPJ
+- Badges:
+  - Tipo (PF/PJ)
+  - Perfil
+  - Tributação
+
+### Ações
+- Editar
+- Salvar
+- Cancelar
+
+---
+
+## 8. Modo de Edição
+
+### 8.1 Comportamento
+
+- modo padrão: visualização
+- botão “Editar” ativa modo edição
+- campos se tornam editáveis
+
+---
+
+### 8.2 Estados
+
+- Visualização
+- Edição
+
+---
+
+### 8.3 Ações
+
+- Salvar → persiste alterações
+- Cancelar → descarta alterações
+
+---
+
+## 9. Abas do Cliente
+
+---
+
+### 9.1 Dados Gerais
+
+Campos:
+
+- Apelido
+- Tipo de pessoa
+- Nome / Razão Social
+- Documento (CPF/CNPJ com cópia)
+- Inscrição estadual (com cópia)
+- Perfil
+- Tributação
+- Responsável
+
+---
+
+### 9.2 Obrigações (IMPORTANTE)
+
+Exibir:
+
+- lista de obrigações do cliente
+
+Campos:
+
+- nome
+- vencimento
+- status
+- indicador de prazo:
+  - vence hoje
+  - atrasado
+  - futuro
+
+Regras:
+- status visual (cores)
+- foco operacional
+
+---
+
+### 9.3 Acessos
+
+Objetivo:
+Armazenar credenciais operacionais
+
+Campos:
+
+- nome
+- login
+- senha (mascarada)
+- link
+- observação
+
+Regras:
+- múltiplos acessos
+- visualizar em modal
+- copiar com 1 clique
+- opção de mostrar/ocultar senha
+
+---
+
+### 9.4 Documentos
+
+Campos:
+
+- tipo_documento
+- nome
+- descricao
+- arquivo
+- data_upload
+
+Regras:
+- múltiplos documentos
+- exclusão controlada
+- foco em organização
+
+---
+
+### 9.5 Histórico
+
+Exibir:
+
+- timeline de eventos
+- ações realizadas no cliente
+
+---
+
+### 9.6 Observações
+
+Campo livre para anotações operacionais
+
+---
+
+## 10. UX (Experiência do Usuário)
+
+### 10.1 Diretrizes
+
+- evitar troca de tela
+- minimizar cliques
+- foco em produtividade
+
+---
+
+### 10.2 Ações rápidas
+
+- copiar CPF/CNPJ
+- copiar dados com 1 clique
+- acessar links rapidamente
+
+---
+
+### 10.3 Interação
+
+- clique na linha abre cliente
+- edição inline
+- feedback visual imediato
+
+---
+
+## 11. Regras Técnicas
+
+- CRUD completo em todas as abas
+- paginação obrigatória
+- filtros reutilizáveis
+- não duplicar dados
+- todas entidades com office_id
+
+---
+
+## 12. Regra de Ouro
+
+O usuário deve conseguir:
+
+→ consultar  
+→ editar  
+→ agir  
+
+SEM sair da tela de clientes

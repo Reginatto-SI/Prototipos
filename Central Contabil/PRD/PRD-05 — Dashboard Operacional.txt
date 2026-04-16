@@ -1,0 +1,204 @@
+# PRD-05 — Dashboard Operacional
+# Central Contábil
+
+---
+
+## 1. Objetivo do Módulo
+
+O Dashboard é o ponto inicial de uso diário do sistema.
+
+Ele deve permitir que o usuário entenda rapidamente:
+
+→ o que precisa ser feito  
+→ o que está atrasado  
+→ onde agir  
+
+---
+
+## 2. Princípio do Dashboard
+
+O dashboard NÃO é informativo.
+
+Ele é:
+
+- operacional
+- acionável
+- orientado a prioridade
+
+---
+
+## 3. Estrutura da Tela
+
+Dividida em 2 blocos principais:
+
+---
+
+## 3.1 Bloco 1 — Indicadores (Cards)
+
+Exibir:
+
+- Obrigações atrasadas
+- Obrigações vencendo hoje
+- Obrigações próximas do prazo
+- Obrigações concluídas no período
+
+---
+
+### Regras
+
+- cada card é clicável
+- clique aplica filtro na lista
+- não navegar para outra tela
+
+---
+
+### Cores
+
+- 🔴 Atrasadas
+- 🟠 Vencendo hoje / próximas
+- 🔵 Em revisão
+- 🟢 Concluídas
+
+---
+
+## 3.2 Bloco 2 — Lista Operacional (CRÍTICO)
+
+Essa é a parte mais importante do sistema.
+
+---
+
+### Conteúdo
+
+Lista de obrigações com:
+
+- Cliente
+- Obrigação
+- Competência
+- Responsável
+- Prazo interno
+- Prazo fiscal
+- Status
+- Indicador visual de prazo
+
+---
+
+### Ordenação padrão (OBRIGATÓRIA)
+
+1. Atrasadas
+2. Vencendo hoje
+3. Próximas
+4. Em revisão
+5. Demais
+
+---
+
+### Regra
+
+A lista SEMPRE deve abrir já ordenada por prioridade.
+
+---
+
+## 4. Comportamento de Interação
+
+---
+
+### 4.1 Clique na linha
+
+👉 abre o cliente em drawer lateral
+
+- não navegar para outra página
+- foco em ação rápida
+
+---
+
+### 4.2 Ações rápidas
+
+Diretamente na lista:
+
+- alterar status
+- abrir cliente
+- editar obrigação
+
+---
+
+### 4.3 Tempo de ação
+
+O usuário deve conseguir:
+
+→ identificar problema  
+→ abrir cliente  
+→ agir  
+
+em menos de 5 segundos
+
+---
+
+## 5. Filtros Rápidos
+
+- Status
+- Responsável
+- Competência
+- Tipo de obrigação
+- Cliente
+
+---
+
+### Regras
+
+- aplicação rápida
+- sem reload pesado
+- persistência opcional
+
+---
+
+## 6. Integração com Cliente
+
+---
+
+### Regra
+
+Toda ação relevante do dashboard deve levar ao cliente.
+
+---
+
+### Motivo
+
+- cliente é o HUB
+- evitar navegação fragmentada
+- manter contexto operacional
+
+---
+
+## 7. Indicadores de Prioridade (UX)
+
+Cada linha deve ter:
+
+- destaque visual para atraso
+- destaque para prazo próximo
+- leitura rápida sem abrir detalhe
+
+---
+
+## 8. Problema Real que o Dashboard Resolve
+
+O dashboard deve eliminar:
+
+- atraso de SPED
+- esquecimentos
+- falta de visão da equipe
+
+---
+
+## 9. Performance
+
+- carregamento rápido
+- paginação obrigatória
+- dados carregados de forma eficiente
+
+---
+
+## 10. Regra de Ouro
+
+Se o usuário abrir o sistema e olhar o dashboard por 5 segundos:
+
+👉 ele deve saber exatamente o que fazer

@@ -1,0 +1,273 @@
+# PRD-02 — Obrigações (Módulo Operacional)
+# Central Contábil
+
+---
+
+## 1. Objetivo do Módulo
+
+Gerenciar e controlar as obrigações contábeis e fiscais dos clientes de forma estruturada, permitindo:
+
+- organização operacional do escritório
+- controle de prazos internos e fiscais
+- visibilidade de tarefas pendentes, em andamento e atrasadas
+
+---
+
+## 2. Conceito do Módulo
+
+O módulo de obrigações é baseado em três pilares:
+
+1. Tipos de obrigação (configuração)
+2. Obrigações por cliente + competência
+3. Controle operacional por status e prazo
+
+---
+
+## 3. Tipos de Obrigação (Configuração)
+
+### Estrutura
+
+- id
+- nome
+- descricao
+
+- perfil_aplicavel
+- tributacao_aplicavel
+
+- prazo_fiscal_padrao
+- prazo_interno_padrao
+
+- ativo
+
+---
+
+### Regras
+
+- gerar apenas se aplicável ao cliente
+- permitir ativar/desativar
+- evitar obrigações desnecessárias
+
+---
+
+## 4. Geração de Obrigações
+
+### Estrutura
+
+- id
+- cliente_id
+- tipo_obrigacao_id
+- competencia
+
+- prazo_fiscal
+- prazo_interno
+
+- status
+- responsavel_id
+
+- observacoes
+- created_at
+- updated_at
+
+---
+
+### Regras
+
+- evitar duplicidade (cliente + obrigação + competência)
+- permitir ajuste manual
+- respeitar perfil e tributação
+
+---
+
+## 5. Status das Obrigações
+
+### Status padrão
+
+- Não iniciada
+- Em andamento
+- Em revisão
+- Concluída
+- Não se aplica
+
+---
+
+### Regras
+
+- status editável
+- padrão inicial: Não iniciada
+
+---
+
+## 6. Prazos
+
+Cada obrigação possui:
+
+- prazo interno
+- prazo fiscal
+
+---
+
+### Regras
+
+- permitir edição manual
+- identificar automaticamente:
+
+  - atraso interno
+  - atraso fiscal
+
+---
+
+## 7. Comportamento Operacional (CRÍTICO)
+
+### 7.1 Indicadores de prazo (UX)
+
+Cada obrigação deve exibir:
+
+- 🔴 Atrasado
+- 🟠 Vence hoje / próximo
+- 🟢 Em dia
+
+Regras:
+- não depende apenas do status
+- baseado em data atual vs prazo
+
+---
+
+## 8. Integração com Cliente (HUB)
+
+### 8.1 Local principal de uso
+
+Obrigações devem ser acessíveis:
+
+👉 dentro do cliente (drawer)
+
+---
+
+### 8.2 Aba "Obrigações" no Cliente
+
+Exibir lista com:
+
+- Nome da obrigação
+- Competência
+- Prazo interno
+- Prazo fiscal
+- Status
+- Indicador visual de prazo
+
+---
+
+### 8.3 Objetivo
+
+- permitir visão rápida do cliente
+- evitar navegação para outra tela
+- foco operacional
+
+---
+
+## 9. Tela Principal (Painel Operacional / Dashboard)
+
+### Objetivo
+
+Responder:
+
+→ O que precisa ser feito agora?
+
+---
+
+### Conteúdo
+
+Lista com:
+
+- Cliente
+- Obrigação
+- Competência
+- Responsável
+- Prazo interno
+- Prazo fiscal
+- Status
+
+---
+
+### Ordenação
+
+1. Atrasadas
+2. Vencendo hoje
+3. Próximas
+4. Em revisão
+5. Demais
+
+---
+
+### Filtros
+
+- Status
+- Responsável
+- Competência
+- Tipo de obrigação
+- Cliente
+
+---
+
+### Ações rápidas
+
+- alterar status (inline)
+- editar obrigação
+- adicionar observação
+
+---
+
+## 10. Regras Operacionais
+
+### 10.1 Não obrigatoriedade
+
+- sistema não deve forçar obrigação
+
+---
+
+### 10.2 Flexibilidade
+
+- permitir ajustes manuais
+- permitir marcar como “não se aplica”
+
+---
+
+### 10.3 Controle de duplicidade
+
+- impedir duplicação
+
+---
+
+## 11. UX (Experiência do Usuário)
+
+### Diretrizes
+
+- foco em produtividade
+- leitura rápida
+- ação imediata
+
+---
+
+### Comportamentos
+
+- status visual claro
+- destaque para atraso
+- interação direta (sem navegação desnecessária)
+
+---
+
+## 12. Performance
+
+- carregamento rápido
+- paginação obrigatória
+- filtros eficientes
+
+---
+
+## 13. Regra de Ouro
+
+O usuário deve conseguir saber:
+
+→ o que precisa ser feito  
+→ o que está atrasado  
+→ onde agir  
+
+em poucos segundos
