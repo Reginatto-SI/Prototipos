@@ -1,0 +1,243 @@
+# PRD-03 — Usuários e Permissões
+# Central Contábil
+
+---
+
+## 1. Objetivo do Módulo
+
+Gerenciar usuários do sistema e controlar o acesso aos clientes com base em carteira de atendimento.
+
+O sistema deve garantir:
+- segurança dos dados
+- organização da equipe
+- facilidade de gestão de acesso
+
+---
+
+## 2. Estrutura de Dados (Conceitual)
+
+### 2.1 Usuário
+
+- id
+- office_id
+
+- nome
+- email
+
+- role (gerente | usuario)
+- ativo (boolean)
+
+- created_at
+- updated_at
+
+---
+
+### 2.2 Relacionamento Usuário x Cliente
+
+Tabela: usuario_clientes
+
+- id
+- usuario_id
+- cliente_id
+
+Regras:
+- um usuário pode ter vários clientes
+- um cliente pode ter vários usuários
+- não permitir duplicidade de vínculo
+
+---
+
+## 3. Tipos de Usuário
+
+### 3.1 Gerente
+
+- acesso total a todos os clientes
+- não depende de vínculo com cliente
+
+---
+
+### 3.2 Usuário
+
+- acesso somente aos clientes vinculados
+- não pode acessar outros clientes
+
+---
+
+## 4. Regras de Acesso
+
+### 4.1 Visualização
+
+- Gerente → todos os clientes
+- Usuário → apenas clientes vinculados
+
+---
+
+### 4.2 Edição
+
+- segue a mesma regra de visualização
+
+---
+
+### 4.3 Segurança
+
+- todas as consultas devem respeitar:
+  - office_id
+  - vínculo usuario_clientes
+
+---
+
+## 5. Cadastro de Usuários
+
+### 5.1 Campos
+
+- Nome
+- Email
+- Tipo (Gerente / Usuário)
+- Status (Ativo/Inativo)
+
+---
+
+### 5.2 Regras
+
+- email deve ser único por escritório
+- usuário inativo não pode acessar o sistema
+- não excluir usuários (apenas inativar)
+
+---
+
+## 6. Gestão de Carteira
+
+### 6.1 Atribuição de Clientes
+
+O vínculo deve ser feito a partir do usuário.
+
+Interface:
+- lista de clientes
+- seleção múltipla (multi-select)
+
+---
+
+### 6.2 Regras
+
+- permitir adicionar e remover clientes
+- não permitir duplicidade
+- operação deve ser rápida (sem reload pesado)
+
+---
+
+## 7. Transferência de Carteira
+
+### 7.1 Objetivo
+
+Permitir transferir clientes de um usuário para outro.
+
+---
+
+### 7.2 Fluxo
+
+Selecionar:
+- Usuário origem
+- Usuário destino
+
+---
+
+### 7.3 Modos
+
+#### Substituir
+- remove clientes do usuário origem
+- adiciona ao usuário destino
+
+#### Copiar
+- mantém origem
+- adiciona destino
+
+---
+
+### 7.4 Regras
+
+- exibir quantidade de clientes afetados
+- exigir confirmação
+- evitar duplicidade de vínculo
+
+---
+
+## 8. Usuário Inativo
+
+### 8.1 Regra
+
+- usuário pode ser marcado como inativo
+
+---
+
+### 8.2 Comportamento
+
+- não pode acessar o sistema
+- mantém histórico
+- mantém vínculos (opcionalmente removíveis)
+
+---
+
+## 9. Responsável Principal do Cliente
+
+O cliente deve possuir:
+
+- assigned_user_id
+
+---
+
+### 9.1 Função
+
+- definir responsável principal
+- não interfere nas permissões de acesso
+- usado para organização e relatórios
+
+---
+
+## 10. Proteções do Sistema
+
+- não permitir remover todos os usuários de um cliente sem aviso
+- não permitir ações críticas sem confirmação
+- evitar auto-remoção completa de acesso
+
+---
+
+## 11. UX (Experiência do Usuário)
+
+### 11.1 Tela de Usuários
+
+- listagem com:
+  - nome
+  - email
+  - tipo
+  - status
+
+---
+
+### 11.2 Ações
+
+- criar usuário
+- editar usuário
+- gerenciar carteira
+- transferir carteira
+
+---
+
+### 11.3 Interface
+
+- uso de modais
+- seleção múltipla para clientes
+- feedback claro ao usuário
+
+---
+
+## 12. Regras Técnicas
+
+- todas as entidades devem conter office_id
+- validação de duplicidade no vínculo
+- consultas devem respeitar permissões
+
+---
+
+## 13. Regra de Ouro
+
+Nenhum usuário deve acessar dados de clientes fora da sua carteira, exceto usuários do tipo gerente.

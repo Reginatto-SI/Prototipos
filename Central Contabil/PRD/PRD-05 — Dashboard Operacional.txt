@@ -1,0 +1,212 @@
+# PRD-05 — Dashboard Operacional
+# Central Contábil
+
+---
+
+## 1. Objetivo do Módulo
+
+Fornecer uma visão rápida, clara e acionável das obrigações do escritório, permitindo que o usuário:
+
+- entenda o que precisa ser feito
+- identifique atrasos
+- priorize tarefas
+- acesse rapidamente as obrigações
+
+O dashboard deve ser o ponto inicial de uso diário do sistema.
+
+---
+
+## 2. Princípio do Dashboard
+
+O dashboard NÃO é apenas informativo.
+
+Ele deve ser:
+- operacional
+- acionável
+- orientado a prioridade
+
+---
+
+## 3. Estrutura da Tela
+
+A tela deve ser dividida em 3 blocos principais:
+
+---
+
+## 3.1 Bloco 1 — Indicadores (Cards)
+
+Exibir resumo rápido:
+
+- Obrigações vencendo hoje
+- Obrigações atrasadas
+- Obrigações em revisão
+- Obrigações concluídas no período
+
+---
+
+### Regras
+
+- cada card deve ser clicável
+- clique filtra a lista abaixo
+- cores por prioridade:
+
+  - vermelho → atrasadas
+  - laranja → vencendo
+  - azul → revisão
+  - verde → concluídas
+
+---
+
+## 3.2 Bloco 2 — Lista Principal (ESSENCIAL)
+
+Esta é a parte mais importante do dashboard.
+
+---
+
+### 3.2.1 Conteúdo
+
+Lista de obrigações com colunas:
+
+- Cliente
+- Obrigação
+- Competência
+- Responsável
+- Prazo interno
+- Prazo fiscal
+- Status
+
+---
+
+### 3.2.2 Ordenação padrão
+
+Ordenar por prioridade:
+
+1. Atrasadas
+2. Vencendo hoje
+3. Vencendo próximos dias
+4. Em revisão
+5. Demais
+
+---
+
+### 3.2.3 Filtros rápidos
+
+- Status
+- Responsável
+- Competência
+- Tipo de obrigação
+
+---
+
+### 3.2.4 Ações rápidas
+
+- alterar status (inline)
+- editar obrigação
+- adicionar observação
+
+---
+
+## 3.3 Bloco 3 — Visões auxiliares
+
+---
+
+### 3.3.1 Por responsável
+
+Mostrar:
+
+- nome do usuário
+- quantidade de obrigações pendentes
+- quantidade atrasada
+
+---
+
+### 3.3.2 Por tipo de obrigação
+
+Mostrar:
+
+- nome da obrigação
+- volume total
+- volume pendente
+
+---
+
+## 4. Destaques Visuais
+
+### 4.1 Atraso
+
+- linha destacada em vermelho suave
+
+---
+
+### 4.2 Próximo do prazo
+
+- destaque em laranja
+
+---
+
+### 4.3 Revisão
+
+- destaque em azul
+
+---
+
+## 5. Integração com outros módulos
+
+### 5.1 Obrigações
+
+- clicar na linha abre detalhe da obrigação
+
+---
+
+### 5.2 Cliente
+
+- clicar no cliente abre tela do cliente
+
+---
+
+### 5.3 Notificações
+
+- refletir alertas já gerados
+
+---
+
+## 6. UX (Experiência do Usuário)
+
+### 6.1 Objetivo
+
+Usuário deve entender em menos de 5 segundos:
+
+- o que está atrasado
+- o que vence hoje
+- o que precisa de atenção
+
+---
+
+### 6.2 Interação
+
+- tudo deve ser clicável
+- evitar navegação complexa
+- ações diretas
+
+---
+
+## 7. Performance
+
+- carregamento rápido
+- paginação na lista
+- carregamento incremental
+
+---
+
+## 8. Responsividade
+
+- layout adaptável
+- manter legibilidade em telas menores
+
+---
+
+## 9. Regra de Ouro
+
+O dashboard deve responder:
+
+→ O que precisa ser feito agora?

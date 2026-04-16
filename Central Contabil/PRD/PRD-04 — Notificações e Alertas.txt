@@ -1,0 +1,176 @@
+# PRD-04 — Notificações e Alertas
+# Central Contábil
+
+---
+
+## 1. Objetivo do Módulo
+
+Permitir que o sistema avise o usuário sobre eventos importantes, principalmente relacionados a:
+
+- prazos de obrigações
+- atrasos
+- mudanças de status
+- responsabilidades operacionais
+
+O sistema deve atuar de forma proativa, reduzindo esquecimentos e atrasos.
+
+---
+
+## 2. Tipos de Notificação
+
+### 2.1 Obrigações
+
+- obrigação próxima do prazo interno
+- obrigação próxima do prazo fiscal
+- obrigação atrasada
+- obrigação atribuída ao usuário
+- obrigação alterada para "Em revisão"
+
+---
+
+### 2.2 Sistema
+
+- transferência de carteira realizada
+- novo cliente atribuído ao usuário
+
+---
+
+## 3. Canais de Notificação
+
+### 3.1 In-App (obrigatório)
+
+- sino no header
+- lista de notificações
+- contador de não lidas
+
+---
+
+### 3.2 E-mail (fase 2)
+
+- envio opcional
+- baseado em eventos importantes
+
+---
+
+## 4. Estrutura da Notificação
+
+Cada notificação deve conter:
+
+- id
+- usuario_id
+- titulo
+- descricao
+- tipo (obrigacao, sistema)
+
+- referencia_id (ex: id da obrigação)
+- referencia_tipo (ex: obrigacao)
+
+- lida (boolean)
+- created_at
+
+---
+
+## 5. Gatilhos de Notificação
+
+### 5.1 Prazo interno próximo
+
+- disparar X dias antes (ex: 2 dias)
+- apenas se status ≠ concluído
+
+---
+
+### 5.2 Prazo fiscal próximo
+
+- disparar X dias antes (ex: 3 dias)
+
+---
+
+### 5.3 Atraso
+
+- disparar no dia seguinte ao vencimento
+- repetir diariamente até conclusão (opcional futuro)
+
+---
+
+### 5.4 Mudança de status
+
+- quando mudar para "Em revisão"
+- quando mudar responsável
+
+---
+
+## 6. Regras de Envio
+
+- não duplicar notificações iguais
+- não notificar obrigações concluídas
+- respeitar usuário responsável
+
+---
+
+## 7. Interface (UX)
+
+### 7.1 Sino de notificações
+
+- localizado no header
+- mostra quantidade de não lidas
+
+---
+
+### 7.2 Lista de notificações
+
+Exibir:
+
+- título
+- descrição
+- data
+- status (lida/não lida)
+
+---
+
+### 7.3 Ações
+
+- marcar como lida
+- marcar todas como lidas
+- clicar leva para a tela relacionada
+
+---
+
+## 8. Priorização
+
+Notificações devem ter prioridade visual:
+
+- 🔴 Atrasadas
+- 🟠 Próximas do prazo
+- 🔵 Informativas
+
+---
+
+## 9. Integração com Obrigações
+
+- cada notificação deve apontar para uma obrigação
+- permitir acesso direto à edição
+
+---
+
+## 10. Configurações (Futuro)
+
+- usuário pode ativar/desativar tipos de alerta
+- escolher receber por e-mail
+
+---
+
+## 11. Performance
+
+- carregar rápido
+- evitar excesso de notificações
+- limitar histórico (ex: últimos 30 dias)
+
+---
+
+## 12. Regra de Ouro
+
+Toda notificação deve responder:
+
+→ O que aconteceu  
+→ O que precisa ser feito  
+→ Onde clicar para resolver

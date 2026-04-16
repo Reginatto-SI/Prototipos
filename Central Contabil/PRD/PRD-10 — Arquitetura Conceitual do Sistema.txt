@@ -1,0 +1,307 @@
+
+### 🔥 PRD-10 — Arquitetura Conceitual do Sistema
+
+(ou se quiser mais correto ainda: **ARC-01 — Arquitetura Conceitual**)
+
+---
+
+## 📌 Agora vou te entregar ELE PRONTO (copiar e colar)
+
+```markdown
+# PRD-10 — Arquitetura Conceitual do Sistema
+# Central Contábil
+
+---
+
+## 1. Objetivo
+
+Definir a estrutura conceitual do sistema, garantindo:
+
+- organização dos dados
+- separação clara de responsabilidades
+- base consistente para desenvolvimento
+- alinhamento entre todos os módulos
+
+Este documento não define comportamento (PRD), mas sim a estrutura do sistema.
+
+---
+
+## 2. Princípio Arquitetural
+
+O sistema é baseado no conceito:
+
+👉 Cliente como HUB central
+
+Todos os dados operacionais orbitam em torno do cliente.
+
+---
+
+## 3. Estrutura Geral
+
+```
+
+Office
+├── Usuários
+├── Clientes (HUB)
+│    ├── Acessos
+│    ├── Certificados
+│    ├── Documentos
+│    ├── Extratos Bancários
+│
+├── Obrigações (transversal)
+├── Notificações
+├── Auditoria
+
+```
+
+---
+
+## 4. Tipos de Entidade
+
+### 4.1 Entidades centrais
+
+- offices
+- users
+- clientes
+
+---
+
+### 4.2 Entidades dependentes do cliente
+
+Dados que sempre pertencem a um cliente:
+
+- acessos
+- certificados
+- documentos
+- contas bancárias
+- extratos
+
+---
+
+### 4.3 Entidades operacionais (transversais)
+
+Dados que cruzam múltiplos clientes:
+
+- obrigações
+- notificações
+- auditoria
+
+---
+
+## 5. Modelo Conceitual de Dados
+
+---
+
+### 5.1 Offices
+
+- id
+- nome
+
+---
+
+### 5.2 Users
+
+- id
+- office_id
+- nome
+- email
+- role
+- ativo
+
+---
+
+### 5.3 Clientes
+
+- id
+- office_id
+
+- tipo_pessoa
+- nome
+- documento
+
+- razao_social
+- nome_fantasia
+
+- perfil
+- tributacao
+
+- assigned_user_id
+
+---
+
+### 5.4 Relacionamento Usuário x Cliente
+
+Tabela: usuario_clientes
+
+- id
+- usuario_id
+- cliente_id
+
+---
+
+## 6. Submódulos do Cliente
+
+---
+
+### 6.1 Acessos
+
+- id
+- cliente_id
+- descricao
+- login
+- senha
+- link
+
+---
+
+### 6.2 Certificados
+
+- id
+- cliente_id
+- tipo
+- data_validade
+- arquivo_url
+
+---
+
+### 6.3 Documentos
+
+- id
+- cliente_id
+
+- tipo_documento
+- nome
+- descricao
+
+- arquivo_url
+- data_upload
+
+---
+
+### 6.4 Contas Bancárias
+
+- id
+- cliente_id
+- banco
+- agencia
+- conta
+
+---
+
+### 6.5 Extratos
+
+- id
+- cliente_id
+- conta_id
+- competencia
+- arquivo_url
+
+---
+
+## 7. Módulo de Obrigações
+
+---
+
+### 7.1 Tipos de obrigação
+
+- id
+- nome
+- perfil_aplicavel
+- tributacao_aplicavel
+- prazo_fiscal_padrao
+- prazo_interno_padrao
+- ativo
+
+---
+
+### 7.2 Obrigações
+
+- id
+- cliente_id
+- tipo_obrigacao_id
+
+- competencia
+
+- prazo_fiscal
+- prazo_interno
+
+- status
+- responsavel_id
+
+---
+
+## 8. Notificações
+
+- id
+- usuario_id
+- titulo
+- descricao
+- tipo
+- referencia_id
+- referencia_tipo
+- lida
+
+---
+
+## 9. Auditoria
+
+- id
+- office_id
+
+- usuario_id
+- entidade
+- entidade_id
+- acao
+
+- campo_alterado
+- valor_anterior
+- valor_novo
+
+- descricao
+
+---
+
+## 10. Regras Arquiteturais
+
+---
+
+### 10.1 Isolamento
+
+- todas as entidades devem conter `office_id` (direto ou indireto)
+
+---
+
+### 10.2 Relacionamento
+
+- dados do cliente nunca devem existir sem cliente
+- dados operacionais devem referenciar cliente
+
+---
+
+### 10.3 Consistência
+
+- evitar duplicidade de dados
+- evitar estruturas genéricas sem controle
+
+---
+
+## 11. Regra de Ouro
+
+Se uma informação pertence a um cliente:
+
+→ ela deve estar vinculada ao cliente
+
+Se uma informação cruza múltiplos clientes:
+
+→ ela deve ser tratada como módulo transversal
+```
+
+---
+
+## 🚀 Conclusão
+
+👉 Sim, você deve ter esse documento
+👉 Não é PRD funcional, é **PRD estrutural / arquitetura**
+👉 Ele evita 80% dos erros de desenvolvimento
+
+---
