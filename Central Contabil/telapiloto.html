@@ -62,6 +62,7 @@
         gap: 10px;
         margin-bottom: 22px;
         padding: 8px 10px;
+        position: relative;
       }
 
       .brand-mark {
@@ -70,6 +71,11 @@
         border-radius: 8px;
         background: rgba(255, 255, 255, 0.14);
         border: 1px solid rgba(255, 255, 255, 0.2);
+        display: inline-grid;
+        place-items: center;
+        font-size: 14px;
+        font-weight: 700;
+        color: #eef5ff;
       }
 
       .brand strong {
@@ -142,9 +148,11 @@
       }
 
       .sidebar-toggle {
-        width: 100%;
-        margin-top: 8px;
-        height: 34px;
+        position: absolute;
+        right: 0;
+        top: 5px;
+        width: 28px;
+        height: 28px;
         border-radius: 9px;
         border: 1px solid rgba(255, 255, 255, 0.2);
         background: rgba(255, 255, 255, 0.08);
@@ -152,7 +160,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
         cursor: pointer;
       }
 
@@ -181,6 +188,7 @@
 
       .app.sidebar-collapsed .brand {
         justify-content: center;
+        padding-right: 0;
       }
 
       .app.sidebar-collapsed .nav-item {
@@ -194,6 +202,10 @@
 
       .app.sidebar-collapsed .sidebar-footer {
         padding-top: 8px;
+      }
+
+      .app.sidebar-collapsed .brand-mark {
+        background: rgba(255, 255, 255, 0.2);
       }
 
       .app.sidebar-collapsed .nav-item[data-tooltip]:hover::after {
@@ -562,6 +574,35 @@
           "Courier New", monospace;
         letter-spacing: 0.1px;
         color: #30435d;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .doc-copy {
+        width: 24px;
+        height: 24px;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        background: #fff;
+        color: #4f6280;
+        display: inline-grid;
+        place-items: center;
+        cursor: pointer;
+      }
+
+      .doc-copy svg {
+        width: 12px;
+        height: 12px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.8;
+      }
+
+      .doc-copy[data-copied='true'] {
+        border-color: #bfd7c5;
+        background: #edf7f0;
+        color: #355b40;
       }
 
       .badge {
@@ -1158,11 +1199,18 @@
       <aside class="sidebar">
         <div>
           <div class="brand">
-            <div class="brand-mark"></div>
+            <!-- Branding reduz para "C" no estado colapsado para manter assinatura discreta. -->
+            <div class="brand-mark">C</div>
             <div>
               <strong>Central Contábil</strong>
               <small>Operação Contábil Integrada</small>
             </div>
+            <!-- Controle de colapso discreto no topo da sidebar, sem botão de destaque no rodapé. -->
+            <button class="sidebar-toggle" id="sidebar-toggle" type="button" aria-label="Alternar sidebar">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M14 6l-6 6 6 6"></path>
+              </svg>
+            </button>
           </div>
           <div class="nav-section">
             <div class="nav-title">Operação</div>
@@ -1224,12 +1272,6 @@
               </button>
             </div>
           </div>
-          <button class="sidebar-toggle" id="sidebar-toggle" type="button" aria-label="Alternar sidebar">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M14 6l-6 6 6 6"></path>
-            </svg>
-            <span>Recolher menu</span>
-          </button>
         </div>
 
         <div class="sidebar-footer">
@@ -1361,7 +1403,7 @@
                   <tr>
                     <th>Apelido</th>
                     <th>Nome / Razão Social</th>
-                    <th>Documento</th>
+                    <th>CPF/CNPJ</th>
                     <th>Perfil</th>
                     <th>Tributação</th>
                     <th>Responsável</th>
@@ -1375,7 +1417,8 @@
                       <span class="name-main">Agropecuária Vale do Sol LTDA</span>
                       <div class="sub"><span class="badge badge-person">PJ</span> Cliente desde 2019</div>
                     </td>
-                    <td class="doc">12.345.678/0001-90</td>
+                    <!-- Coluna CPF/CNPJ com cópia rápida sem abrir drawer ao clicar no ícone. -->
+                    <td class="doc"><span>12.345.678/0001-90</span><button class="doc-copy" data-doc="12.345.678/0001-90" type="button" aria-label="Copiar CPF/CNPJ"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="10" height="10"></rect><rect x="5" y="5" width="10" height="10"></rect></svg></button></td>
                     <td><span class="badge badge-profile">Empresa</span></td>
                     <td><span class="badge badge-tax">Lucro Presumido</span></td>
                     <td>Larissa Mota</td>
@@ -1394,7 +1437,7 @@
                       <span class="name-main">João Batista da Cunha</span>
                       <div class="sub"><span class="badge badge-person">PF</span> Produtor rural</div>
                     </td>
-                    <td class="doc">456.803.220-11</td>
+                    <td class="doc"><span>456.803.220-11</span><button class="doc-copy" data-doc="456.803.220-11" type="button" aria-label="Copiar CPF/CNPJ"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="10" height="10"></rect><rect x="5" y="5" width="10" height="10"></rect></svg></button></td>
                     <td><span class="badge badge-profile">Produtor Rural</span></td>
                     <td><span class="badge badge-tax">Não se aplica</span></td>
                     <td>Carlos Nogueira</td>
@@ -1413,7 +1456,7 @@
                       <span class="name-main">Cooperativa Campo Forte</span>
                       <div class="sub"><span class="badge badge-person">PJ</span> Filial Oeste</div>
                     </td>
-                    <td class="doc">28.902.111/0001-37</td>
+                    <td class="doc"><span>28.902.111/0001-37</span><button class="doc-copy" data-doc="28.902.111/0001-37" type="button" aria-label="Copiar CPF/CNPJ"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="10" height="10"></rect><rect x="5" y="5" width="10" height="10"></rect></svg></button></td>
                     <td><span class="badge badge-profile">Cooperativa</span></td>
                     <td><span class="badge badge-tax">Lucro Real</span></td>
                     <td>Bianca Alvim</td>
@@ -1432,7 +1475,7 @@
                       <span class="name-main">Isabel Cristina Marques MEI</span>
                       <div class="sub"><span class="badge badge-person">PJ</span> Comércio varejista</div>
                     </td>
-                    <td class="doc">47.211.099/0001-56</td>
+                    <td class="doc"><span>47.211.099/0001-56</span><button class="doc-copy" data-doc="47.211.099/0001-56" type="button" aria-label="Copiar CPF/CNPJ"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="10" height="10"></rect><rect x="5" y="5" width="10" height="10"></rect></svg></button></td>
                     <td><span class="badge badge-profile">Empresa</span></td>
                     <td><span class="badge badge-tax">MEI</span></td>
                     <td>Larissa Mota</td>
@@ -1451,7 +1494,7 @@
                       <span class="name-main">Marco Túlio Ferreira</span>
                       <div class="sub"><span class="badge badge-person">PF</span> Autônomo</div>
                     </td>
-                    <td class="doc">092.510.330-87</td>
+                    <td class="doc"><span>092.510.330-87</span><button class="doc-copy" data-doc="092.510.330-87" type="button" aria-label="Copiar CPF/CNPJ"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="10" height="10"></rect><rect x="5" y="5" width="10" height="10"></rect></svg></button></td>
                     <td><span class="badge badge-profile">Outros</span></td>
                     <td><span class="badge badge-tax">Não se aplica</span></td>
                     <td>Carlos Nogueira</td>
@@ -1470,7 +1513,7 @@
                       <span class="name-main">Clínica Médica Sabiá SS</span>
                       <div class="sub"><span class="badge badge-person">PJ</span> Regime especial de ISS</div>
                     </td>
-                    <td class="doc">08.663.500/0001-44</td>
+                    <td class="doc"><span>08.663.500/0001-44</span><button class="doc-copy" data-doc="08.663.500/0001-44" type="button" aria-label="Copiar CPF/CNPJ"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="10" height="10"></rect><rect x="5" y="5" width="10" height="10"></rect></svg></button></td>
                     <td><span class="badge badge-profile">Empresa</span></td>
                     <td><span class="badge badge-tax">Simples Nacional</span></td>
                     <td>Bianca Alvim</td>
@@ -1489,7 +1532,7 @@
                       <span class="name-main">Transportadora Rota Sul LTDA</span>
                       <div class="sub"><span class="badge badge-person">PJ</span> Matriz + 2 filiais</div>
                     </td>
-                    <td class="doc">66.902.731/0001-12</td>
+                    <td class="doc"><span>66.902.731/0001-12</span><button class="doc-copy" data-doc="66.902.731/0001-12" type="button" aria-label="Copiar CPF/CNPJ"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="10" height="10"></rect><rect x="5" y="5" width="10" height="10"></rect></svg></button></td>
                     <td><span class="badge badge-profile">Empresa</span></td>
                     <td><span class="badge badge-tax">Lucro Real</span></td>
                     <td>Larissa Mota</td>
@@ -1508,7 +1551,7 @@
                       <span class="name-main">Espólio de Tereza Ribeiro</span>
                       <div class="sub"><span class="badge badge-person">PF</span> Declaração anual PF</div>
                     </td>
-                    <td class="doc">384.901.420-76</td>
+                    <td class="doc"><span>384.901.420-76</span><button class="doc-copy" data-doc="384.901.420-76" type="button" aria-label="Copiar CPF/CNPJ"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="10" height="10"></rect><rect x="5" y="5" width="10" height="10"></rect></svg></button></td>
                     <td><span class="badge badge-profile">Outros</span></td>
                     <td><span class="badge badge-tax">Não se aplica</span></td>
                     <td>Carlos Nogueira</td>
@@ -1527,7 +1570,7 @@
                       <span class="name-main">Bom Grão Alimentos EIRELI</span>
                       <div class="sub"><span class="badge badge-person">PJ</span> Setor atacadista</div>
                     </td>
-                    <td class="doc">18.430.040/0001-73</td>
+                    <td class="doc"><span>18.430.040/0001-73</span><button class="doc-copy" data-doc="18.430.040/0001-73" type="button" aria-label="Copiar CPF/CNPJ"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="10" height="10"></rect><rect x="5" y="5" width="10" height="10"></rect></svg></button></td>
                     <td><span class="badge badge-profile">Empresa</span></td>
                     <td><span class="badge badge-tax">Simples Nacional</span></td>
                     <td>Bianca Alvim</td>
@@ -1546,7 +1589,7 @@
                       <span class="name-main">Núcleo TI Consultoria LTDA</span>
                       <div class="sub"><span class="badge badge-person">PJ</span> Serviços recorrentes</div>
                     </td>
-                    <td class="doc">30.701.915/0001-08</td>
+                    <td class="doc"><span>30.701.915/0001-08</span><button class="doc-copy" data-doc="30.701.915/0001-08" type="button" aria-label="Copiar CPF/CNPJ"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="10" height="10"></rect><rect x="5" y="5" width="10" height="10"></rect></svg></button></td>
                     <td><span class="badge badge-profile">Empresa</span></td>
                     <td><span class="badge badge-tax">Lucro Presumido</span></td>
                     <td>Larissa Mota</td>
@@ -1823,7 +1866,7 @@
       sidebarToggle.addEventListener('click', () => {
         appContainer.classList.toggle('sidebar-collapsed');
         const collapsed = appContainer.classList.contains('sidebar-collapsed');
-        sidebarToggle.querySelector('span').textContent = collapsed ? 'Expandir menu' : 'Recolher menu';
+        sidebarToggle.setAttribute('aria-label', collapsed ? 'Expandir sidebar' : 'Recolher sidebar');
         sidebarToggle.querySelector('svg').style.transform = collapsed ? 'rotate(180deg)' : 'rotate(0deg)';
       });
 
@@ -1912,6 +1955,23 @@
             button.textContent = originalText;
             button.setAttribute('data-copied', 'false');
           }, 1300);
+        });
+      });
+
+      document.querySelectorAll('.doc-copy').forEach((button) => {
+        button.addEventListener('click', async (event) => {
+          event.stopPropagation();
+          const value = button.dataset.doc || '';
+          if (!value) return;
+          try {
+            await navigator.clipboard.writeText(value);
+            button.setAttribute('data-copied', 'true');
+          } catch (error) {
+            button.setAttribute('data-copied', 'false');
+          }
+          setTimeout(() => {
+            button.setAttribute('data-copied', 'false');
+          }, 1000);
         });
       });
 
