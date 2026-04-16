@@ -1,0 +1,259 @@
+# PRD-08 — Busca Global
+# Central Contábil
+
+---
+
+## 1. Objetivo do Módulo
+
+Permitir que o usuário encontre rapidamente qualquer informação do sistema, reduzindo navegação e aumentando produtividade operacional.
+
+A busca deve ser:
+- rápida
+- inteligente
+- contextual
+- acionável
+
+---
+
+## 2. Princípios da Busca
+
+### 2.1 Centralização
+
+A busca deve abranger:
+
+- Clientes
+- Obrigações
+- Documentos
+- Acessos
+
+---
+
+### 2.2 Velocidade
+
+- resposta quase instantânea
+- sem necessidade de clicar em "buscar"
+- atualização em tempo real ao digitar
+
+---
+
+### 2.3 Clareza
+
+- resultados organizados por tipo
+- cada resultado com contexto suficiente
+
+---
+
+### 2.4 Ação direta
+
+- todo resultado deve ser clicável
+- levar diretamente ao local correto
+
+---
+
+## 3. Campos Pesquisáveis
+
+---
+
+### 3.1 Clientes
+
+- Nome
+- Razão social
+- Nome fantasia
+- CPF/CNPJ (normalizado)
+- Inscrição estadual
+
+---
+
+### 3.2 Obrigações
+
+- Nome da obrigação
+- Nome do cliente
+- Competência (ex: 03/2026)
+- Status
+
+---
+
+### 3.3 Documentos (CRÍTICO)
+
+A busca deve considerar:
+
+- nome do documento
+- tipo_documento
+- descricao (campo textual indexado)
+
+---
+
+#### Exemplos de busca
+
+Se o documento possuir:
+
+Descrição:
+"Contrato de arrendamento entre Edimar Reginato e Josiane Soares - Matrícula 1234"
+
+Busca deve encontrar por:
+
+- Edimar
+- Josiane
+- arrendamento
+- contrato
+- 1234
+
+---
+
+### 3.4 Acessos
+
+- descrição
+- login
+- link
+
+---
+
+## 4. Normalização
+
+### 4.1 Documento (CPF/CNPJ)
+
+- remover pontuação
+- buscar apenas números
+
+---
+
+### 4.2 Texto
+
+- ignorar maiúsculas/minúsculas
+- ignorar acentos
+- tolerância a variações simples
+
+---
+
+## 5. Interface
+
+---
+
+### 5.1 Campo de busca
+
+- localizado no header
+- sempre visível
+- acessível em todas as telas
+
+---
+
+### 5.2 Comportamento
+
+- busca automática ao digitar
+- exibir dropdown com resultados
+
+---
+
+### 5.3 Agrupamento de resultados
+
+Separar por:
+
+- Clientes
+- Obrigações
+- Documentos
+- Acessos
+
+---
+
+## 6. Estrutura dos Resultados
+
+Cada resultado deve conter:
+
+- título principal
+- subtítulo/contexto
+- tipo (cliente, documento, etc)
+
+---
+
+### Exemplos
+
+Cliente:
+- Nome
+- CPF/CNPJ
+
+Documento:
+- Nome
+- Cliente
+- Trecho da descrição (quando possível)
+
+Obrigação:
+- Nome + Cliente + Competência
+
+---
+
+## 7. Ações
+
+### 7.1 Clique
+
+- abrir diretamente:
+  - cliente
+  - obrigação
+  - documento
+  - acesso
+
+---
+
+## 8. Filtros Rápidos
+
+Permitir filtrar por tipo:
+
+- Todos
+- Clientes
+- Obrigações
+- Documentos
+- Acessos
+
+---
+
+## 9. Permissões
+
+A busca deve respeitar:
+
+- office_id
+- regras de acesso do usuário
+
+Usuário comum:
+- só vê clientes da sua carteira
+- só vê dados vinculados a esses clientes
+
+---
+
+## 10. Performance
+
+- resposta em milissegundos
+- limitar resultados iniciais (ex: 5 por grupo)
+- carregamento incremental
+
+---
+
+## 11. UX (Experiência do Usuário)
+
+### 11.1 Objetivo
+
+Usuário deve conseguir:
+
+→ digitar qualquer informação parcial  
+→ encontrar rapidamente  
+→ clicar e resolver  
+
+---
+
+### 11.2 Atalhos (Futuro)
+
+- abrir busca com teclado (ex: Ctrl + K)
+
+---
+
+## 12. Evolução futura
+
+- busca por metadados estruturados (documentos)
+- busca por conteúdo interno de arquivos (OCR/PDF)
+- sugestões inteligentes
+
+---
+
+## 13. Regra de Ouro
+
+Se o usuário souber qualquer informação parcial (nome, número, palavra-chave):
+
+→ ele deve encontrar o que precisa em segundos.
