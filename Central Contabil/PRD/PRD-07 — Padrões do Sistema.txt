@@ -6,12 +6,13 @@
 ## 1. Objetivo
 
 Definir padrões obrigatórios de:
+
 - interface (UI)
 - experiência (UX)
 - estrutura de dados
 - comportamento do sistema
 
-Este documento deve ser seguido em TODOS os módulos, evitando inconsistência e retrabalho.
+Este documento deve ser seguido em TODOS os módulos, garantindo consistência visual, previsibilidade e eficiência operacional.
 
 ---
 
@@ -19,7 +20,7 @@ Este documento deve ser seguido em TODOS os módulos, evitando inconsistência e
 
 ### 2.1 Estrutura de Tela
 
-Todas as telas devem seguir:
+Todas as telas devem seguir obrigatoriamente:
 
 - Header (título + ações principais)
 - Card de filtros
@@ -34,7 +35,8 @@ Todas as telas devem seguir:
 - Header superior
 - Conteúdo dentro do layout
 
-NUNCA renderizar telas fora desse padrão.
+Regra crítica:
+→ NUNCA renderizar telas fora desse padrão
 
 ---
 
@@ -45,6 +47,7 @@ NUNCA renderizar telas fora desse padrão.
 - Layout compacto
 - Linhas clicáveis
 - Hover destacando linha
+- Leitura rápida (estilo operacional)
 
 ---
 
@@ -60,9 +63,9 @@ NUNCA renderizar telas fora desse padrão.
 
 ### 3.3 Paginação
 
-Obrigatória quando houver volume:
+Obrigatória:
 
-- padrão: 10, 20, 50 por página
+- 10, 20, 50 por página
 - navegação simples
 
 ---
@@ -88,8 +91,9 @@ Card com:
 
 ### 4.3 Comportamento
 
-- filtros aplicados automaticamente ou via botão
-- persistência temporária (opcional)
+- aplicação rápida
+- sem reload pesado
+- persistência opcional
 
 ---
 
@@ -116,7 +120,7 @@ Card com:
 - Salvar
 - Cancelar
 
-Botões sempre no rodapé do modal/formulário.
+Botões sempre no rodapé
 
 ---
 
@@ -128,22 +132,21 @@ Botões sempre no rodapé do modal/formulário.
 - Editar
 - Visualizar
 
-Evitar navegação para nova página.
+Evitar navegação para nova página
 
 ---
 
 ### 6.2 Estrutura
 
 - Header (título + fechar)
-- Body (conteúdo)
+- Body
 - Footer (ações)
 
 ---
 
 ### 6.3 Abas
 
-Quando necessário:
-- usar abas internas no modal
+- usar abas quando necessário
 - manter layout limpo
 
 ---
@@ -159,10 +162,10 @@ Todas as entidades devem possuir:
 
 ---
 
-### 7.1 Regras
+### Regras
 
 - exclusão com confirmação
-- edição reaproveitando formulário de criação
+- edição reutiliza formulário
 
 ---
 
@@ -170,16 +173,14 @@ Todas as entidades devem possuir:
 
 ### 8.1 Multi-tenant
 
-Todas as tabelas devem conter:
-
-- office_id
+- todas as tabelas devem conter `office_id`
 
 ---
 
 ### 8.2 Naming
 
 - snake_case obrigatório
-- nomes claros e consistentes
+- nomes claros
 
 ---
 
@@ -195,30 +196,28 @@ Todas as tabelas devem conter:
 ### 9.1 Controle de acesso
 
 - baseado em usuário
-- baseado em carteira (assigned_user_id)
+- baseado em carteira
 
 ---
 
 ### 9.2 Dados sensíveis
 
 - senhas mascaradas
-- evitar exposição desnecessária
+- evitar exposição
 
 ---
 
 ## 10. Performance
 
-### 10.1 Regras
-
-- evitar carregamento de dados desnecessários
-- usar carregamento assíncrono
-- meta de resposta: <200ms
+- carregamento assíncrono
+- evitar dados desnecessários
+- meta: <200ms
 
 ---
 
 ## 11. UX (Experiência do Usuário)
 
-### 11.1 Princípios
+### Princípios
 
 - simplicidade
 - rapidez
@@ -226,49 +225,48 @@ Todas as tabelas devem conter:
 
 ---
 
-### 11.2 Produtividade
+### Produtividade
 
-- copiar com 1 clique
-- ações rápidas
-- evitar múltiplos cliques
+- ações com 1 clique
+- evitar múltiplos passos
 
 ---
 
 ## 12. Reutilização
 
-### 12.1 Regra obrigatória
+### Regra obrigatória
 
 Antes de criar:
-→ verificar se já existe componente equivalente
+
+→ verificar se já existe componente
 
 ---
 
-### 12.2 Proibição
+### Proibição
 
-- não criar novos padrões sem necessidade
-- não duplicar lógica existente
+- não duplicar lógica
+- não criar padrão novo sem necessidade
 
 ---
 
 ## 13. Regra de Ouro
 
-Se existir uma solução já implementada no sistema:
+Se já existe:
 
-→ ela deve ser reutilizada, não recriada.
+→ reutilizar, nunca recriar
 
 ---
 
-## 14. Identidade Visual (Design System)
+# 14. Identidade Visual (Design System)
 
-### 14.1 Cor Primária (OFICIAL)
+---
 
-- Azul principal: #182849
+## 14.1 Cor Primária
 
-Objetivo:
-- transmitir confiança e profissionalismo
-- padronizar identidade visual do sistema
+- Azul: #182849
 
 Uso:
+
 - Sidebar
 - Header
 - Botões primários
@@ -276,218 +274,210 @@ Uso:
 
 ---
 
-### 14.2 Cores de Status (OBRIGATÓRIAS)
+## 14.2 Cores de Status
 
-- Verde (sucesso / em dia): #21C45D
-- Amarelo (pendente / atenção): #FACC14
-- Laranja (atenção intermediária): #F97415
-- Vermelho (erro / atraso / exclusão): #EF4343
+- Verde: #21C45D
+- Amarelo: #FACC14
+- Laranja: #F97415
+- Vermelho: #EF4343
 
 ---
 
-### 14.3 Cores Neutras
+## 14.3 Cores Neutras
 
-- Fundo geral: cinza muito claro (ex: #F7F9FC)
-- Cards: branco (#FFFFFF)
+- Fundo: #F7F9FC
+- Cards: #FFFFFF
 - Bordas: cinza claro
-- Texto principal: quase preto
-- Texto secundário: cinza médio
+- Texto: quase preto
+- Texto secundário: cinza
 
 ---
 
-### 14.4 Uso das Cores
+## 14.4 Estados
 
-(sem alteração)
-
----
-
-### 14.5 Estados de Interface
-
-- Hover: leve clareamento
-- Ativo: destaque com azul principal
-- Desabilitado: cinza claro
+- Hover leve
+- Ativo com azul
+- Desabilitado cinza
 
 ---
 
-### 14.6 Padrões de Componentes
+## 14.5 Botões
 
-#### Botões
-- Primário: azul (#182849)
-- Secundário: outline neutro
-- Perigo: vermelho (#EF4343)
-
-#### Badges (ATUALIZADO — CRÍTICO)
-
-- devem seguir cores de status
-- devem ter presença visual clara e chamativa
-- NÃO devem ser apagadas, neutras ou excessivamente foscas
-- devem permitir leitura imediata (escaneabilidade rápida)
-- usar fundo sólido ou semi-sólido com bom contraste
-- texto com peso médio ou forte
-- devem se destacar visualmente do restante da interface
-
-Objetivo:
-→ o usuário deve entender o status apenas ao bater o olho
+- Primário: azul
+- Secundário: outline
+- Perigo: vermelho
 
 ---
 
-### 14.6.1 Semântica Visual das Badges (NOVO)
+# 14.6 BADGES (REGRA CRÍTICA DO SISTEMA)
 
-As badges devem seguir padrão visual forte e consistente:
+Este é um dos pontos mais importantes do sistema.
 
-- Verde → vinculado, concluído, em dia
-- Amarelo → pendente, aguardando
-- Laranja → ambíguo, atenção intermediária, revisão
-- Vermelho → atraso, erro, divergente
-- Azul ou neutro forte → classificações informativas (ex: tipo de empresa, tributação)
+As badges devem seguir uma separação OBRIGATÓRIA entre:
 
-Regras:
-
-- badges de status devem ser MAIS chamativas que badges informativas
-- badges informativas podem ser mais suaves, mas nunca apagadas
-- manter consistência em TODAS as telas (clientes, dashboard, tabelas, cards)
+→ BADGE DE STATUS (OPERACIONAL)  
+→ BADGE INFORMATIVA (CLASSIFICAÇÃO)
 
 ---
 
-#### Tabelas
-- fundo branco
-- hover suave
-- linhas bem definidas
-
----
-### 14.6.2 Tipos de Badge (CRÍTICO)
-
-As badges do sistema devem ser divididas em dois tipos:
-
----
-
-#### 1. Badge Informativa (NEUTRA)
+## 14.6.1 Badge de Status (OPERACIONAL)
 
 Usada para:
-- Perfil (Empresa, Produtor Rural, Cooperativa, etc)
-- Tributação (Simples Nacional, Lucro Real, etc)
-- Tipo de pessoa (PF/PJ)
-- Classificações gerais
 
-Regras:
-
-- NÃO usar cores fortes de status
-- Usar fundo neutro:
-  - branco (#FFFFFF) ou cinza claro
-- borda leve
-- texto em cinza escuro ou azul suave
-- NÃO chamar mais atenção que status
-
-Objetivo:
-→ não competir visualmente com indicadores operacionais
-
----
-
-#### 2. Badge de Status (OPERACIONAL)
-
-Usada para:
 - Obrigações
+- Situação operacional
 - Indicadores de prazo
-- Situações operacionais
+- Status de vínculo/análise
 
 Exemplos:
+
 - Em dia
 - Pendente
 - Atrasado
-
-Regras:
-
-- usar cores oficiais do sistema:
-  - Verde (#21C45D)
-  - Amarelo (#FACC14)
-  - Laranja (#F97415)
-  - Vermelho (#EF4343)
-- fundo com contraste forte
-- destaque visual claro
-
-Objetivo:
-→ permitir leitura imediata do estado operacional
+- Vinculado
+- Divergente
+- Ambíguo
 
 ---
 
-### Regra Geral (CRÍTICA)
+### Regras VISUAIS (OBRIGATÓRIO)
 
-- badges de status devem ser MAIS chamativas que badges informativas
-- badges informativas devem ser discretas e neutras
-- nunca misturar comportamento visual entre os dois tipos
-
-### 14.7 Consistência Visual (CRÍTICO)
-
-- nunca usar cores aleatórias
-- nunca criar novos tons sem padrão
-- todas as telas devem seguir esse design system
+- fundo **SÓLIDO**
+- cor baseada no status
+- texto **SEMPRE branco**
+- alto contraste
+- leitura imediata
 
 ---
 
-### 14.8 Regra de Ouro Visual
+### Cores
 
-Se um elemento já existe com determinada cor/comportamento:
-
-→ deve ser reutilizado, não reinventado
-
----
-
-### 14.9 Uso de Ícones (Padrão UX)
-
-O uso de ícones no sistema deve seguir regras simples para evitar poluição visual e manter consistência.
-
-#### Princípio
-
-Ícones são auxiliares visuais, não elementos obrigatórios.
-
-Devem ser usados apenas quando melhoram a leitura ou a ação.
+- Verde → sucesso / em dia / vinculado
+- Amarelo → pendente / aguardando
+- Laranja → atenção / ambíguo
+- Vermelho → erro / atraso / divergente
 
 ---
 
-#### Uso permitido
+### Regra crítica
 
-Ícones DEVEM ser utilizados em:
-
-- ações rápidas (copiar, excluir, abrir, anexar)
-- botões destrutivos (ex: excluir)
-- elementos de apoio visual (ex: notificações, status)
-- itens dentro de menus (menu “…”)
-- abas dentro de modais/drawers (opcional)
+→ STATUS SEMPRE DEVE “GRITAR” NA TELA
 
 ---
 
-#### Uso opcional
+## 14.6.2 Badge Informativa (NEUTRA)
 
-Podem ser utilizados em:
+Usada para:
 
-- botões secundários (ex: importar, exportar)
-- ações contextuais
-
----
-
-#### Uso NÃO recomendado
-
-Evitar uso de ícones em:
-
-- botões primários (ex: "Novo cliente")
-- labels de formulário
-- tabelas principais (colunas)
-- textos informativos
+- Perfil (Empresa, Produtor Rural)
+- Tributação
+- Tipo (PF/PJ)
+- Classificações gerais
 
 ---
 
-#### Regras visuais
+### Regras VISUAIS
 
-- tamanho padrão: 14px a 16px
-- sempre alinhado à esquerda do texto (quando existir)
-- usar ícones simples (outline, sem excesso de detalhe)
-- manter consistência em todo o sistema
+- fundo neutro (branco ou cinza claro)
+- borda leve
+- texto escuro
+- SEM cores de status
+- SEM destaque exagerado
 
 ---
 
-#### Regra de Ouro
+### Regra crítica
 
-Se o ícone não melhora a compreensão ou a velocidade da ação:
+→ NÃO competir com status
 
-→ não deve ser utilizado
+---
 
+## 14.6.3 Hierarquia Visual (CRÍTICO)
+
+- status > informativo
+- status chama atenção
+- informativo é discreto
+
+---
+
+## 14.6.4 Proibição
+
+- NÃO usar badge “soft” para status principal
+- NÃO usar texto escuro em status crítico
+- NÃO misturar padrões
+
+---
+
+## 14.6.5 Regra de Ouro das Badges
+
+Se for status:
+
+→ fundo forte + texto branco
+
+Se for informação:
+
+→ neutro e discreto
+
+---
+
+## 14.7 Tabelas
+
+- fundo branco
+- hover leve
+- linhas bem definidas
+
+---
+
+## 14.8 Consistência Visual
+
+- nunca inventar cor
+- seguir padrão sempre
+- consistência em TODAS as telas
+
+---
+
+## 14.9 Regra de Ouro Visual
+
+Se já existe padrão:
+
+→ reutilizar
+
+---
+
+## 14.10 Uso de Ícones
+
+### Princípio
+
+Ícones são auxiliares, não obrigatórios
+
+---
+
+### Usar em:
+
+- ações rápidas
+- menus
+- status
+
+---
+
+### Evitar em:
+
+- botões principais
+- labels
+- textos
+
+---
+
+### Regras
+
+- tamanho: 14–16px
+- alinhado à esquerda
+- estilo simples
+
+---
+
+### Regra final
+
+Se não melhora a experiência:
+
+→ não usar
