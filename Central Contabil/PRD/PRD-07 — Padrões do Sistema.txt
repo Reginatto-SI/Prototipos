@@ -355,6 +355,66 @@ Regras:
 - linhas bem definidas
 
 ---
+### 14.6.2 Tipos de Badge (CRÍTICO)
+
+As badges do sistema devem ser divididas em dois tipos:
+
+---
+
+#### 1. Badge Informativa (NEUTRA)
+
+Usada para:
+- Perfil (Empresa, Produtor Rural, Cooperativa, etc)
+- Tributação (Simples Nacional, Lucro Real, etc)
+- Tipo de pessoa (PF/PJ)
+- Classificações gerais
+
+Regras:
+
+- NÃO usar cores fortes de status
+- Usar fundo neutro:
+  - branco (#FFFFFF) ou cinza claro
+- borda leve
+- texto em cinza escuro ou azul suave
+- NÃO chamar mais atenção que status
+
+Objetivo:
+→ não competir visualmente com indicadores operacionais
+
+---
+
+#### 2. Badge de Status (OPERACIONAL)
+
+Usada para:
+- Obrigações
+- Indicadores de prazo
+- Situações operacionais
+
+Exemplos:
+- Em dia
+- Pendente
+- Atrasado
+
+Regras:
+
+- usar cores oficiais do sistema:
+  - Verde (#21C45D)
+  - Amarelo (#FACC14)
+  - Laranja (#F97415)
+  - Vermelho (#EF4343)
+- fundo com contraste forte
+- destaque visual claro
+
+Objetivo:
+→ permitir leitura imediata do estado operacional
+
+---
+
+### Regra Geral (CRÍTICA)
+
+- badges de status devem ser MAIS chamativas que badges informativas
+- badges informativas devem ser discretas e neutras
+- nunca misturar comportamento visual entre os dois tipos
 
 ### 14.7 Consistência Visual (CRÍTICO)
 
@@ -430,3 +490,4 @@ Evitar uso de ícones em:
 Se o ícone não melhora a compreensão ou a velocidade da ação:
 
 → não deve ser utilizado
+
