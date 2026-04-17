@@ -297,28 +297,7 @@ Uso:
 
 ### 14.4 Uso das Cores
 
-#### Azul (Primária)
-- navegação
-- ações principais
-- estados ativos
-
-#### Verde
-- concluído
-- sucesso
-- “em dia”
-
-#### Amarelo
-- pendente
-- próximo do prazo
-
-#### Laranja
-- atenção intermediária
-- estados ambíguos
-
-#### Vermelho
-- atraso
-- erro
-- exclusão
+(sem alteração)
 
 ---
 
@@ -337,9 +316,38 @@ Uso:
 - Secundário: outline neutro
 - Perigo: vermelho (#EF4343)
 
-#### Badges
+#### Badges (ATUALIZADO — CRÍTICO)
+
 - devem seguir cores de status
-- visual leve e discreto
+- devem ter presença visual clara e chamativa
+- NÃO devem ser apagadas, neutras ou excessivamente foscas
+- devem permitir leitura imediata (escaneabilidade rápida)
+- usar fundo sólido ou semi-sólido com bom contraste
+- texto com peso médio ou forte
+- devem se destacar visualmente do restante da interface
+
+Objetivo:
+→ o usuário deve entender o status apenas ao bater o olho
+
+---
+
+### 14.6.1 Semântica Visual das Badges (NOVO)
+
+As badges devem seguir padrão visual forte e consistente:
+
+- Verde → vinculado, concluído, em dia
+- Amarelo → pendente, aguardando
+- Laranja → ambíguo, atenção intermediária, revisão
+- Vermelho → atraso, erro, divergente
+- Azul ou neutro forte → classificações informativas (ex: tipo de empresa, tributação)
+
+Regras:
+
+- badges de status devem ser MAIS chamativas que badges informativas
+- badges informativas podem ser mais suaves, mas nunca apagadas
+- manter consistência em TODAS as telas (clientes, dashboard, tabelas, cards)
+
+---
 
 #### Tabelas
 - fundo branco
@@ -347,6 +355,66 @@ Uso:
 - linhas bem definidas
 
 ---
+### 14.6.2 Tipos de Badge (CRÍTICO)
+
+As badges do sistema devem ser divididas em dois tipos:
+
+---
+
+#### 1. Badge Informativa (NEUTRA)
+
+Usada para:
+- Perfil (Empresa, Produtor Rural, Cooperativa, etc)
+- Tributação (Simples Nacional, Lucro Real, etc)
+- Tipo de pessoa (PF/PJ)
+- Classificações gerais
+
+Regras:
+
+- NÃO usar cores fortes de status
+- Usar fundo neutro:
+  - branco (#FFFFFF) ou cinza claro
+- borda leve
+- texto em cinza escuro ou azul suave
+- NÃO chamar mais atenção que status
+
+Objetivo:
+→ não competir visualmente com indicadores operacionais
+
+---
+
+#### 2. Badge de Status (OPERACIONAL)
+
+Usada para:
+- Obrigações
+- Indicadores de prazo
+- Situações operacionais
+
+Exemplos:
+- Em dia
+- Pendente
+- Atrasado
+
+Regras:
+
+- usar cores oficiais do sistema:
+  - Verde (#21C45D)
+  - Amarelo (#FACC14)
+  - Laranja (#F97415)
+  - Vermelho (#EF4343)
+- fundo com contraste forte
+- destaque visual claro
+
+Objetivo:
+→ permitir leitura imediata do estado operacional
+
+---
+
+### Regra Geral (CRÍTICA)
+
+- badges de status devem ser MAIS chamativas que badges informativas
+- badges informativas devem ser discretas e neutras
+- nunca misturar comportamento visual entre os dois tipos
 
 ### 14.7 Consistência Visual (CRÍTICO)
 
@@ -361,3 +429,65 @@ Uso:
 Se um elemento já existe com determinada cor/comportamento:
 
 → deve ser reutilizado, não reinventado
+
+---
+
+### 14.9 Uso de Ícones (Padrão UX)
+
+O uso de ícones no sistema deve seguir regras simples para evitar poluição visual e manter consistência.
+
+#### Princípio
+
+Ícones são auxiliares visuais, não elementos obrigatórios.
+
+Devem ser usados apenas quando melhoram a leitura ou a ação.
+
+---
+
+#### Uso permitido
+
+Ícones DEVEM ser utilizados em:
+
+- ações rápidas (copiar, excluir, abrir, anexar)
+- botões destrutivos (ex: excluir)
+- elementos de apoio visual (ex: notificações, status)
+- itens dentro de menus (menu “…”)
+- abas dentro de modais/drawers (opcional)
+
+---
+
+#### Uso opcional
+
+Podem ser utilizados em:
+
+- botões secundários (ex: importar, exportar)
+- ações contextuais
+
+---
+
+#### Uso NÃO recomendado
+
+Evitar uso de ícones em:
+
+- botões primários (ex: "Novo cliente")
+- labels de formulário
+- tabelas principais (colunas)
+- textos informativos
+
+---
+
+#### Regras visuais
+
+- tamanho padrão: 14px a 16px
+- sempre alinhado à esquerda do texto (quando existir)
+- usar ícones simples (outline, sem excesso de detalhe)
+- manter consistência em todo o sistema
+
+---
+
+#### Regra de Ouro
+
+Se o ícone não melhora a compreensão ou a velocidade da ação:
+
+→ não deve ser utilizado
+
