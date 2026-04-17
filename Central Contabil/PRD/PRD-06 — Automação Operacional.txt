@@ -257,3 +257,6 @@ Usuário deve conseguir entender:
 ## 16. Regra de Ouro
 
 Automação deve ajudar o usuário, nunca tomar controle do sistema.
+
+## 17. O sistema deve calcular automaticamente a situação de prazo da obrigação,
+sem alterar o status de execução definido pelo usuário.
