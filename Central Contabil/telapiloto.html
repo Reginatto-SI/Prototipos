@@ -647,25 +647,25 @@
         font-weight: 600;
       }
 
-      /* Badges discretas derivadas da paleta oficial PRD-07. */
+      /* Badges informativas neutralizadas para não competir com badges operacionais. */
       .badge-profile {
-        background: var(--brand-soft);
-        border-color: rgba(24, 40, 73, 0.22);
-        color: var(--brand);
+        background: rgba(24, 40, 73, 0.06);
+        border-color: rgba(24, 40, 73, 0.14);
+        color: #3f4c61;
       }
 
       .badge-tax {
-        background: rgba(250, 204, 20, 0.12);
-        border-color: rgba(250, 204, 20, 0.36);
-        color: #7a6108;
+        background: var(--surface);
+        border-color: var(--line);
+        color: #505d70;
       }
 
       .badge-person {
         padding: 2px 8px;
         font-size: 11px;
-        background: rgba(249, 116, 21, 0.08);
-        border-color: rgba(249, 116, 21, 0.3);
-        color: #9a4303;
+        background: rgba(107, 114, 128, 0.08);
+        border-color: rgba(107, 114, 128, 0.22);
+        color: #5f6b7c;
       }
 
       .action-cell {
@@ -1148,6 +1148,7 @@
         margin-bottom: 10px;
       }
 
+      /* Badges operacionais seguem chamativas por prioridade de status (verde/amarelo/laranja/vermelho). */
       .status-ok {
         background: var(--success-soft);
         border-color: var(--success-border);
