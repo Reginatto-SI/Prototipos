@@ -312,7 +312,7 @@
       .card + .card { margin-top: 0; }
       .filter-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
       .filter-header strong { font-size: 14px; }
-      .filters-grid { display: grid; grid-template-columns: repeat(6, minmax(120px, 1fr)); gap: 12px; }
+      .filters-grid { display: grid; grid-template-columns: repeat(7, minmax(120px, 1fr)); gap: 12px; }
       .field { display: grid; gap: 6px; }
       .field label { font-size: 12px; color: #50607a; font-weight: 600; }
       .summary-context {
@@ -581,12 +581,18 @@
       }
 
       /* Badges alinhadas ao padrão oficial: fundo sólido + alto contraste. */
-      .status-late { background: #ef4343; border-color: #ef4343; color: #ffffff; }
-      .status-today { background: #facc14; border-color: #facc14; color: #ffffff; }
-      .status-near { background: #f97415; border-color: #f97415; color: #ffffff; }
-      .status-done { background: #21c45d; border-color: #21c45d; color: #ffffff; }
+      /* Status manual (execução): badge operacional. */
+      .status-not-started { background: #64748b; border-color: #64748b; color: #ffffff; }
       .status-progress { background: #182849; border-color: #182849; color: #ffffff; }
-      .status-review { background: #f97415; border-color: #f97415; color: #ffffff; }
+      .status-review { background: #f59e0b; border-color: #f59e0b; color: #ffffff; }
+      .status-done { background: #21c45d; border-color: #21c45d; color: #ffffff; }
+      .status-na { background: #94a3b8; border-color: #94a3b8; color: #ffffff; }
+
+      /* Prazo automático: badge de urgência calculada pelo sistema. */
+      .deadline-late { background: #ef4343; border-color: #ef4343; color: #ffffff; }
+      .deadline-today { background: #facc14; border-color: #facc14; color: #1d3150; }
+      .deadline-near { background: #f97415; border-color: #f97415; color: #ffffff; }
+      .deadline-on-time { background: #16a34a; border-color: #16a34a; color: #ffffff; }
 
       .pagination {
         display: flex;
@@ -626,7 +632,7 @@
         padding: 14px 14px 10px;
         background: #fbfdff;
         display: grid;
-        grid-template-columns: repeat(6, minmax(90px, 1fr));
+        grid-template-columns: repeat(4, minmax(90px, 1fr));
         gap: 10px;
         align-items: end;
       }
@@ -668,12 +674,14 @@
       .bar-late { background: #ef4343; }
       .bar-today { background: #facc14; }
       .bar-near { background: #f97415; }
-      .bar-progress { background: #182849; }
-      .bar-review { background: #f97415; }
-      .bar-done { background: #21c45d; }
+      .bar-ontime { background: #16a34a; }
+
+      @media (max-width: 1360px) {
+        .filters-grid { grid-template-columns: repeat(5, minmax(120px, 1fr)); }
+      }
 
       @media (max-width: 1140px) {
-        .filters-grid { grid-template-columns: repeat(3, minmax(120px, 1fr)); }
+        .filters-grid { grid-template-columns: repeat(4, minmax(120px, 1fr)); }
       }
 
       @media (max-width: 900px) {
@@ -776,7 +784,7 @@
         </header>
 
         <section class="container">
-          <!-- Header adaptado para foco operacional com ações rápidas solicitadas. -->
+          <!-- Dashboard operacional é tela de priorização e acompanhamento, não tela de configuração. -->
           <div class="page-header">
             <div>
               <h1>Dashboard Operacional</h1>
@@ -789,11 +797,10 @@
               <button class="btn btn-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8"><path d="M12 4v10"></path><path d="M8.5 10.5L12 14l3.5-3.5"></path><path d="M5 18h14"></path></svg>Exportar</button>
               <!-- Atalho rápido para o módulo de Clientes, mantendo o padrão de botões existente. -->
               <button class="btn btn-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8"><path d="M4 19.2c0-2.4 2.1-4.2 4.6-4.2h6.8c2.5 0 4.6 1.8 4.6 4.2"></path><circle cx="12" cy="8" r="3.4"></circle></svg>Clientes</button>
-              <button class="btn btn-primary"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>Nova obrigação</button>
             </div>
           </div>
 
-          <!-- Bloco prioritário para responder rapidamente "o que precisa ser feito agora". -->
+          <!-- Bloco de prioridade usa indicadores automáticos de prazo (não status manual de execução). -->
           <div class="priority-panel">
             <div class="priority-header">
               <div class="priority-title">Prioridade operacional</div>
@@ -821,7 +828,7 @@
             </div>
           </div>
 
-          <!-- Card de filtros reaproveitando o mesmo grid e campos da tela de clientes. -->
+          <!-- Dashboard segue a mesma regra da tela de Obrigações: status manual separado de prazo automático. -->
           <div class="card">
             <div class="filter-header">
               <strong>Filtrar por:</strong>
@@ -843,8 +850,12 @@
                 <select class="select"><option>Todos</option><option>Larissa Mota</option><option>Carlos Nogueira</option><option>Bianca Alvim</option></select>
               </div>
               <div class="field">
-                <label>Status</label>
-                <select class="select"><option>Todos</option><option>Atrasado</option><option>Vence hoje</option><option>Próximo do prazo</option><option>Concluído</option><option>Em andamento</option><option>Em revisão</option></select>
+                <label>Status (manual)</label>
+                <select class="select"><option>Todos</option><option>Não iniciada</option><option>Em andamento</option><option>Em revisão</option><option>Concluída</option><option>Não se aplica</option></select>
+              </div>
+              <div class="field">
+                <label>Prazo (automático)</label>
+                <select class="select"><option>Todos</option><option>Atrasada</option><option>Vence hoje</option><option>Próxima</option><option>Em dia</option></select>
               </div>
               <div class="field">
                 <label>Tipo de obrigação</label>
@@ -857,16 +868,16 @@
             </div>
           </div>
 
-          <!-- Summary cards no mesmo padrão visual, agora com indicadores operacionais. -->
+          <!-- Cards-resumo mantêm o padrão visual e deixam explícita a origem: prazo automático vs status manual. -->
           <p class="summary-context">Recorte atual aplicado a todos os blocos: por vencimento.</p>
           <div class="summary">
-            <div class="summary-item summary-critical"><strong>14</strong><span>Obrigações atrasadas</span></div>
-            <div class="summary-item summary-warning"><strong>9</strong><span>Vencendo hoje</span></div>
-            <div class="summary-item summary-attention"><strong>22</strong><span>Em revisão / próximas</span></div>
-            <div class="summary-item summary-positive"><strong>187</strong><span>Concluídas no período</span></div>
+            <div class="summary-item summary-critical"><strong>14</strong><span>Atrasadas (prazo automático)</span></div>
+            <div class="summary-item summary-warning"><strong>9</strong><span>Vence hoje (prazo automático)</span></div>
+            <div class="summary-item summary-attention"><strong>22</strong><span>Próximas do prazo (automático)</span></div>
+            <div class="summary-item summary-positive"><strong>187</strong><span>Concluídas (status manual)</span></div>
           </div>
 
-          <!-- Lista principal operacional: tabela priorizando leitura rápida e execução. -->
+          <!-- Tabela operacional separa explicitamente status manual (execução) e prazo automático (urgência). -->
           <div class="card">
             <div class="table-header">
               <div>
@@ -885,7 +896,8 @@
                     <th>Responsável</th>
                     <th>Prazo interno</th>
                     <th>Prazo fiscal</th>
-                    <th>Status</th>
+                    <th>Status (manual)</th>
+                    <th>Prazo (automático)</th>
                     <!-- Coluna de ações removida para manter o dashboard como monitoramento rápido. -->
                   </tr>
                 </thead>
@@ -898,7 +910,8 @@
                     <td>Larissa Mota</td>
                     <td>14/04/2026</td>
                     <td>15/04/2026</td>
-                    <td><span class="badge status-late">Atrasado</span></td>
+                    <td><span class="badge status-progress">Em andamento</span></td>
+                    <td><span class="badge deadline-late">Atrasada</span></td>
                   </tr>
                   <tr class="row-today">
                     <td><div class="client-main">Transportadora Rota Sul LTDA</div><div class="client-code">Cód. 000487</div></td>
@@ -907,7 +920,8 @@
                     <td>Carlos Nogueira</td>
                     <td>16/04/2026</td>
                     <td>16/04/2026</td>
-                    <td><span class="badge status-today">Vence hoje</span></td>
+                    <td><span class="badge status-not-started">Não iniciada</span></td>
+                    <td><span class="badge deadline-today">Vence hoje</span></td>
                   </tr>
                   <tr>
                     <td><div class="client-main">Clínica Médica Sabiá SS</div><div class="client-code">Cód. 000219</div></td>
@@ -916,7 +930,8 @@
                     <td>Bianca Alvim</td>
                     <td>19/04/2026</td>
                     <td>21/04/2026</td>
-                    <td><span class="badge status-near">Próximo do prazo</span></td>
+                    <td><span class="badge status-review">Em revisão</span></td>
+                    <td><span class="badge deadline-near">Próxima</span></td>
                   </tr>
                   <tr>
                     <td><div class="client-main">Bom Grão Alimentos EIRELI</div><div class="client-code">Cód. 000654</div></td>
@@ -925,7 +940,8 @@
                     <td>Larissa Mota</td>
                     <td>13/04/2026</td>
                     <td>20/04/2026</td>
-                    <td><span class="badge status-progress">Em andamento</span></td>
+                    <td><span class="badge status-done">Concluída</span></td>
+                    <td><span class="badge deadline-on-time">Em dia</span></td>
                   </tr>
                   <tr>
                     <td><div class="client-main">Núcleo TI Consultoria LTDA</div><div class="client-code">Cód. 000398</div></td>
@@ -934,7 +950,8 @@
                     <td>Carlos Nogueira</td>
                     <td>12/04/2026</td>
                     <td>15/04/2026</td>
-                    <td><span class="badge status-review">Em revisão</span></td>
+                    <td><span class="badge status-na">Não se aplica</span></td>
+                    <td><span class="badge deadline-on-time">Em dia</span></td>
                   </tr>
                   <tr>
                     <td><div class="client-main">Cooperativa Campo Forte</div><div class="client-code">Cód. 000771</div></td>
@@ -943,7 +960,8 @@
                     <td>Bianca Alvim</td>
                     <td>10/04/2026</td>
                     <td>12/04/2026</td>
-                    <td><span class="badge status-done">Concluído</span></td>
+                    <td><span class="badge status-progress">Em andamento</span></td>
+                    <td><span class="badge deadline-late">Atrasada</span></td>
                   </tr>
                 </tbody>
               </table>
@@ -960,17 +978,17 @@
             </div>
           </div>
 
-          <!-- Bloco complementar: leitura analítica secundária sem substituir prioridade e execução da tabela. -->
+          <!-- Bloco analítico separado por prazo automático para evitar mistura conceitual com status manual. -->
           <div class="card">
             <div class="chart-header">
               <div>
-                <h3>Distribuição por status</h3>
-                <p>Distribuição por status no mesmo recorte global por vencimento</p>
+                <h3>Distribuição por prazo</h3>
+                <p>Distribuição por prazo automático no mesmo recorte global por vencimento</p>
               </div>
             </div>
 
             <!-- Posicionado abaixo da paginação para não competir com o fluxo operacional principal. -->
-            <div class="status-chart" aria-label="Obrigações por status">
+            <div class="status-chart" aria-label="Obrigações por prazo">
               <div class="chart-col">
                 <span class="chart-value">14</span>
                 <div class="bar bar-late" style="--value: 14" title="Atrasadas: 14"></div>
@@ -984,22 +1002,12 @@
               <div class="chart-col">
                 <span class="chart-value">22</span>
                 <div class="bar bar-near" style="--value: 22" title="Próximas do prazo: 22"></div>
-                <span class="bar-label">Próximas do prazo</span>
-              </div>
-              <div class="chart-col">
-                <span class="chart-value">18</span>
-                <div class="bar bar-progress" style="--value: 18" title="Em andamento: 18"></div>
-                <span class="bar-label">Em andamento</span>
-              </div>
-              <div class="chart-col">
-                <span class="chart-value">11</span>
-                <div class="bar bar-review" style="--value: 11" title="Em revisão: 11"></div>
-                <span class="bar-label">Em revisão</span>
+                <span class="bar-label">Próximas</span>
               </div>
               <div class="chart-col">
                 <span class="chart-value">187</span>
-                <div class="bar bar-done" style="--value: 187" title="Concluídas: 187"></div>
-                <span class="bar-label">Concluídas</span>
+                <div class="bar bar-ontime" style="--value: 187" title="Em dia: 187"></div>
+                <span class="bar-label">Em dia</span>
               </div>
             </div>
           </div>
@@ -1008,7 +1016,7 @@
     </div>
 
     <script>
-      // Reuso de interação leve da tela de clientes para manter comportamento conhecido.
+      // Dashboard mantém comportamento conhecido do AppLayout sem alterar a lógica estrutural do motor de recorrência.
       const appLayout = document.getElementById('app-layout');
       const sidebarToggle = document.getElementById('sidebar-toggle');
       const rows = document.querySelectorAll('tbody tr');
@@ -1017,7 +1025,7 @@
         appLayout.classList.toggle('sidebar-collapsed');
       });
 
-      // Clique na linha permanece como ação principal de acesso rápido ao contexto do cliente.
+      // Clique na linha é somente atalho de navegação para o contexto operacional; não é fluxo completo de execução e não substitui a tela de Obrigações.
       rows.forEach((row) => {
         row.addEventListener('click', () => {
           console.log('Abrir contexto rápido do cliente (piloto):', row.cells[0].innerText.replace(/\n/g, ' ').trim());
