@@ -325,3 +325,39 @@ O **prazo interno nunca é informado como data fixa independente**; ele deve ser
 Nesta tela, o ajuste de fim de semana deve ser entendido como ajuste do **prazo interno**.
 
 Se no futuro houver necessidade de tratar também o prazo fiscal com regra própria de fim de semana, isso deverá existir como configuração separada, sem misturar os dois conceitos.
+
+## 16. Limite da Configuração vs Execução
+
+A configuração de obrigações define apenas:
+
+- tipo de obrigação
+- periodicidade
+- regras de geração
+- prazo fiscal
+- prazo interno
+- regras de ajuste (ex.: fim de semana)
+
+A configuração NÃO define:
+
+- status operacional da obrigação
+- andamento da execução
+- conclusão da obrigação
+
+## Regra de Produto
+
+Após a geração da obrigação:
+
+- o sistema calcula automaticamente o indicador de prazo (com base em datas)
+- o status de execução é controlado exclusivamente pelo usuário na tela de Obrigações
+
+Exemplos:
+
+- "Atrasado", "Vence hoje" e "Próximo" são indicadores automáticos
+- "Em andamento", "Revisão" e "Concluído" são status operacionais manuais
+
+## Importante
+
+Nenhuma regra de configuração deve alterar automaticamente o status de execução da obrigação.
+
+## 17. A configuração pode gerar obrigações automaticamente,
+mas nunca deve decidir o progresso da execução.
