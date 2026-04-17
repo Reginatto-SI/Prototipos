@@ -271,3 +271,52 @@ O usuário deve conseguir saber:
 → onde agir  
 
 em poucos segundos
+
+## 14. Modelo de Status da Obrigação
+
+A obrigação possui dois conceitos distintos:
+
+### Status de Execução (manual)
+Controlado pelo usuário:
+
+- Não iniciada
+- Em andamento
+- Em revisão
+- Concluída
+- Não se aplica
+
+### Indicador de Prazo (automático)
+Calculado pelo sistema com base na data atual e no prazo:
+
+- Atrasada
+- Vence hoje
+- Próxima
+- Em dia
+
+Regra:
+O indicador de prazo NÃO deve ser editável pelo usuário.
+
+## 15. Regra de Prazo
+
+O sistema deve calcular automaticamente o indicador de prazo com base em:
+
+- prazo interno (operacional)
+- prazo fiscal (legal)
+- data atual
+
+O indicador é apenas visual e não altera o status de execução.
+
+## 16. Regra de Conclusão da Obrigação
+
+Para marcar uma obrigação como "Concluída":
+
+O sistema deve exigir pelo menos uma das opções:
+
+- anexo de comprovante (PDF ou imagem)
+- justificativa textual obrigatória
+
+Opcional:
+- flag de "comprovante pendente"
+
+Toda conclusão deve gerar registro no histórico da obrigação.
+
