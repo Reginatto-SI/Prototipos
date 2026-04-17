@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Central Contábil | Dashboard Operacional</title>
+    <style>
+      :root {
+        /* Reaproveitamento direto dos tokens visuais da tela de Clientes (telapiloto). */
+        --bg: #f2f5f9;
+        --surface: #ffffff;
+        --surface-soft: #f7f9fc;
+        --text: #162238;
+        --text-soft: #5f6b7d;
+        --line: #dde4ee;
+        --line-strong: #cad4e1;
+        --brand: #0f2f5c;
+        --brand-hover: #0c254a;
+        --brand-soft: #eaf2fb;
+        --badge: #edf2f8;
+        --danger: #b6464f;
+        --danger-soft: #fceced;
+        --danger-border: #e4c2c5;
+        --shadow: 0 14px 34px rgba(12, 27, 50, 0.07);
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        font-family: Inter, "Segoe UI", Roboto, system-ui, sans-serif;
+        color: var(--text);
+        background: var(--bg);
+      }
+
+      .app {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: var(--sidebar-width, 264px) 1fr;
+        transition: grid-template-columns 0.2s ease;
+      }
+
+      /* Reaproveitamento direto do AppLayout da tela piloto de clientes. */
+      .sidebar {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        background: linear-gradient(180deg, #112948 0%, #0d2038 100%);
+        color: #d8e2f3;
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 22px 16px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: width 0.2s ease, padding 0.2s ease;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 22px;
+        padding: 8px 10px;
+        position: relative;
+      }
+
+      .brand-mark {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.14);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        display: inline-grid;
+        place-items: center;
+        font-size: 14px;
+        font-weight: 700;
+        color: #eef5ff;
+      }
+
+      .brand strong { font-size: 15px; display: block; color: #f3f8ff; }
+      .brand small { color: #a9b8cf; font-size: 11px; }
+
+      .nav-group { display: grid; gap: 4px; }
+      .nav-section { margin-bottom: 16px; }
+      .nav-title {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #9fb0ca;
+        padding: 0 10px 6px;
+      }
+
+      .nav-item {
+        border: 0;
+        text-align: left;
+        background: transparent;
+        color: inherit;
+        padding: 11px 12px;
+        border-radius: 10px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background 0.18s ease, color 0.18s ease;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        position: relative;
+      }
+
+      .nav-item:hover { background: rgba(255, 255, 255, 0.11); color: #ffffff; }
+      .nav-item.active {
+        background: rgba(241, 245, 249, 0.14);
+        color: #ffffff;
+        font-weight: 600;
+        box-shadow: inset 2px 0 0 #92aad0;
+      }
+
+      .nav-item svg {
+        width: 16px;
+        height: 16px;
+        stroke: currentColor;
+        stroke-width: 1.9;
+        fill: none;
+        flex-shrink: 0;
+      }
+
+      .sidebar-toggle {
+        position: absolute;
+        right: 0;
+        top: 5px;
+        width: 28px;
+        height: 28px;
+        border-radius: 9px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.08);
+        color: #dce6f5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+
+      .sidebar-toggle svg {
+        width: 14px;
+        height: 14px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.8;
+      }
+
+      .app.sidebar-collapsed { --sidebar-width: 78px; }
+
+      .app.sidebar-collapsed .brand small,
+      .app.sidebar-collapsed .brand strong,
+      .app.sidebar-collapsed .nav-title,
+      .app.sidebar-collapsed .nav-text,
+      .app.sidebar-collapsed .sidebar-footer small,
+      .app.sidebar-collapsed .sidebar-footer strong,
+      .app.sidebar-collapsed .sidebar-toggle span {
+        display: none;
+      }
+
+      .app.sidebar-collapsed .brand { justify-content: center; padding-right: 0; }
+      .app.sidebar-collapsed .nav-item { justify-content: center; padding: 11px 8px; }
+      .app.sidebar-collapsed .sidebar { padding: 22px 10px; }
+      .app.sidebar-collapsed .sidebar-footer { padding-top: 8px; }
+
+      .app.sidebar-collapsed .nav-item[data-tooltip]:hover::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        left: calc(100% + 10px);
+        top: 50%;
+        transform: translateY(-50%);
+        background: #0b1b31;
+        border: 1px solid #263d5d;
+        color: #eef4ff;
+        font-size: 11px;
+        border-radius: 6px;
+        padding: 5px 8px;
+        white-space: nowrap;
+        z-index: 30;
+      }
+
+      .sidebar-footer {
+        border-top: 1px solid rgba(255, 255, 255, 0.14);
+        padding: 12px 10px 4px;
+      }
+
+      .sidebar-footer small { display: block; font-size: 11px; color: #a9b8cf; }
+      .sidebar-footer strong { font-size: 13px; color: #eef3fb; }
+
+      .main { min-width: 0; display: grid; grid-template-rows: 70px 1fr; }
+
+      .topbar {
+        border-bottom: 1px solid var(--line);
+        background: var(--surface);
+        padding: 0 26px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+      }
+
+      .topbar-left, .topbar-right { display: flex; align-items: center; gap: 12px; }
+
+      .search {
+        width: min(360px, 48vw);
+        height: 38px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: var(--surface-soft);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0 10px;
+      }
+
+      .search input {
+        width: 100%;
+        border: 0;
+        background: transparent;
+        color: var(--text);
+        outline: none;
+      }
+
+      .pill {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: #f8fbff;
+        color: #2f4664;
+        padding: 6px 10px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .icon-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
+        border: 1px solid var(--line);
+        background: #fff;
+        color: #4a5d78;
+        cursor: pointer;
+        display: inline-grid;
+        place-items: center;
+      }
+
+      .icon-btn svg,
+      .search svg {
+        width: 15px;
+        height: 15px;
+        stroke: #5c6d86;
+        stroke-width: 1.8;
+        fill: none;
+      }
+
+      .avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 1px solid var(--line-strong);
+        background: #dbe5f3;
+        color: #274264;
+        display: inline-grid;
+        place-items: center;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .container { width: min(1220px, calc(100% - 44px)); margin: 20px auto 30px; display: grid; gap: 14px; }
+
+      .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        background: linear-gradient(180deg, #ffffff 0%, #f9fbfe 100%);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 18px;
+        box-shadow: 0 10px 24px rgba(16, 34, 61, 0.06);
+      }
+
+      /* Reforço sutil de hierarquia no header sem alterar o padrão do sistema. */
+      h1 { margin: 0; font-size: 33px; letter-spacing: -0.7px; }
+      .subtitle { margin-top: 8px; color: var(--text-soft); font-size: 14px; max-width: 760px; line-height: 1.4; }
+      .actions { display: flex; gap: 10px; align-items: center; }
+      .actions .btn-primary { min-width: 132px; }
+
+      button, select, input { font: inherit; }
+
+      .btn {
+        border-radius: 10px;
+        border: 1px solid transparent;
+        padding: 9px 13px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.18s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+
+      /* Botões alinhados ao mesmo componente base da tela de Clientes. */
+      .btn-primary { background: var(--brand); color: #fff; box-shadow: 0 4px 10px rgba(15, 47, 92, 0.18); }
+      .btn-primary:hover { background: var(--brand-hover); box-shadow: 0 6px 14px rgba(15, 47, 92, 0.22); }
+      .btn-secondary { border-color: var(--line); background: var(--surface); color: var(--text); }
+      .btn-secondary:hover { border-color: #c8d4e4; background: #f5f9ff; }
+
+      .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); padding: 16px; }
+      .card + .card { margin-top: 0; }
+      .filter-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+      .filter-header strong { font-size: 14px; }
+      .filters-grid { display: grid; grid-template-columns: repeat(6, minmax(120px, 1fr)); gap: 12px; }
+      .field { display: grid; gap: 6px; }
+      .field label { font-size: 12px; color: #50607a; font-weight: 600; }
+      .summary-context {
+        margin: -2px 0 4px;
+        font-size: 12px;
+        color: var(--text-soft);
+      }
+
+      .input, .select {
+        height: 39px;
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 0 12px;
+        background: var(--surface-soft);
+        color: var(--text);
+        outline: none;
+      }
+
+      .input:focus, .select:focus, .search:focus-within {
+        border-color: #95a9c8;
+        box-shadow: 0 0 0 3px rgba(126, 148, 184, 0.14);
+      }
+
+      /* Bloco de prioridade operacional para evidenciar urgência em menos de 5 segundos (PRD-05). */
+      .priority-panel {
+        /* Simplificação do bloco próprio para encaixar no mesmo padrão de card do sistema. */
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        box-shadow: var(--shadow);
+        padding: 16px;
+      }
+
+      .priority-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+      }
+
+      .priority-title {
+        font-size: 13px;
+        color: #2f4664;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-weight: 700;
+      }
+
+      .priority-subtitle {
+        font-size: 12px;
+        color: var(--text-soft);
+      }
+
+      .priority-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(140px, 1fr));
+        gap: 10px;
+      }
+
+      .priority-item {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 9px 11px;
+        background: #ffffff;
+        cursor: pointer;
+        transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .priority-item strong {
+        font-size: 24px;
+        display: block;
+        letter-spacing: -0.3px;
+        color: #162238;
+      }
+
+      .priority-item span {
+        margin-top: 3px;
+        display: block;
+        font-size: 12px;
+      }
+
+      .priority-item small {
+        margin-top: 5px;
+        display: block;
+        font-size: 11.5px;
+        color: #5d6f88;
+      }
+
+      /* Acento superior sólido para comunicar urgência sem usar fundo colorido no card inteiro. */
+      .priority-item::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: #c7d3e4;
+      }
+
+      /* Cards de prioridade ganham affordance clicável sem criar novo padrão visual. */
+      .priority-item:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 9px 18px rgba(20, 37, 63, 0.12);
+        border-color: #c8d4e4;
+      }
+
+      .priority-link {
+        margin-top: 7px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 11.5px;
+        color: #2f5078;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 999px;
+        border: 1px solid #c9d7e8;
+        background: #edf3fb;
+        transition: background 0.16s ease, color 0.16s ease, border-color 0.16s ease;
+      }
+
+      .priority-item:hover .priority-link {
+        background: #e1ecfa;
+        border-color: #c3d3e8;
+        color: #213d61;
+        text-decoration: underline;
+      }
+
+      /* Semântica por acento: barra sólida no topo em vez de preencher o card inteiro. */
+      .priority-critical {
+        border-color: #d8e0eb;
+      }
+      .priority-critical::before { background: #ef4343; }
+
+      .priority-today {
+        border-color: #d8e0eb;
+      }
+      .priority-today::before { background: #facc14; }
+
+      .priority-near {
+        border-color: #d8e0eb;
+      }
+      .priority-near::before { background: #f97415; }
+
+      /* Cards mantêm o mesmo componente visual, com contraste e affordance mais operacional. */
+      .summary { display: grid; grid-template-columns: repeat(4, minmax(130px, 1fr)); gap: 7px; }
+      .summary-item {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #ffffff;
+        padding: 12px;
+        position: relative;
+        cursor: pointer;
+        overflow: hidden;
+      }
+
+      /* Summary alinhado à mesma linguagem: fundo neutro e acento superior por status. */
+      .summary-item::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: #c7d3e4;
+        border-radius: 12px 12px 0 0;
+      }
+
+      .summary-item:hover {
+        transform: none;
+        box-shadow: none;
+        border-color: #cdd8e8;
+      }
+
+      .summary-item span { display: block; margin-top: 4px; font-size: 12px; color: var(--text-soft); }
+      .summary-item strong { font-size: 24px; letter-spacing: -0.3px; }
+      .summary-critical { border-color: var(--line); }
+      .summary-warning { border-color: var(--line); }
+      .summary-attention { border-color: var(--line); }
+      .summary-positive { border-color: var(--line); }
+      .summary-critical::before { background: #ef4343; }
+      .summary-warning::before { background: #facc14; }
+      .summary-attention::before { background: #f97415; }
+      .summary-positive::before { background: #21c45d; }
+
+      /* Refinamento da tabela para leitura rápida e reforço de prioridade por linha. */
+      .table-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 8px;
+        padding: 8px 10px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: #fbfdff;
+      }
+
+      .table-title {
+        font-size: 14.5px;
+        font-weight: 700;
+        color: #213956;
+        letter-spacing: -0.1px;
+      }
+
+      .table-subtitle {
+        font-size: 12px;
+        color: #5f6e83;
+      }
+
+      .table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--line); }
+
+      table { width: 100%; border-collapse: collapse; min-width: 980px; background: var(--surface); }
+      th, td {
+        padding: 11px 14px;
+        text-align: left;
+        border-bottom: 1px solid #ebeff5;
+        font-size: 13px;
+        vertical-align: middle;
+      }
+
+      th {
+        color: #4c5d76;
+        font-size: 11.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        background: #f7fafe;
+      }
+
+      /* Refino da célula Cliente: hierarquia premium com nome mais forte e código mais discreto. */
+      .client-main {
+        font-weight: 700;
+        color: #1a2d48;
+        line-height: 1.36;
+      }
+
+      .client-code {
+        margin-top: 2px;
+        font-size: 11.5px;
+        color: #5d6f88;
+      }
+
+      tbody tr { cursor: pointer; transition: background 0.18s ease, box-shadow 0.18s ease; }
+      tbody tr:hover { background: #f7fbff; }
+      tbody tr.row-critical { background: #fffdfd; }
+      tbody tr.row-critical:hover { background: #fff4f5; }
+      tbody tr.row-today { background: #fffef9; }
+      tbody tr.row-today:hover { background: #fff8ea; }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        border: 1px solid #cfd9e6;
+        background: #eef3f9;
+        color: #ffffff;
+        padding: 3px 10px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0;
+        box-shadow: none;
+      }
+
+      /* Badges alinhadas ao padrão oficial: fundo sólido + alto contraste. */
+      .status-late { background: #ef4343; border-color: #ef4343; color: #ffffff; }
+      .status-today { background: #facc14; border-color: #facc14; color: #ffffff; }
+      .status-near { background: #f97415; border-color: #f97415; color: #ffffff; }
+      .status-done { background: #21c45d; border-color: #21c45d; color: #ffffff; }
+      .status-progress { background: #182849; border-color: #182849; color: #ffffff; }
+      .status-review { background: #f97415; border-color: #f97415; color: #ffffff; }
+
+      .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 10px;
+        flex-wrap: wrap;
+      }
+
+      .inline { display: inline-flex; gap: 8px; align-items: center; }
+
+      .chart-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+
+      .chart-header h3 {
+        margin: 0;
+        font-size: 16px;
+        color: #1d3150;
+      }
+
+      .chart-header p {
+        margin: 4px 0 0;
+        color: var(--text-soft);
+        font-size: 12.5px;
+      }
+
+      .status-chart {
+        height: 238px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 14px 14px 10px;
+        background: #fbfdff;
+        display: grid;
+        grid-template-columns: repeat(6, minmax(90px, 1fr));
+        gap: 10px;
+        align-items: end;
+      }
+
+      .chart-col {
+        display: grid;
+        justify-items: center;
+        gap: 6px;
+      }
+
+      .chart-value {
+        font-size: 11px;
+        color: #4f6078;
+        font-weight: 700;
+      }
+
+      .bar {
+        width: 100%;
+        max-width: 42px;
+        height: calc(var(--value) * 0.92px);
+        min-height: 8px;
+        border-radius: 8px 8px 4px 4px;
+        box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.08);
+        transition: transform 0.16s ease, filter 0.16s ease;
+      }
+
+      .bar:hover {
+        transform: translateY(-2px);
+        filter: brightness(1.03);
+      }
+
+      .bar-label {
+        font-size: 11px;
+        color: var(--text-soft);
+        text-align: center;
+        line-height: 1.25;
+      }
+
+      .bar-late { background: #ef4343; }
+      .bar-today { background: #facc14; }
+      .bar-near { background: #f97415; }
+      .bar-progress { background: #182849; }
+      .bar-review { background: #f97415; }
+      .bar-done { background: #21c45d; }
+
+      @media (max-width: 1140px) {
+        .filters-grid { grid-template-columns: repeat(3, minmax(120px, 1fr)); }
+      }
+
+      @media (max-width: 900px) {
+        .app { grid-template-columns: 1fr; }
+        .sidebar { display: none; }
+        .container { width: min(1200px, calc(100% - 20px)); }
+        .page-header { flex-direction: column; }
+        .search { width: min(48vw, 280px); }
+        .filters-grid, .summary { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
+        .priority-grid { grid-template-columns: 1fr; }
+        .status-chart { grid-template-columns: repeat(3, minmax(90px, 1fr)); height: auto; align-items: start; }
+      }
+
+      @media (max-width: 760px) {
+        .topbar { padding: 8px 12px; min-height: 72px; height: auto; flex-wrap: wrap; }
+        .topbar-left, .topbar-right { width: 100%; justify-content: space-between; }
+        .filters-grid, .summary { grid-template-columns: 1fr; }
+        .status-chart { grid-template-columns: repeat(2, minmax(90px, 1fr)); }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app" id="app-layout">
+      <aside class="sidebar">
+        <div>
+          <div class="brand">
+            <div class="brand-mark">C</div>
+            <div>
+              <strong>Central Contábil</strong>
+              <small>Operação Contábil Integrada</small>
+            </div>
+            <button class="sidebar-toggle" id="sidebar-toggle" type="button" aria-label="Alternar sidebar">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 6l-6 6 6 6"></path></svg>
+            </button>
+          </div>
+
+          <!-- Sidebar reutilizada com Dashboard Operacional ativo para manter continuidade visual. -->
+          <div class="nav-section">
+            <div class="nav-title">Operação</div>
+            <div class="nav-group">
+              <button class="nav-item active" data-tooltip="Dashboard">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="3.5" y="3.5" width="7" height="7"></rect>
+                  <rect x="13.5" y="3.5" width="7" height="7"></rect>
+                  <rect x="3.5" y="13.5" width="7" height="7"></rect>
+                  <rect x="13.5" y="13.5" width="7" height="7"></rect>
+                </svg>
+                <span class="nav-text">Dashboard</span>
+              </button>
+              <button class="nav-item" data-tooltip="Clientes">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 19.2c0-2.4 2.1-4.2 4.6-4.2h6.8c2.5 0 4.6 1.8 4.6 4.2"></path>
+                  <circle cx="12" cy="8" r="3.4"></circle>
+                </svg>
+                <span class="nav-text">Clientes</span>
+              </button>
+              <button class="nav-item" data-tooltip="Obrigações">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="5" y="4" width="14" height="16" rx="2"></rect>
+                  <path d="M8.5 9.2h7"></path>
+                  <path d="M8.5 13h7"></path>
+                  <path d="M8.5 16.8h4"></path>
+                </svg>
+                <span class="nav-text">Obrigações</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="nav-section">
+            <div class="nav-title">Administração</div>
+            <div class="nav-group">
+              <button class="nav-item" data-tooltip="Usuários"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="9" r="3"></circle><circle cx="16.5" cy="10" r="2.5"></circle><path d="M3.8 19c0-2.3 2-4 4.4-4h1.4c2.4 0 4.4 1.7 4.4 4"></path><path d="M13.5 18.8c.2-1.7 1.7-3 3.6-3h.6c1.4 0 2.7.7 3.3 1.8"></path></svg><span class="nav-text">Usuários</span></button>
+              <button class="nav-item" data-tooltip="Auditoria"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M12 8.2V12l2.7 2"></path><path d="M8.7 4.8L7.3 3.4"></path></svg><span class="nav-text">Auditoria</span></button>
+              <button class="nav-item" data-tooltip="Configurações"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="2.8"></circle><path d="M19 12a6.8 6.8 0 0 0-.1-1l1.7-1.3-1.6-2.8-2.1.7a7.2 7.2 0 0 0-1.6-.9L14.9 4h-3.8l-.3 2.7a7.2 7.2 0 0 0-1.6.9l-2.1-.7-1.6 2.8L7.2 11a6.8 6.8 0 0 0 0 2l-1.7 1.3 1.6 2.8 2.1-.7c.5.4 1 .7 1.6.9l.3 2.7h3.8l.3-2.7c.6-.2 1.1-.5 1.6-.9l2.1.7 1.6-2.8-1.7-1.3c.1-.3.1-.7.1-1z"></path></svg><span class="nav-text">Configurações</span></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-footer">
+          <small>Unidade logada</small>
+          <strong>Matriz • Curitiba/PR</strong>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div class="topbar-left">
+            <div class="search">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16L21 21"></path></svg>
+              <input placeholder="Buscar obrigação, cliente ou responsável" />
+            </div>
+            <span class="pill">Escritório: Andrade & Santos</span>
+          </div>
+
+          <div class="topbar-right">
+            <button class="icon-btn" title="Notificações" aria-label="Notificações"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 17h8"></path><path d="M6 17h12l-1.2-2.1V10a4.8 4.8 0 0 0-9.6 0v4.9L6 17z"></path><path d="M10 19a2 2 0 0 0 4 0"></path></svg></button>
+            <button class="icon-btn" title="Acesso rápido" aria-label="Configurações"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="2.6"></circle><path d="M19 12a7 7 0 0 0-.1-1l1.8-1.4-1.7-2.9-2.2.7a7.3 7.3 0 0 0-1.7-1L14.8 4h-3.6l-.3 2.4a7.3 7.3 0 0 0-1.7 1L7 6.7 5.3 9.6 7 11a7 7 0 0 0-.1 1c0 .3 0 .7.1 1l-1.7 1.4L7 17.3l2.2-.7a7.3 7.3 0 0 0 1.7 1l.3 2.4h3.6l.3-2.4a7.3 7.3 0 0 0 1.7-1l2.2.7 1.7-2.9-1.8-1.4c.1-.3.1-.7.1-1z"></path></svg></button>
+            <span class="avatar">LM</span>
+          </div>
+        </header>
+
+        <section class="container">
+          <!-- Header adaptado para foco operacional com ações rápidas solicitadas. -->
+          <div class="page-header">
+            <div>
+              <h1>Dashboard Operacional</h1>
+              <div class="subtitle">
+                Painel de prioridades do escritório com atrasos, obrigações próximas do prazo e ações rápidas para execução da equipe.
+              </div>
+            </div>
+            <div class="actions">
+              <span class="pill">Atualizado: 16/04/2026 08:40</span>
+              <button class="btn btn-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8"><path d="M12 4v10"></path><path d="M8.5 10.5L12 14l3.5-3.5"></path><path d="M5 18h14"></path></svg>Exportar</button>
+              <!-- Atalho rápido para o módulo de Clientes, mantendo o padrão de botões existente. -->
+              <button class="btn btn-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8"><path d="M4 19.2c0-2.4 2.1-4.2 4.6-4.2h6.8c2.5 0 4.6 1.8 4.6 4.2"></path><circle cx="12" cy="8" r="3.4"></circle></svg>Clientes</button>
+              <button class="btn btn-primary"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>Nova obrigação</button>
+            </div>
+          </div>
+
+          <!-- Bloco prioritário para responder rapidamente "o que precisa ser feito agora". -->
+          <div class="priority-panel">
+            <div class="priority-header">
+              <div class="priority-title">Prioridade operacional</div>
+              <div class="priority-subtitle">Recorte global atual: por vencimento · Priorização da fila: atrasadas → vence hoje → próximas do prazo</div>
+            </div>
+            <div class="priority-grid">
+              <div class="priority-item priority-critical">
+                <strong>14</strong>
+                <span>Obrigações atrasadas</span>
+                <small>7 com impacto em prazo fiscal</small>
+                <span class="priority-link">Ver lista →</span>
+              </div>
+              <div class="priority-item priority-today">
+                <strong>9</strong>
+                <span>Vencendo hoje</span>
+                <small>5 aguardando validação final</small>
+                <span class="priority-link">Ver lista →</span>
+              </div>
+              <div class="priority-item priority-near">
+                <strong>22</strong>
+                <span>Próximas do prazo</span>
+                <small>Janela crítica: próximos 3 dias</small>
+                <span class="priority-link">Ver lista →</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card de filtros reaproveitando o mesmo grid e campos da tela de clientes. -->
+          <div class="card">
+            <div class="filter-header">
+              <strong>Filtrar por:</strong>
+              <div class="inline">
+                <button class="btn btn-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8"><path d="M20 6H8"></path><path d="M16 12H4"></path><path d="M20 18H8"></path><path d="M6 4v4"></path><path d="M18 10v4"></path><path d="M6 16v4"></path></svg>Limpar filtros</button>
+              </div>
+            </div>
+            <div class="filters-grid">
+              <div class="field">
+                <label>Competência de referência</label>
+                <input class="input" placeholder="MM/AAAA" value="03/2026" />
+              </div>
+              <div class="field">
+                <label>Visão do dashboard</label>
+                <select class="select"><option selected>Por vencimento</option><option>Por competência</option></select>
+              </div>
+              <div class="field">
+                <label>Responsável</label>
+                <select class="select"><option>Todos</option><option>Larissa Mota</option><option>Carlos Nogueira</option><option>Bianca Alvim</option></select>
+              </div>
+              <div class="field">
+                <label>Status</label>
+                <select class="select"><option>Todos</option><option>Atrasado</option><option>Vence hoje</option><option>Próximo do prazo</option><option>Concluído</option><option>Em andamento</option><option>Em revisão</option></select>
+              </div>
+              <div class="field">
+                <label>Tipo de obrigação</label>
+                <select class="select"><option>Todas</option><option>SPED Fiscal</option><option>EFD Contribuições</option><option>DCTF</option><option>PGDAS</option><option>REINF</option><option>Simples Nacional</option></select>
+              </div>
+              <div class="field">
+                <label>Cliente</label>
+                <input class="input" placeholder="Buscar cliente" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Summary cards no mesmo padrão visual, agora com indicadores operacionais. -->
+          <p class="summary-context">Recorte atual aplicado a todos os blocos: por vencimento.</p>
+          <div class="summary">
+            <div class="summary-item summary-critical"><strong>14</strong><span>Obrigações atrasadas</span></div>
+            <div class="summary-item summary-warning"><strong>9</strong><span>Vencendo hoje</span></div>
+            <div class="summary-item summary-attention"><strong>22</strong><span>Em revisão / próximas</span></div>
+            <div class="summary-item summary-positive"><strong>187</strong><span>Concluídas no período</span></div>
+          </div>
+
+          <!-- Lista principal operacional: tabela priorizando leitura rápida e execução. -->
+          <div class="card">
+            <div class="table-header">
+              <div>
+                <div class="table-title">Fila operacional de obrigações</div>
+                <div class="table-subtitle">Fila no recorte global por vencimento. Clique na linha para abrir rapidamente o contexto do cliente</div>
+              </div>
+              <span class="pill">Ordenado por prioridade</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Cliente</th>
+                    <th>Obrigação</th>
+                    <th>Competência</th>
+                    <th>Responsável</th>
+                    <th>Prazo interno</th>
+                    <th>Prazo fiscal</th>
+                    <th>Status</th>
+                    <!-- Coluna de ações removida para manter o dashboard como monitoramento rápido. -->
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="row-critical">
+                    <!-- Código do cliente permanece como informação secundária na mesma célula principal. -->
+                    <td><div class="client-main">Agropecuária Vale do Sol LTDA</div><div class="client-code">Cód. 000123</div></td>
+                    <td>SPED Fiscal</td>
+                    <td>03/2026</td>
+                    <td>Larissa Mota</td>
+                    <td>14/04/2026</td>
+                    <td>15/04/2026</td>
+                    <td><span class="badge status-late">Atrasado</span></td>
+                  </tr>
+                  <tr class="row-today">
+                    <td><div class="client-main">Transportadora Rota Sul LTDA</div><div class="client-code">Cód. 000487</div></td>
+                    <td>DCTF</td>
+                    <td>03/2026</td>
+                    <td>Carlos Nogueira</td>
+                    <td>16/04/2026</td>
+                    <td>16/04/2026</td>
+                    <td><span class="badge status-today">Vence hoje</span></td>
+                  </tr>
+                  <tr>
+                    <td><div class="client-main">Clínica Médica Sabiá SS</div><div class="client-code">Cód. 000219</div></td>
+                    <td>EFD Contribuições</td>
+                    <td>03/2026</td>
+                    <td>Bianca Alvim</td>
+                    <td>19/04/2026</td>
+                    <td>21/04/2026</td>
+                    <td><span class="badge status-near">Próximo do prazo</span></td>
+                  </tr>
+                  <tr>
+                    <td><div class="client-main">Bom Grão Alimentos EIRELI</div><div class="client-code">Cód. 000654</div></td>
+                    <td>PGDAS</td>
+                    <td>03/2026</td>
+                    <td>Larissa Mota</td>
+                    <td>13/04/2026</td>
+                    <td>20/04/2026</td>
+                    <td><span class="badge status-progress">Em andamento</span></td>
+                  </tr>
+                  <tr>
+                    <td><div class="client-main">Núcleo TI Consultoria LTDA</div><div class="client-code">Cód. 000398</div></td>
+                    <td>REINF</td>
+                    <td>03/2026</td>
+                    <td>Carlos Nogueira</td>
+                    <td>12/04/2026</td>
+                    <td>15/04/2026</td>
+                    <td><span class="badge status-review">Em revisão</span></td>
+                  </tr>
+                  <tr>
+                    <td><div class="client-main">Cooperativa Campo Forte</div><div class="client-code">Cód. 000771</div></td>
+                    <td>Simples Nacional</td>
+                    <td>03/2026</td>
+                    <td>Bianca Alvim</td>
+                    <td>10/04/2026</td>
+                    <td>12/04/2026</td>
+                    <td><span class="badge status-done">Concluído</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="pagination">
+              <div class="inline"><span style="color: var(--text-soft); font-size: 13px">Mostrando 1–6 de 48 obrigações</span></div>
+              <div class="inline">
+                <label for="per-page" style="font-size: 12px; color: var(--text-soft)">Por página:</label>
+                <select id="per-page" class="select" style="width: 76px"><option>10</option><option>20</option><option>50</option></select>
+                <button class="btn btn-secondary"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8"><path d="M15 6l-6 6 6 6"></path></svg>Anterior</button>
+                <button class="btn btn-secondary">Próxima<svg viewBox="0 0 24 24" aria-hidden="true" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8"><path d="M9 6l6 6-6 6"></path></svg></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bloco complementar: leitura analítica secundária sem substituir prioridade e execução da tabela. -->
+          <div class="card">
+            <div class="chart-header">
+              <div>
+                <h3>Distribuição por status</h3>
+                <p>Distribuição por status no mesmo recorte global por vencimento</p>
+              </div>
+            </div>
+
+            <!-- Posicionado abaixo da paginação para não competir com o fluxo operacional principal. -->
+            <div class="status-chart" aria-label="Obrigações por status">
+              <div class="chart-col">
+                <span class="chart-value">14</span>
+                <div class="bar bar-late" style="--value: 14" title="Atrasadas: 14"></div>
+                <span class="bar-label">Atrasadas</span>
+              </div>
+              <div class="chart-col">
+                <span class="chart-value">9</span>
+                <div class="bar bar-today" style="--value: 9" title="Vence hoje: 9"></div>
+                <span class="bar-label">Vence hoje</span>
+              </div>
+              <div class="chart-col">
+                <span class="chart-value">22</span>
+                <div class="bar bar-near" style="--value: 22" title="Próximas do prazo: 22"></div>
+                <span class="bar-label">Próximas do prazo</span>
+              </div>
+              <div class="chart-col">
+                <span class="chart-value">18</span>
+                <div class="bar bar-progress" style="--value: 18" title="Em andamento: 18"></div>
+                <span class="bar-label">Em andamento</span>
+              </div>
+              <div class="chart-col">
+                <span class="chart-value">11</span>
+                <div class="bar bar-review" style="--value: 11" title="Em revisão: 11"></div>
+                <span class="bar-label">Em revisão</span>
+              </div>
+              <div class="chart-col">
+                <span class="chart-value">187</span>
+                <div class="bar bar-done" style="--value: 187" title="Concluídas: 187"></div>
+                <span class="bar-label">Concluídas</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      // Reuso de interação leve da tela de clientes para manter comportamento conhecido.
+      const appLayout = document.getElementById('app-layout');
+      const sidebarToggle = document.getElementById('sidebar-toggle');
+      const rows = document.querySelectorAll('tbody tr');
+
+      sidebarToggle.addEventListener('click', () => {
+        appLayout.classList.toggle('sidebar-collapsed');
+      });
+
+      // Clique na linha permanece como ação principal de acesso rápido ao contexto do cliente.
+      rows.forEach((row) => {
+        row.addEventListener('click', () => {
+          console.log('Abrir contexto rápido do cliente (piloto):', row.cells[0].innerText.replace(/\n/g, ' ').trim());
+        });
+      });
+    </script>
+  </body>
+</html>
