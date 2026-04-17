@@ -256,76 +256,108 @@ Se existir uma solução já implementada no sistema:
 
 → ela deve ser reutilizada, não recriada.
 
+---
+
 ## 14. Identidade Visual (Design System)
 
-### 14.1 Cor Primária
+### 14.1 Cor Primária (OFICIAL)
 
-O sistema deve utilizar como base um tom de azul escuro institucional.
+- Azul principal: #182849
 
 Objetivo:
 - transmitir confiança e profissionalismo
-- manter padrão visual consistente
+- padronizar identidade visual do sistema
 
-Exemplo de referência:
-- azul semelhante ao utilizado no menu lateral e header da aplicação
-
-Sugestão base:
-- Azul principal: #1E3A5F (ou similar)
-- Hover/ativo: tom levemente mais claro
-- Background leve: variação bem clara do azul
-
----
-
-### 14.2 Uso das Cores
-
-#### Primária (azul)
+Uso:
 - Sidebar
 - Header
-- Botões principais
+- Botões primários
 - Elementos ativos
 
-#### Secundária (cinza claro)
-- Fundo da aplicação
-- Cards
-- Tabelas
+---
 
-#### Branco
-- Conteúdo principal
-- Contraste de leitura
+### 14.2 Cores de Status (OBRIGATÓRIAS)
+
+- Verde (sucesso / em dia): #21C45D
+- Amarelo (pendente / atenção): #FACC14
+- Laranja (atenção intermediária): #F97415
+- Vermelho (erro / atraso / exclusão): #EF4343
 
 ---
 
-### 14.3 Estados
+### 14.3 Cores Neutras
+
+- Fundo geral: cinza muito claro (ex: #F7F9FC)
+- Cards: branco (#FFFFFF)
+- Bordas: cinza claro
+- Texto principal: quase preto
+- Texto secundário: cinza médio
+
+---
+
+### 14.4 Uso das Cores
+
+#### Azul (Primária)
+- navegação
+- ações principais
+- estados ativos
+
+#### Verde
+- concluído
+- sucesso
+- “em dia”
+
+#### Amarelo
+- pendente
+- próximo do prazo
+
+#### Laranja
+- atenção intermediária
+- estados ambíguos
+
+#### Vermelho
+- atraso
+- erro
+- exclusão
+
+---
+
+### 14.5 Estados de Interface
 
 - Hover: leve clareamento
-- Ativo: azul mais intenso
-- Desabilitado: cinza
+- Ativo: destaque com azul principal
+- Desabilitado: cinza claro
 
 ---
 
-### 14.4 Padrões de Componentes
+### 14.6 Padrões de Componentes
 
 #### Botões
-- Primário: azul
-- Secundário: outline
-- Perigo: vermelho (apenas exclusão)
+- Primário: azul (#182849)
+- Secundário: outline neutro
+- Perigo: vermelho (#EF4343)
 
-#### Tabela
-- Fundo branco
-- Hover suave
-- Linhas bem definidas
+#### Badges
+- devem seguir cores de status
+- visual leve e discreto
 
----
-
-### 14.5 Consistência
-
-- Nunca usar cores aleatórias
-- Nunca criar novos tons sem padrão
-- Todas as cores devem seguir o design system
+#### Tabelas
+- fundo branco
+- hover suave
+- linhas bem definidas
 
 ---
 
-### 14.6 Regra de Ouro Visual
+### 14.7 Consistência Visual (CRÍTICO)
+
+- nunca usar cores aleatórias
+- nunca criar novos tons sem padrão
+- todas as telas devem seguir esse design system
+
+---
+
+### 14.8 Regra de Ouro Visual
 
 Se um elemento já existe com determinada cor/comportamento:
+
 → deve ser reutilizado, não reinventado
