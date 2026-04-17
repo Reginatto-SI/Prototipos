@@ -297,28 +297,7 @@ Uso:
 
 ### 14.4 Uso das Cores
 
-#### Azul (Primária)
-- navegação
-- ações principais
-- estados ativos
-
-#### Verde
-- concluído
-- sucesso
-- “em dia”
-
-#### Amarelo
-- pendente
-- próximo do prazo
-
-#### Laranja
-- atenção intermediária
-- estados ambíguos
-
-#### Vermelho
-- atraso
-- erro
-- exclusão
+(sem alteração)
 
 ---
 
@@ -337,9 +316,38 @@ Uso:
 - Secundário: outline neutro
 - Perigo: vermelho (#EF4343)
 
-#### Badges
+#### Badges (ATUALIZADO — CRÍTICO)
+
 - devem seguir cores de status
-- visual leve e discreto
+- devem ter presença visual clara e chamativa
+- NÃO devem ser apagadas, neutras ou excessivamente foscas
+- devem permitir leitura imediata (escaneabilidade rápida)
+- usar fundo sólido ou semi-sólido com bom contraste
+- texto com peso médio ou forte
+- devem se destacar visualmente do restante da interface
+
+Objetivo:
+→ o usuário deve entender o status apenas ao bater o olho
+
+---
+
+### 14.6.1 Semântica Visual das Badges (NOVO)
+
+As badges devem seguir padrão visual forte e consistente:
+
+- Verde → vinculado, concluído, em dia
+- Amarelo → pendente, aguardando
+- Laranja → ambíguo, atenção intermediária, revisão
+- Vermelho → atraso, erro, divergente
+- Azul ou neutro forte → classificações informativas (ex: tipo de empresa, tributação)
+
+Regras:
+
+- badges de status devem ser MAIS chamativas que badges informativas
+- badges informativas podem ser mais suaves, mas nunca apagadas
+- manter consistência em TODAS as telas (clientes, dashboard, tabelas, cards)
+
+---
 
 #### Tabelas
 - fundo branco
@@ -361,6 +369,8 @@ Uso:
 Se um elemento já existe com determinada cor/comportamento:
 
 → deve ser reutilizado, não reinventado
+
+---
 
 ### 14.9 Uso de Ícones (Padrão UX)
 
