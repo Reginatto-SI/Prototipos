@@ -1,0 +1,327 @@
+# PRD-12 — Configuração de Obrigações (Motor de Recorrência)
+# Central Contábil
+
+---
+
+## 1. Objetivo
+
+Definir o modelo estrutural e o comportamento do sistema responsável por:
+
+- cadastrar obrigações contábeis
+- definir regras de recorrência
+- determinar prazos fiscais e internos
+- gerar automaticamente as obrigações operacionais
+
+Este módulo é o **cérebro do sistema de controle de obrigações**.
+
+---
+
+## 2. Premissas
+
+- Obrigações contábeis são **recorrentes**
+- A execução NÃO deve ser criada manualmente mês a mês
+- O sistema deve gerar automaticamente as obrigações com base em regras
+- A tela de “Obrigações” existente é de **execução**, não de configuração
+- Este módulo é exclusivo para **definição das regras**
+
+---
+
+## 3. Conceito de Obrigação
+
+Uma obrigação é um **modelo configurável**, que define:
+
+- o tipo de entrega fiscal
+- quem deve cumprir
+- quando deve ser entregue
+- como o prazo é calculado
+
+Exemplos:
+- EFD Contribuições
+- DCTFWeb
+- SPED Fiscal
+- GIA
+- DIRF
+
+---
+
+## 4. Estrutura da Obrigação (Modelo)
+
+Cada obrigação deve conter:
+
+### 4.1 Identificação
+
+- nome da obrigação
+- descrição opcional
+
+---
+
+### 4.2 Aplicabilidade
+
+Define quais empresas devem receber essa obrigação automaticamente.
+
+Campos:
+
+- regime tributário:
+  - Lucro Real
+  - Lucro Presumido
+  - Simples Nacional
+- (futuro) tipo de atividade
+- (futuro) flags adicionais
+
+---
+
+### 4.3 Periodicidade
+
+Define a frequência de geração.
+
+Opções:
+
+- mensal
+- bimestral
+- trimestral
+- anual
+
+---
+
+### 4.4 Regra de Competência
+
+Define como a competência da obrigação é determinada.
+
+Exemplo:
+
+- competência mensal padrão (mês anterior)
+- competência específica (futuro)
+
+---
+
+### 4.5 Regra de Prazo Fiscal
+
+Define como o prazo oficial é calculado.
+
+Deve suportar:
+
+- dia fixo (ex: dia 15)
+- deslocamento por meses:
+  - exemplo: segundo mês subsequente
+
+Exemplo real:
+- competência 01/2026
+- prazo fiscal → 15/03/2026
+
+---
+
+### 4.6 Regra de Prazo Interno
+
+Define o prazo operacional da equipe.
+
+Base:
+
+- calculado a partir do prazo fiscal
+
+Exemplo:
+- prazo fiscal: 15/03
+- prazo interno: 13/03 (2 dias antes)
+
+---
+
+### 4.7 Ajustes de Calendário
+
+Regras automáticas:
+
+- se cair em sábado/domingo → antecipar ou postergar
+- (futuro) considerar feriados
+
+---
+
+## 5. Geração Automática de Obrigações
+
+O sistema deve gerar automaticamente registros operacionais com base nas regras configuradas.
+
+---
+
+### 5.1 Quando gerar
+
+- execução mensal (ou conforme periodicidade)
+- pode ser via rotina automática (cron)
+
+---
+
+### 5.2 Para quem gerar
+
+- todas as empresas que atendam aos critérios definidos na obrigação
+
+---
+
+### 5.3 O que gerar
+
+Para cada empresa:
+
+- empresa
+- obrigação
+- competência
+- prazo interno
+- prazo fiscal
+- status inicial: pendente
+- responsável (opcional ou padrão)
+
+---
+
+## 6. Execução (Integração com Tela Atual)
+
+A tela de “Obrigações” já existente deve consumir os registros gerados.
+
+Essa tela é responsável por:
+
+- visualizar
+- filtrar
+- acompanhar
+- atualizar status
+- executar atividades
+
+---
+
+## 7. Obrigações Avulsas (Exceções)
+
+O sistema deve permitir criação manual de obrigações fora da regra automática.
+
+Uso:
+
+- casos específicos
+- ajustes pontuais
+- obrigações não recorrentes
+
+Essas obrigações:
+
+- não seguem regras de geração
+- não impactam o modelo principal
+
+---
+
+## 8. Edição e Manutenção
+
+O usuário deve poder:
+
+- editar regras da obrigação
+- ativar/desativar obrigação
+- ajustar critérios de aplicabilidade
+
+---
+
+### 8.1 Impacto da edição
+
+Alterações NÃO devem afetar obrigações já geradas.
+
+Devem afetar apenas:
+- novas gerações futuras
+
+---
+
+## 9. Exclusão
+
+- não permitir exclusão se houver histórico
+- preferir status “inativo”
+
+---
+
+## 10. Regra de Ouro
+
+Separação obrigatória entre:
+
+### Configuração (este PRD)
+- define regras
+- cria modelo
+
+### Execução (tela de obrigações)
+- executa tarefas
+- acompanha status
+
+---
+
+## 11. IBS/CBS (Reforma Tributária)
+
+Para futuras obrigações relacionadas a IBS/CBS:
+
+- o sistema deve permitir classificação tributária
+- cada obrigação pode exigir vínculo com código de classificação tributária
+
+---
+
+## 12. Nota Técnica
+
+Este módulo é o ponto central do sistema.
+
+Toda a lógica de:
+- prazos
+- recorrência
+- geração
+
+deve estar concentrada aqui.
+
+---
+
+## 13. Mudanças Futuras
+
+- integração com calendário de feriados
+- regras específicas por obrigação
+- automatização de responsáveis
+- notificações automáticas
+- dashboards gerenciais baseados na recorrência
+
+---
+
+## 14. Regra de Ouro Final
+
+O sistema NÃO deve depender de criação manual recorrente.
+
+Toda obrigação recorrente deve ser gerada automaticamente a partir de regras configuradas.
+
+## Regra oficial de cálculo de prazo da obrigação
+
+A parametrização da obrigação deve sempre partir do **prazo fiscal real/oficial** da obrigação.
+
+### Conceitos obrigatórios
+
+- **Prazo fiscal**: data legal/oficial da obrigação
+- **Prazo interno**: data operacional do escritório para concluir ou receber a demanda antes do prazo fiscal
+
+## 15. Regra oficial de cálculo
+
+O sistema deve seguir obrigatoriamente esta ordem:
+
+15.1 Definir o **prazo fiscal** com base na regra da obrigação
+   - referência da competência
+   - tipo de vencimento
+   - dia fixo ou último dia útil
+
+15.2 A partir do prazo fiscal calculado, definir o **prazo interno**
+   - calculado em `X dias antes do prazo fiscal`
+
+15.3 Após calcular o prazo interno, aplicar a regra de ajuste de fim de semana **sobre o prazo interno**
+   - antecipar
+   - postergar
+   - manter data original
+
+### Exemplo oficial
+
+- competência: 01/2026
+- regra fiscal: segundo mês subsequente, dia 17
+- prazo fiscal calculado: 17/03/2026
+- prazo interno parametrizado: 2 dias antes
+- prazo interno inicial: 15/03/2026
+
+Se o prazo interno cair em sábado ou domingo, aplicar a configuração definida na regra:
+- **Antecipar**: mover para o dia útil anterior
+- **Postergar**: mover para o próximo dia útil
+- **Manter data original**: manter a data mesmo caindo em final de semana
+
+### Regra de ouro
+
+A configuração da obrigação sempre deve usar o **prazo fiscal como origem**.
+
+O **prazo interno nunca é informado como data fixa independente**; ele deve ser derivado automaticamente a partir do prazo fiscal.
+
+### Observação de produto
+
+Nesta tela, o ajuste de fim de semana deve ser entendido como ajuste do **prazo interno**.
+
+Se no futuro houver necessidade de tratar também o prazo fiscal com regra própria de fim de semana, isso deverá existir como configuração separada, sem misturar os dois conceitos.
