@@ -361,3 +361,62 @@ Uso:
 Se um elemento já existe com determinada cor/comportamento:
 
 → deve ser reutilizado, não reinventado
+
+### 14.9 Uso de Ícones (Padrão UX)
+
+O uso de ícones no sistema deve seguir regras simples para evitar poluição visual e manter consistência.
+
+#### Princípio
+
+Ícones são auxiliares visuais, não elementos obrigatórios.
+
+Devem ser usados apenas quando melhoram a leitura ou a ação.
+
+---
+
+#### Uso permitido
+
+Ícones DEVEM ser utilizados em:
+
+- ações rápidas (copiar, excluir, abrir, anexar)
+- botões destrutivos (ex: excluir)
+- elementos de apoio visual (ex: notificações, status)
+- itens dentro de menus (menu “…”)
+- abas dentro de modais/drawers (opcional)
+
+---
+
+#### Uso opcional
+
+Podem ser utilizados em:
+
+- botões secundários (ex: importar, exportar)
+- ações contextuais
+
+---
+
+#### Uso NÃO recomendado
+
+Evitar uso de ícones em:
+
+- botões primários (ex: "Novo cliente")
+- labels de formulário
+- tabelas principais (colunas)
+- textos informativos
+
+---
+
+#### Regras visuais
+
+- tamanho padrão: 14px a 16px
+- sempre alinhado à esquerda do texto (quando existir)
+- usar ícones simples (outline, sem excesso de detalhe)
+- manter consistência em todo o sistema
+
+---
+
+#### Regra de Ouro
+
+Se o ícone não melhora a compreensão ou a velocidade da ação:
+
+→ não deve ser utilizado
