@@ -57,7 +57,7 @@ Cada obrigação deve conter:
 
 ### 4.2 Aplicabilidade
 
-Define quais empresas devem receber essa obrigação automaticamente.
+Define quais clientes devem receber essa obrigação automaticamente.
 
 Campos:
 
@@ -148,15 +148,15 @@ O sistema deve gerar automaticamente registros operacionais com base nas regras 
 
 ### 5.2 Para quem gerar
 
-- todas as empresas que atendam aos critérios definidos na obrigação
+- todos os clientes que atendam aos critérios definidos na obrigação
 
 ---
 
 ### 5.3 O que gerar
 
-Para cada empresa:
+Para cada cliente:
 
-- empresa
+- cliente
 - obrigação
 - competência
 - prazo interno

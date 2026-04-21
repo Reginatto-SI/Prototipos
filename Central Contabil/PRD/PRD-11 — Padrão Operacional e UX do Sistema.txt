@@ -1,256 +1,149 @@
-# PRD-09 — Auditoria e Histórico
+# PRD-11 — Padrão Operacional e UX do Sistema
 # Central Contábil
 
 ---
 
-## 1. Objetivo do Módulo
+## 1. Objetivo
 
-Registrar todas as ações relevantes do sistema, garantindo:
-
-- rastreabilidade completa
-- transparência operacional
-- confiança no sistema
-- apoio à análise de erros
+Consolidar regras operacionais e de UX que devem ser aplicadas de forma transversal em todos os módulos, evitando divergências entre PRDs.
 
 ---
 
-## 2. Princípio da Auditoria (CRÍTICO)
+## 2. Navegação e Estrutura
 
-A auditoria deve permitir que qualquer usuário entenda:
+### 2.1 AppLayout obrigatório
 
-→ o que aconteceu  
-→ quem fez  
-→ quando aconteceu  
-→ por que aconteceu  
+- sidebar + header + conteúdo
+- nenhuma tela operacional fora do AppLayout
 
 ---
 
-## 3. Princípios do Sistema de Auditoria
+### 2.2 Padrão de abertura
+
+- preferir drawer para preservar contexto operacional
+- modal pode ser usado para criação/edição pontual quando o PRD do módulo não exigir drawer
+- evitar navegação para páginas de detalhe sem necessidade
 
 ---
 
-### 3.1 Não intrusiva
+## 3. Papel de cada visão operacional
 
-- não impactar performance
-- não atrapalhar a operação
+### 3.1 Dashboard
 
----
-
-### 3.2 Completa
-
-- registrar todas as ações críticas
+- visão geral, prioridade, triagem e acesso rápido
+- não substitui execução detalhada
 
 ---
 
-### 3.3 Imutável
+### 3.2 Obrigações (lista operacional)
 
-- não permitir edição
-- não permitir exclusão
-
----
-
-### 3.4 Legível
-
-- linguagem amigável
-- evitar termos técnicos
+- centro de execução operacional detalhada
+- acompanhamento completo por cliente, competência e responsável
 
 ---
 
-## 4. Estrutura de Auditoria
+### 3.3 Calendário
 
-Cada registro deve conter:
-
-- id
-- office_id
-
-- usuario_id
-- usuario_nome (snapshot)
-
-- entidade (cliente, obrigação, documento, acesso, usuário)
-- entidade_id
-
-- acao (CREATE, UPDATE, DELETE, STATUS_CHANGE, ASSIGNMENT_CHANGE)
-
-- campo_alterado (quando aplicável)
-
-- valor_anterior
-- valor_novo
-
-- descricao (texto amigável)
-
-- origem (manual | automatica)
-
-- created_at
+- visualização temporal para planejamento
+- não substitui dashboard nem lista operacional
 
 ---
 
-## 5. Origem da Ação (NOVO — CRÍTICO)
+## 4. Modelo de estado das obrigações (regra transversal)
 
-Cada registro deve indicar:
+### 4.1 Status de execução (manual)
 
-- manual → ação feita por usuário
-- automatica → ação feita pelo sistema
-
----
-
-### Objetivo
-
-- diferenciar erro humano de automação
-- aumentar confiança
+Controlado pelo usuário:
+- Não iniciada
+- Em andamento
+- Em revisão
+- Concluída
+- Não se aplica
 
 ---
 
-## 6. Eventos que DEVEM ser auditados
+### 4.2 Indicador de prazo (automático)
+
+Calculado pelo sistema por data atual vs prazo:
+- Atrasada
+- Vence hoje
+- Próxima
+- Em dia
 
 ---
 
-### 6.1 Clientes
+### 4.3 Regra crítica
 
-- criação
-- edição de dados
-- alteração de responsável
-
----
-
-### 6.2 Obrigações
-
-- criação (manual ou automática)
-- alteração de status
-- alteração de prazo
-- alteração de responsável
+- status de execução nunca deve ser alterado automaticamente por regra de prazo
+- indicador de prazo nunca deve ser editável manualmente
 
 ---
 
-### 6.3 Documentos
+## 5. Badges e destaque visual
 
-- upload
-- substituição
-- exclusão
+### 5.1 Badge informativa
 
----
-
-### 6.4 Acessos
-
-- criação
-- edição
-- exclusão
+- usada para classificação (PF/PJ, perfil, tributação)
+- visual neutro
 
 ---
 
-### 6.5 Usuários
+### 5.2 Badge de status
 
-- criação
-- edição
-- ativação/inativação
-- transferência de carteira
+- usada para situação operacional (status e prazo)
+- visual com alta prioridade e contraste
 
 ---
 
-## 7. Formato de Exibição
+## 6. Filtros, listagem e paginação
+
+- card de filtros com comportamento rápido
+- tabelas compactas e clicáveis
+- ações de linha no menu “...”
+- paginação obrigatória nas listagens principais
 
 ---
 
-### 7.1 Timeline (OBRIGATÓRIO)
+## 7. Cliente como HUB
 
-Exibir em formato de linha do tempo:
-
-Exemplos:
-
-- "João alterou status de 'Em andamento' para 'Concluído'"
-- "Sistema gerou obrigação EFD Fiscal (03/2026)"
-- "Maria alterou prazo interno de 10 para 08"
+- ações iniciadas por dashboard, busca, calendário e notificações devem manter contexto do cliente sempre que aplicável
+- objetivo: reduzir navegação fragmentada
 
 ---
 
-### 7.2 Destaques
+## 8. Segurança e multi-tenant
 
-- destacar valores alterados
-- destacar ações críticas (exclusão, atraso)
-
----
-
-## 8. Local de Exibição
+- isolamento obrigatório por `office_id`
+- regras de carteira devem ser respeitadas em listagens, busca e atalhos
+- nenhuma ação deve expor dados fora da carteira permitida
 
 ---
 
-### 8.1 Dentro do Cliente
+## 9. Auditoria transversal
 
-Aba:
-
-👉 "Histórico"
-
----
-
-### 8.2 Comportamento
-
-- ordenação por data (mais recente primeiro)
-- carregamento sob demanda
+- toda ação manual relevante deve ser auditada
+- ações automáticas relevantes também devem ser auditadas
+- auditoria é imutável e rastreável por entidade
 
 ---
 
-## 9. Integração com Automação
+## 10. Nomenclatura padronizada
+
+- usar “cliente” para entidade central
+- usar “tipo de obrigação” para configuração/modelo
+- usar “obrigação” para instância operacional por cliente + competência
+- usar “indicador de prazo” para estado automático
+- usar “status de execução” para estado manual
+- usar “auditoria” como trilha oficial; “histórico” como forma de exibição
 
 ---
 
-### Regras
+## 11. Regra de Ouro
 
-Toda ação automática deve ser registrada:
+A experiência operacional deve manter consistência entre módulos:
 
-- geração de obrigação
-- identificação de atraso
-- disparo de eventos relevantes
+- mesma lógica de prioridade
+- mesma semântica de status e prazo
+- mesma navegação contextual
 
----
-
-### Exemplo
-
-- "Sistema marcou obrigação como atrasada (prazo interno vencido)"
-
----
-
-## 10. Integração com Operação
-
----
-
-### Regra
-
-Toda ação relevante do usuário deve ser auditada
-
----
-
-### Objetivo
-
-- permitir investigação de erros
-- permitir acompanhamento de equipe
-
----
-
-## 11. Segurança
-
-- respeitar office_id
-- respeitar permissões do usuário
-
----
-
-## 12. Performance
-
-- armazenar de forma eficiente
-- carregar sob demanda
-- evitar carregamento completo
-
----
-
-## 13. Evolução futura
-
-- filtros por usuário
-- filtros por período
-- exportação de histórico
-- auditoria por entidade
-
----
-
-## 14. Regra de Ouro
-
-Se algo mudar no sistema:
-
-👉 deve existir um registro claro, legível e confiável explicando o que aconteceu
+Sem reinventar padrões já definidos nos PRDs base.

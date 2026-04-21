@@ -63,7 +63,7 @@ Exibir:
 
 ## 3.2 Bloco 2 — Lista Operacional (CRÍTICO)
 
-Essa é a parte mais importante do sistema.
+Essa é a área principal de triagem operacional do dashboard (não substitui a execução detalhada da tela de Obrigações).
 
 ---
 
@@ -115,9 +115,9 @@ A lista SEMPRE deve abrir já ordenada por prioridade.
 
 Diretamente na lista:
 
-- alterar status
+- alterar status (rápido)
 - abrir cliente
-- editar obrigação
+- abrir obrigação na lista operacional para execução detalhada
 
 ---
 
@@ -194,6 +194,14 @@ O dashboard deve eliminar:
 - carregamento rápido
 - paginação obrigatória
 - dados carregados de forma eficiente
+
+---
+
+## 9.1 Limite funcional do Dashboard (CRÍTICO)
+
+- Dashboard = visão, prioridade, acesso rápido e triagem
+- Tela de Obrigações = execução operacional detalhada e acompanhamento completo
+- o dashboard não deve concentrar regras avançadas de edição
 
 ---
 

@@ -134,6 +134,9 @@ Botões sempre no rodapé
 
 Evitar navegação para nova página
 
+Exceção:
+- quando o PRD do módulo definir explicitamente drawer como padrão principal de abertura/edição, o drawer prevalece sobre modal
+
 ---
 
 ### 6.2 Estrutura
@@ -166,6 +169,13 @@ Todas as entidades devem possuir:
 
 - exclusão com confirmação
 - edição reutiliza formulário
+
+---
+
+## 7.1 Cliente como HUB (Regra transversal)
+
+- funcionalidades operacionais devem manter contexto de cliente sempre que aplicável
+- ações de atalho podem partir de dashboard, calendário e notificações, mas devem preservar rastreabilidade por cliente
 
 ---
 

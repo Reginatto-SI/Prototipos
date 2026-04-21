@@ -1,13 +1,3 @@
-
-### 🔥 PRD-10 — Arquitetura Conceitual do Sistema
-
-(ou se quiser mais correto ainda: **ARC-01 — Arquitetura Conceitual**)
-
----
-
-## 📌 Agora vou te entregar ELE PRONTO (copiar e colar)
-
-```markdown
 # PRD-10 — Arquitetura Conceitual do Sistema
 # Central Contábil
 
@@ -15,91 +5,53 @@
 
 ## 1. Objetivo
 
-Definir a estrutura conceitual do sistema, garantindo:
+Definir a estrutura conceitual do sistema para manter alinhamento entre os PRDs funcionais, garantindo:
 
 - organização dos dados
 - separação clara de responsabilidades
-- base consistente para desenvolvimento
-- alinhamento entre todos os módulos
-
-Este documento não define comportamento (PRD), mas sim a estrutura do sistema.
+- base consistente para evolução do produto
+- coerência entre módulos transversais e módulos por cliente
 
 ---
 
 ## 2. Princípio Arquitetural
 
-O sistema é baseado no conceito:
+O sistema é multi-tenant por `office_id` e adota:
 
 👉 Cliente como HUB central
 
-Todos os dados operacionais orbitam em torno do cliente.
+Todos os dados operacionais relevantes devem estar vinculados ao cliente direta ou indiretamente.
 
 ---
 
 ## 3. Estrutura Geral
 
-```
-
 Office
 ├── Usuários
 ├── Clientes (HUB)
-│    ├── Acessos
-│    ├── Certificados
-│    ├── Documentos
-│    ├── Extratos Bancários
-│
-├── Obrigações (transversal)
+│   ├── Dados Gerais
+│   ├── Acessos
+│   ├── Certificados
+│   ├── Documentos
+│   ├── Extratos Bancários
+│   └── Histórico (auditoria por entidade)
+├── Tipos de Obrigação (configuração)
+├── Obrigações Operacionais (execução)
 ├── Notificações
-├── Auditoria
-
-```
+└── Auditoria
 
 ---
 
-## 4. Tipos de Entidade
+## 4. Entidades Centrais e Relacionamentos
 
-### 4.1 Entidades centrais
-
-- offices
-- users
-- clientes
-
----
-
-### 4.2 Entidades dependentes do cliente
-
-Dados que sempre pertencem a um cliente:
-
-- acessos
-- certificados
-- documentos
-- contas bancárias
-- extratos
-
----
-
-### 4.3 Entidades operacionais (transversais)
-
-Dados que cruzam múltiplos clientes:
-
-- obrigações
-- notificações
-- auditoria
-
----
-
-## 5. Modelo Conceitual de Dados
-
----
-
-### 5.1 Offices
+### 4.1 Office
 
 - id
 - nome
 
 ---
 
-### 5.2 Users
+### 4.2 Usuários
 
 - id
 - office_id
@@ -110,28 +62,25 @@ Dados que cruzam múltiplos clientes:
 
 ---
 
-### 5.3 Clientes
+### 4.3 Clientes
 
 - id
 - office_id
-
-- tipo_pessoa
+- tipo_pessoa (PF/PJ)
+- perfil (classificação operacional)
+- tributacao (regime tributário)
 - nome
 - documento
-
-- razao_social
-- nome_fantasia
-
-- perfil
-- tributacao
-
 - assigned_user_id
+
+Regra:
+- PF/PJ, perfil e tributação são campos distintos e complementares.
 
 ---
 
-### 5.4 Relacionamento Usuário x Cliente
+### 4.4 Relacionamento Usuário x Cliente
 
-Tabela: usuario_clientes
+Tabela: `usuario_clientes`
 
 - id
 - usuario_id
@@ -139,71 +88,28 @@ Tabela: usuario_clientes
 
 ---
 
-## 6. Submódulos do Cliente
+## 5. Entidades Dependentes do Cliente
+
+Dados que sempre dependem de cliente_id:
+
+- acessos
+- certificados
+- documentos
+- contas bancárias
+- extratos
+
+Regra:
+- não deve existir entidade dependente sem vínculo válido com cliente.
 
 ---
 
-### 6.1 Acessos
+## 6. Obrigações — Separação Estrutural Obrigatória
 
-- id
-- cliente_id
-- descricao
-- login
-- senha
-- link
+### 6.1 Tipo de obrigação (configuração)
 
----
+Representa o modelo/regra recorrente.
 
-### 6.2 Certificados
-
-- id
-- cliente_id
-- tipo
-- data_validade
-- arquivo_url
-
----
-
-### 6.3 Documentos
-
-- id
-- cliente_id
-
-- tipo_documento
-- nome
-- descricao
-
-- arquivo_url
-- data_upload
-
----
-
-### 6.4 Contas Bancárias
-
-- id
-- cliente_id
-- banco
-- agencia
-- conta
-
----
-
-### 6.5 Extratos
-
-- id
-- cliente_id
-- conta_id
-- competencia
-- arquivo_url
-
----
-
-## 7. Módulo de Obrigações
-
----
-
-### 7.1 Tipos de obrigação
-
+Campos conceituais:
 - id
 - nome
 - perfil_aplicavel
@@ -214,94 +120,87 @@ Tabela: usuario_clientes
 
 ---
 
-### 7.2 Obrigações
+### 6.2 Obrigação operacional (execução)
 
+Representa a instância gerada para cliente + competência.
+
+Campos conceituais:
 - id
+- office_id
 - cliente_id
 - tipo_obrigacao_id
-
 - competencia
-
 - prazo_fiscal
 - prazo_interno
-
-- status
+- status_execucao
 - responsavel_id
 
----
-
-## 8. Notificações
-
-- id
-- usuario_id
-- titulo
-- descricao
-- tipo
-- referencia_id
-- referencia_tipo
-- lida
+Regra:
+- evitar duplicidade por `cliente_id + tipo_obrigacao_id + competencia`.
 
 ---
 
-## 9. Auditoria
+### 6.3 Regras de estado
+
+- status de execução = manual (usuário)
+- indicador de prazo = automático (sistema)
+
+O indicador de prazo não substitui nem altera o status de execução.
+
+---
+
+## 7. Notificações
+
+Entidade transversal por usuário:
 
 - id
 - office_id
-
 - usuario_id
+- tipo
+- prioridade
+- referencia_tipo
+- referencia_id
+- lida
+- created_at
+
+Regra:
+- notificação referencia entidade operacional (ex.: obrigação) e deve levar para ação contextual.
+
+---
+
+## 8. Auditoria
+
+Entidade transversal e imutável:
+
+- id
+- office_id
+- usuario_id (ou sistema)
 - entidade
 - entidade_id
 - acao
-
 - campo_alterado
 - valor_anterior
 - valor_novo
+- origem (manual | automatica)
+- created_at
 
-- descricao
-
----
-
-## 10. Regras Arquiteturais
-
----
-
-### 10.1 Isolamento
-
-- todas as entidades devem conter `office_id` (direto ou indireto)
+Regra:
+- ações manuais e automáticas relevantes devem gerar trilha de auditoria.
 
 ---
 
-### 10.2 Relacionamento
+## 9. Regras Transversais de Consistência
 
-- dados do cliente nunca devem existir sem cliente
-- dados operacionais devem referenciar cliente
-
----
-
-### 10.3 Consistência
-
-- evitar duplicidade de dados
-- evitar estruturas genéricas sem controle
+- AppLayout obrigatório em todos os módulos.
+- Navegação operacional prioriza drawer/contexto, evitando quebra de fluxo.
+- Dashboard é triagem/prioridade; execução detalhada ocorre na lista operacional de Obrigações.
+- Calendário é visualização temporal; não substitui execução detalhada.
+- Busca global, notificações e dashboard devem respeitar permissões por carteira e isolamento por office_id.
 
 ---
 
-## 11. Regra de Ouro
+## 10. Regra de Ouro
 
-Se uma informação pertence a um cliente:
+Se a informação é operacional do cliente, ela deve manter vínculo explícito com cliente.
 
-→ ela deve estar vinculada ao cliente
-
-Se uma informação cruza múltiplos clientes:
-
-→ ela deve ser tratada como módulo transversal
-```
-
----
-
-## 🚀 Conclusão
-
-👉 Sim, você deve ter esse documento
-👉 Não é PRD funcional, é **PRD estrutural / arquitetura**
-👉 Ele evita 80% dos erros de desenvolvimento
-
----
+Se a informação é transversal (ex.: auditoria e notificações), ela deve manter rastreabilidade por `office_id`, usuário e entidade de referência.
