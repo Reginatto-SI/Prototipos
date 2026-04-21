@@ -160,6 +160,120 @@ Dentro do drawer:
 - visualizar detalhes
 
 ---
+### 6.4 Visualização de Detalhes da Obrigação (NOVO — CRÍTICO)
+
+A ação "Visualizar detalhes" deve abrir um modal (popup) sobre o drawer do calendário.
+
+---
+
+#### Objetivo
+
+Permitir que o usuário visualize todas as informações relevantes de uma obrigação específica sem sair do contexto do calendário.
+
+---
+
+#### Regra de navegação
+
+- NÃO navegar para outra página
+- NÃO abrir novo drawer
+- NÃO substituir o drawer atual
+
+👉 Deve abrir um MODAL sobre o drawer
+
+---
+
+#### Estrutura do modal
+
+O modal deve conter:
+
+##### Header
+- Nome da obrigação
+- Nome do cliente
+- Competência
+- Botão de fechar
+
+---
+
+##### Body
+
+Exibir informações completas da obrigação:
+
+- Cliente
+- Obrigação
+- Competência
+- Responsável
+- Status de execução (manual)
+- Indicador de prazo (automático)
+
+- Prazo interno (operacional)
+- Prazo fiscal (oficial)
+
+- Origem da obrigação:
+  - Manual
+  - Automática
+
+- Observações (se houver)
+
+---
+
+##### Bloco adicional (IMPORTANTE)
+
+- Histórico resumido da obrigação (timeline simples)
+  - Exemplo:
+    - "Sistema gerou obrigação"
+    - "João alterou status para Em andamento"
+    - "Maria concluiu a obrigação"
+
+---
+
+##### Comprovante / Conclusão
+
+Se status = Concluída:
+
+Exibir:
+
+- comprovante anexado OU
+- justificativa de conclusão
+
+---
+
+#### Ações no modal
+
+- Alterar status
+- Abrir cliente (atalho)
+- Fechar
+
+---
+
+#### Regras de UX
+
+- layout compacto e escaneável
+- evitar excesso de texto
+- manter foco operacional
+- não duplicar informações já visíveis no drawer sem necessidade
+
+---
+
+#### Regra de consistência
+
+A ação "Visualizar detalhes" NÃO substitui:
+
+- "Abrir cliente" → que leva ao HUB do cliente
+- "Alterar status" → ação operacional direta
+
+Cada ação deve ter papel claro e distinto
+
+---
+
+#### Regra de ouro
+
+O usuário deve conseguir:
+
+→ clicar em uma obrigação  
+→ abrir detalhes  
+→ entender tudo em poucos segundos  
+
+Sem sair do fluxo do calendário
 
 ### Regra
 
