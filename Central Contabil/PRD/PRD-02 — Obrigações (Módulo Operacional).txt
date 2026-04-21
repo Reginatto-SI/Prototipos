@@ -62,7 +62,7 @@ O módulo de obrigações é baseado em três pilares:
 - prazo_interno
 
 - status
-- responsavel_id
+- responsavel_execucao_id
 
 - observacoes
 - created_at
@@ -75,6 +75,9 @@ O módulo de obrigações é baseado em três pilares:
 - evitar duplicidade (cliente + obrigação + competência)
 - permitir ajuste manual
 - respeitar perfil e tributação
+- o responsável da obrigação é o Responsável pela Execução (não confundir com Responsável da Carteira do cliente)
+
+Comentário de alinhamento: este campo representa o responsável pela execução da obrigação e não deve ser confundido com o responsável da carteira do cliente.
 
 ---
 
@@ -180,7 +183,7 @@ Lista com:
 - Cliente
 - Obrigação
 - Competência
-- Responsável
+- Responsável pela Execução
 - Prazo interno
 - Prazo fiscal
 - Status
@@ -200,7 +203,7 @@ Lista com:
 ### Filtros
 
 - Status
-- Responsável
+- Responsável pela Execução
 - Competência
 - Tipo de obrigação
 - Cliente
@@ -214,6 +217,8 @@ Lista com:
 - adicionar observação
 
 ---
+
+Comentário de alinhamento: redistribuir uma obrigação altera apenas o Responsável pela Execução dessa obrigação, sem alterar o Responsável da Carteira no cliente.
 
 ## 10. Regras Operacionais
 
@@ -319,4 +324,3 @@ Opcional:
 - flag de "comprovante pendente"
 
 Toda conclusão deve gerar registro no histórico da obrigação.
-

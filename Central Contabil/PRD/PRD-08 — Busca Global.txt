@@ -70,6 +70,7 @@ A busca deve abranger:
 - Nome do cliente
 - Competência (ex: 03/2026)
 - Status
+- Responsável pela Execução
 
 ---
 
@@ -184,6 +185,8 @@ Obrigação:
 ## 7. Ações
 
 ### 7.1 Clique
+
+Comentário de alinhamento: ao abrir resultados de obrigação, priorizar contexto operacional com foco no Responsável pela Execução; ao abrir cliente, manter contexto de Responsável da Carteira.
 
 - abrir diretamente:
   - cliente

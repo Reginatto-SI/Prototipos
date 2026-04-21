@@ -38,13 +38,14 @@ Consolidar regras operacionais e de UX que devem ser aplicadas de forma transver
 ### 3.2 Obrigações (lista operacional)
 
 - centro de execução operacional detalhada
-- acompanhamento completo por cliente, competência e responsável
+- acompanhamento completo por cliente, competência e Responsável pela Execução
 
 ---
 
 ### 3.3 Calendário
 
 - visualização temporal para planejamento
+- destacar Responsável pela Execução no contexto operacional
 - não substitui dashboard nem lista operacional
 
 ---
@@ -99,7 +100,8 @@ Calculado pelo sistema por data atual vs prazo:
 
 - card de filtros com comportamento rápido
 - tabelas compactas e clicáveis
-- ações de linha no menu “...”
+- ações de linha no menu “...” (padrão geral)
+- exceção oficial: Dashboard e Calendário podem abrir drawer/contexto por clique direto para reduzir cliques
 - paginação obrigatória nas listagens principais
 
 ---
@@ -129,12 +131,16 @@ Calculado pelo sistema por data atual vs prazo:
 
 ## 10. Nomenclatura padronizada
 
+Comentário de alinhamento: evitar uso de “responsável” isolado.
+
 - usar “cliente” para entidade central
 - usar “tipo de obrigação” para configuração/modelo
 - usar “obrigação” para instância operacional por cliente + competência
 - usar “indicador de prazo” para estado automático
 - usar “status de execução” para estado manual
 - usar “auditoria” como trilha oficial; “histórico” como forma de exibição
+- usar “Responsável da Carteira” para cliente
+- usar “Responsável pela Execução” para obrigação/tarefa
 
 ---
 

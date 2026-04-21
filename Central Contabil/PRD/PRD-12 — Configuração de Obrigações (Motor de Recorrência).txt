@@ -162,9 +162,11 @@ Para cada cliente:
 - prazo interno
 - prazo fiscal
 - status inicial: pendente
-- responsável (opcional ou padrão)
+- Responsável pela Execução (inicial, opcional ou padrão herdado da carteira)
 
 ---
+
+Comentário de alinhamento: o motor de recorrência pode herdar o Responsável da Carteira como padrão inicial de execução, sem acoplar cliente e obrigação como a mesma responsabilidade.
 
 ## 6. Execução (Integração com Tela Atual)
 

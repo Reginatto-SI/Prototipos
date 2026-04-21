@@ -28,6 +28,7 @@ Todos os dados operacionais relevantes devem estar vinculados ao cliente direta 
 
 Office
 ├── Usuários
+├── Carteiras de Clientes
 ├── Clientes (HUB)
 │   ├── Dados Gerais
 │   ├── Acessos
@@ -39,6 +40,8 @@ Office
 ├── Obrigações Operacionais (execução)
 ├── Notificações
 └── Auditoria
+
+Comentário de alinhamento: hierarquia oficial do produto = Escritório → Usuários → Carteira → Cliente → Obrigações.
 
 ---
 
@@ -71,7 +74,7 @@ Office
 - tributacao (regime tributário)
 - nome
 - documento
-- assigned_user_id
+- assigned_user_id (Responsável da Carteira)
 
 Regra:
 - PF/PJ, perfil e tributação são campos distintos e complementares.
@@ -133,10 +136,11 @@ Campos conceituais:
 - prazo_fiscal
 - prazo_interno
 - status_execucao
-- responsavel_id
+- responsavel_execucao_id (Responsável pela Execução)
 
 Regra:
 - evitar duplicidade por `cliente_id + tipo_obrigacao_id + competencia`.
+- redistribuição da obrigação altera apenas o Responsável pela Execução, sem alterar o Responsável da Carteira do cliente.
 
 ---
 
@@ -190,6 +194,8 @@ Regra:
 ---
 
 ## 9. Regras Transversais de Consistência
+
+Comentário de alinhamento: separação cliente/carteira/execução é obrigatória para evitar ambiguidade funcional entre módulos.
 
 - AppLayout obrigatório em todos os módulos.
 - Navegação operacional prioriza drawer/contexto, evitando quebra de fluxo.

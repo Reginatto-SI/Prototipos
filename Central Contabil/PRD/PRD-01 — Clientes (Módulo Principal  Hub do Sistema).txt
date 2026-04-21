@@ -59,7 +59,7 @@ Cada cliente representa uma entidade contábil:
 
 ### 3.3 Outros campos
 
-- assigned_user_id
+- assigned_user_id (Responsável da Carteira)
 - created_at
 - updated_at
 
@@ -75,9 +75,12 @@ Cada cliente representa uma entidade contábil:
 
 ---
 
-### 4.2 Responsável
+### 4.2 Responsável da Carteira
 - define organização da carteira
+- representa o dono de gestão contínua do cliente
 - não limita acesso (permissões tratadas no módulo de usuários)
+
+Comentário de alinhamento: no módulo de Clientes, “responsável” sempre significa “Responsável da Carteira”, e não o executor de obrigações.
 
 ---
 
@@ -92,7 +95,7 @@ Tabela com colunas:
 - CPF/CNPJ
 - Perfil
 - Tributação
-- Responsável
+- Responsável da Carteira
 - Ações (menu “…")
 
 ---
@@ -114,7 +117,7 @@ Tabela com colunas:
 
 - Nome / Razão Social
 - CPF/CNPJ
-- Responsável
+- Responsável da Carteira
 - Perfil
 - Tributação
 
@@ -198,7 +201,7 @@ Campos:
 - Inscrição estadual (com cópia)
 - Perfil
 - Tributação
-- Responsável
+- Responsável da Carteira
 
 ---
 
@@ -213,6 +216,7 @@ Campos:
 - nome
 - vencimento
 - status
+- Responsável pela Execução
 - indicador de prazo:
   - vence hoje
   - atrasado

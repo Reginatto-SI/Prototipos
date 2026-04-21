@@ -52,6 +52,16 @@ A proposta é funcionar como uma “plataforma operacional contábil”, sendo o
 
 ## 3. Arquitetura Conceitual
 
+### 3.0 Hierarquia funcional oficial (alinhamento final)
+- Escritório contábil (entidade raiz)
+- Usuários do escritório
+- Carteira de clientes por usuário
+- Cliente com Responsável da Carteira
+- Obrigações/Tarefas com Responsável pela Execução
+
+Comentário de alinhamento: “Responsável da Carteira” pertence ao cliente; “Responsável pela Execução” pertence à obrigação/tarefa.
+
+
 ### 3.1 Multi-tenant
 
 O sistema é multi-tenant por escritório contábil.
@@ -143,7 +153,7 @@ Características:
 - geração por cliente + competência
 - controle por status
 - prazos internos e fiscais
-- responsável por execução
+- Responsável pela Execução (obrigação/tarefa)
 
 ---
 
@@ -152,7 +162,7 @@ Características:
 Responsável por:
 
 - gerar obrigações automaticamente
-- definir responsáveis e prazos
+- definir Responsável pela Execução (padrão inicial por carteira) e prazos
 - atualizar indicadores de atraso
 
 ---
@@ -227,7 +237,8 @@ Responsável por:
 
 ### 5.2 Interações
 - ações principais visíveis
-- ações secundárias via menu “...”
+- ações secundárias via menu “...” (padrão geral)
+- exceção oficial: em Dashboard e Calendário, clique direto pode abrir drawer/contexto para reduzir cliques sem quebrar padrão
 
 ---
 

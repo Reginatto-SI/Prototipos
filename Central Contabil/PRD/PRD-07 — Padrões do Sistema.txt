@@ -59,6 +59,9 @@ Regra crítica:
   - excluir
   - outros
 
+Exceção oficial documentada:
+- em Dashboard e Calendário, clique direto em linha/dia pode abrir drawer/contexto para reduzir cliques, mantendo o menu “...” para ações secundárias.
+
 ---
 
 ### 3.3 Paginação
@@ -191,6 +194,9 @@ Todas as entidades devem possuir:
 
 - snake_case obrigatório
 - nomes claros
+- “responsável” deve ser explícito por contexto:
+  - Responsável da Carteira (cliente)
+  - Responsável pela Execução (obrigação/tarefa)
 
 ---
 

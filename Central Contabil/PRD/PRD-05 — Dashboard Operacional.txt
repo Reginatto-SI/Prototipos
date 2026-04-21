@@ -65,6 +65,8 @@ Exibir:
 
 Essa é a área principal de triagem operacional do dashboard (não substitui a execução detalhada da tela de Obrigações).
 
+Comentário de alinhamento: Dashboard prioriza triagem e ação rápida; execução detalhada permanece no módulo de Obrigações.
+
 ---
 
 ### Conteúdo
@@ -74,11 +76,13 @@ Lista de obrigações com:
 - Cliente
 - Obrigação
 - Competência
-- Responsável
+- Responsável pela Execução
 - Prazo interno
 - Prazo fiscal
 - Status
 - Indicador visual de prazo
+
+Comentário de alinhamento: no Dashboard, “Responsável pela Execução” é sempre o responsável operacional da obrigação (não o Responsável da Carteira do cliente).
 
 ---
 
@@ -105,6 +109,8 @@ A lista SEMPRE deve abrir já ordenada por prioridade.
 ### 4.1 Clique na linha
 
 👉 abre o cliente em drawer lateral
+
+Comentário de alinhamento: exceção oficial ao uso exclusivo do menu “...”, pois reduz cliques sem quebrar o padrão global.
 
 - não navegar para outra página
 - foco em ação rápida
@@ -136,7 +142,7 @@ em menos de 5 segundos
 ## 5. Filtros Rápidos
 
 - Status
-- Responsável
+- Responsável pela Execução
 - Competência
 - Tipo de obrigação
 - Cliente
