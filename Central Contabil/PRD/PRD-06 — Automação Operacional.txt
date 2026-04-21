@@ -51,6 +51,7 @@ A automação atua em:
 Para cada cliente ativo:
 
 1. identificar:
+   - tipo_pessoa (PF/PJ)
    - perfil
    - tributação
 
@@ -66,7 +67,7 @@ Para cada cliente ativo:
 
 - não gerar duplicidade (cliente + obrigação + competência)
 - gerar apenas obrigações ativas
-- respeitar aplicabilidade
+- respeitar aplicabilidade por tipo_pessoa, perfil e tributação
 
 ---
 

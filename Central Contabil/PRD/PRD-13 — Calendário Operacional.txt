@@ -146,7 +146,8 @@ Lista de obrigações daquele dia contendo:
 - Competência
 - Prazo interno
 - Prazo fiscal
-- Status
+- Status de execução (manual)
+- Indicador de prazo (automático)
 
 ---
 

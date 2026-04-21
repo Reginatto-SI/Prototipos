@@ -85,30 +85,37 @@ O sistema deve suportar:
 
 ---
 
-### 3.4 Perfil Operacional/Fiscal do Cliente
+### 3.4 Perfil e Tributação do Cliente
 
-Além do tipo de cliente (PF/PJ), o sistema deve suportar um perfil operacional/fiscal para permitir regras de automação, geração de obrigações e filtros de gestão.
+Além do tipo de cliente (PF/PJ), o sistema deve suportar dois campos distintos para automação, geração de obrigações e filtros de gestão:
+
+- perfil do cliente (classificação operacional)
+- tributação (regime tributário)
 
 Perfis iniciais suportados:
+
+- Empresa
+- Produtor Rural
+- Cooperativa
+- Outros
+
+Tributações iniciais suportadas:
 
 - Lucro Real
 - Lucro Presumido
 - Simples Nacional
 - MEI
-- Produtor Rural
 
 #### Regras:
-- o perfil operacional/fiscal não substitui PF/PJ
-- PF/PJ define a natureza do cliente
-- o perfil operacional/fiscal define comportamento das obrigações e automações
-- esse campo deve ser usado como base para:
-  - geração automática de obrigações
-  - aplicabilidade de regras
-  - filtros operacionais
-  - futuras automações do sistema
+- perfil do cliente não substitui PF/PJ
+- tributação não substitui perfil do cliente
+- PF/PJ define a natureza da pessoa
+- perfil define classificação operacional
+- tributação define regras fiscais e aplicabilidade de obrigações
+- automações e filtros devem permitir uso combinado desses três eixos (PF/PJ + perfil + tributação)
 
 #### Observação:
-- a lista de perfis poderá ser expandida no futuro, mas esses são os perfis oficiais iniciais do sistema
+- as listas poderão ser expandidas no futuro, mas estes são os valores oficiais iniciais do sistema
 
 ## 4. Estrutura Geral do Sistema
 
