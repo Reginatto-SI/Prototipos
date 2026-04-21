@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Central Contábil | Calendário Operacional</title>
+    <style>
+      :root {
+        --bg: #f4f6f8;
+        --surface: #ffffff;
+        --surface-soft: #f8fafc;
+        --text: #14171d;
+        --text-soft: #6b7280;
+        --line: #dfe3e8;
+        --line-strong: #ccd3db;
+        --brand: #182849;
+        --brand-hover: #111e36;
+        --brand-soft: rgba(24, 40, 73, 0.1);
+        --danger: #ef4343;
+        --warning: #f59e0b;
+        --success: #21c45d;
+        --orange: #f97415;
+        --focus-ring: rgba(24, 40, 73, 0.2);
+        --shadow: 0 14px 34px rgba(24, 40, 73, 0.08);
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Inter, "Segoe UI", Roboto, system-ui, sans-serif;
+        color: var(--text);
+        background: var(--bg);
+      }
+
+      .app { min-height: 100vh; display: grid; grid-template-columns: var(--sidebar-width, 264px) 1fr; }
+      .sidebar {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        background: linear-gradient(180deg, var(--brand) 0%, var(--brand-hover) 100%);
+        color: rgba(255, 255, 255, 0.86);
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 22px 16px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; padding: 8px 10px; position: relative; }
+      .brand-mark {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.14);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        display: inline-grid;
+        place-items: center;
+        font-size: 14px;
+        font-weight: 700;
+        color: #eef5ff;
+      }
+      .brand strong { font-size: 15px; display: block; color: #f3f8ff; }
+      .brand small { color: #a9b8cf; font-size: 11px; }
+      .nav-section { margin-bottom: 16px; }
+      .nav-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: #9fb0ca; padding: 0 10px 6px; }
+      .nav-group { display: grid; gap: 4px; }
+      .nav-item {
+        border: 0;
+        text-align: left;
+        background: transparent;
+        color: inherit;
+        padding: 11px 12px;
+        border-radius: 10px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .nav-item.active { background: rgba(255, 255, 255, 0.16); color: #fff; font-weight: 600; box-shadow: inset 2px 0 0 #facc14; }
+      .nav-item svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 1.9; fill: none; }
+      .sidebar-footer { border-top: 1px solid rgba(255, 255, 255, 0.14); padding: 12px 10px 4px; }
+      .sidebar-footer small { display: block; font-size: 11px; color: #a9b8cf; }
+      .sidebar-footer strong { font-size: 13px; color: #eef3fb; }
+
+      .main { min-width: 0; display: grid; grid-template-rows: 70px 1fr; }
+      .topbar {
+        border-bottom: 1px solid var(--line);
+        background: var(--surface);
+        padding: 0 26px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+      }
+      .topbar-left, .topbar-right { display: flex; align-items: center; gap: 12px; }
+      .search {
+        width: min(360px, 48vw);
+        height: 38px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: var(--surface-soft);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0 10px;
+      }
+      .search input { width: 100%; border: 0; background: transparent; color: var(--text); outline: none; }
+      .search svg { width: 15px; height: 15px; stroke: #5c6d86; stroke-width: 1.8; fill: none; }
+      .pill {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--brand-soft);
+        color: var(--brand);
+        padding: 6px 10px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 1px solid var(--line-strong);
+        background: #dbe5f3;
+        color: #274264;
+        display: inline-grid;
+        place-items: center;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .container { width: min(1220px, calc(100% - 44px)); margin: 20px auto 30px; display: grid; gap: 14px; }
+      .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); padding: 16px; }
+
+      .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 18px;
+      }
+      h1 { margin: 0; font-size: 31px; letter-spacing: -0.5px; }
+      .subtitle { margin-top: 8px; color: var(--text-soft); font-size: 14px; line-height: 1.4; }
+
+      .month-nav { display: flex; align-items: center; gap: 10px; }
+      .month-label {
+        min-width: 210px;
+        text-align: center;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 9px 12px;
+        font-weight: 700;
+        color: #1a2d48;
+        background: var(--surface-soft);
+      }
+
+      button, select, input { font: inherit; }
+      .btn {
+        border-radius: 10px;
+        border: 1px solid transparent;
+        padding: 9px 13px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .btn-secondary { border-color: var(--line); background: var(--surface); color: var(--text); }
+      .btn-secondary:hover { border-color: var(--line-strong); background: var(--surface-soft); }
+      .btn:focus-visible, .day-cell:focus-visible, .drawer-close:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--focus-ring); }
+
+      .filter-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+      .filters-grid { display: grid; grid-template-columns: repeat(5, minmax(120px, 1fr)); gap: 12px; }
+      .field { display: grid; gap: 6px; }
+      .field label { font-size: 12px; color: #50607a; font-weight: 600; }
+      .input, .select {
+        height: 39px;
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 0 12px;
+        background: var(--surface-soft);
+        color: var(--text);
+        outline: none;
+      }
+
+      .weekdays,
+      .calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; }
+      .weekdays { margin-bottom: 10px; }
+      .weekday {
+        padding: 7px 10px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #4f5b6b;
+      }
+
+      /* Estrutura principal do calendário mensal seguindo agregação do PRD-13. */
+      .day-cell {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #fff;
+        min-height: 112px;
+        padding: 9px;
+        text-align: left;
+        display: grid;
+        gap: 6px;
+        align-content: start;
+        position: relative;
+      }
+      .day-cell.outside-month { background: #f8fafd; border-style: dashed; color: #9aa4b4; pointer-events: none; }
+      .day-cell.has-items { cursor: pointer; }
+      /* Lógica visual de destaque: atraso (vermelho) > vence hoje (laranja) > hoje (azul). */
+      .day-cell.today { border-color: rgba(24, 40, 73, 0.72); box-shadow: inset 0 0 0 2px var(--brand-soft); }
+      .day-cell.critical { border-color: rgba(239, 67, 67, 0.84); background: rgba(239, 67, 67, 0.07); box-shadow: inset 0 0 0 1px rgba(239, 67, 67, 0.36); }
+      .day-cell.attention { border-color: rgba(249, 116, 21, 0.76); background: rgba(249, 116, 21, 0.06); box-shadow: inset 0 0 0 1px rgba(249, 116, 21, 0.24); }
+      .day-cell.high-volume { box-shadow: inset 0 0 0 1px rgba(24, 40, 73, 0.15); }
+      .day-head { display: flex; align-items: center; justify-content: space-between; }
+      .day-num { font-size: 15px; font-weight: 700; color: #1a2d48; }
+      .day-total { font-size: 11px; color: var(--text-soft); font-weight: 600; }
+      .kpis { display: flex; flex-wrap: wrap; gap: 4px; }
+      .kpi {
+        font-size: 10.5px;
+        font-weight: 600;
+        border-radius: 7px;
+        padding: 2px 7px;
+        width: fit-content;
+      }
+      .kpi.late { background: var(--danger); color: #fff; }
+      .kpi.today-due { background: var(--orange); color: #fff; }
+      .kpi.upcoming { background: var(--warning); color: #1f2937; }
+      .kpi.ok { background: var(--success); color: #fff; }
+      .day-empty { color: #95a1b2; font-size: 12px; }
+
+      .drawer-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(8, 20, 36, 0.36);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+        z-index: 40;
+      }
+      .drawer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100vh;
+        /* Drawer ampliado para leitura operacional da grid; ajustar aqui se colunas mudarem no futuro. */
+        width: min(900px, 94vw);
+        background: #ffffff;
+        border-left: 1px solid var(--line);
+        box-shadow: -14px 0 28px rgba(10, 22, 42, 0.16);
+        transform: translateX(100%);
+        transition: transform 0.24s ease;
+        z-index: 41;
+        display: grid;
+        grid-template-rows: auto 1fr;
+      }
+      .drawer.open { transform: translateX(0); }
+      .drawer-overlay.open { opacity: 1; pointer-events: auto; }
+      .drawer-header { border-bottom: 1px solid var(--line); padding: 16px 16px 12px; position: relative; background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%); }
+      .drawer-title { margin: 0 0 4px; font-size: 20px; line-height: 1.25; }
+      .drawer-subtitle { color: var(--text-soft); font-size: 12.5px; }
+      .drawer-close {
+        position: absolute;
+        right: 14px;
+        top: 14px;
+        width: 30px;
+        height: 30px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        color: #43546b;
+        cursor: pointer;
+      }
+      .drawer-summary {
+        margin-top: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .drawer-content { overflow: auto; padding: 12px 16px 18px; display: grid; gap: 10px; }
+      /* Drawer convertido para grade compacta para escalar com muitos clientes no mesmo dia. */
+      .drawer-grid-wrap {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: #fff;
+        overflow: auto;
+      }
+      .drawer-grid {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: auto;
+      }
+      .drawer-grid th,
+      .drawer-grid td {
+        border-bottom: 1px solid #e9edf4;
+        padding: 8px 7px;
+        font-size: 11.5px;
+        text-align: left;
+        vertical-align: top;
+      }
+      .drawer-grid th {
+        background: var(--surface-soft);
+        color: #4f5b6b;
+        font-size: 10.5px;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+      }
+      .drawer-grid tbody tr {
+        cursor: pointer;
+        transition: background 0.16s ease;
+      }
+      .drawer-grid tbody tr:hover {
+        background: rgba(24, 40, 73, 0.06);
+      }
+      .drawer-grid tr:last-child td { border-bottom: 0; }
+      .col-client { width: 19%; }
+      .col-obligation { width: 19%; }
+      .col-competence { width: 10%; }
+      .col-internal-due { width: 12%; }
+      .col-fiscal-due { width: 12%; }
+      .col-execution { width: 12%; }
+      .col-deadline { width: 11%; }
+      .col-actions { width: 4%; text-align: right; }
+      .row-main {
+        font-weight: 600;
+        color: #1a2d48;
+        display: block;
+        line-height: 1.3;
+        white-space: normal;
+        word-break: break-word;
+      }
+      .row-sub {
+        margin-top: 2px;
+        font-size: 11px;
+        color: var(--text-soft);
+        display: block;
+      }
+      .action-cell {
+        position: relative;
+        cursor: default;
+      }
+      .action-dot {
+        width: 24px;
+        height: 24px;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        background: #fff;
+        color: #415169;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .action-menu {
+        position: absolute;
+        right: 4px;
+        top: 30px;
+        width: 146px;
+        border: 1px solid var(--line);
+        border-radius: 9px;
+        box-shadow: 0 16px 26px rgba(12, 24, 43, 0.14);
+        background: #fff;
+        padding: 5px;
+        display: none;
+        z-index: 20;
+      }
+      .action-menu.open { display: block; }
+      .action-menu button {
+        width: 100%;
+        border: 0;
+        background: transparent;
+        text-align: left;
+        border-radius: 7px;
+        padding: 7px;
+        color: #2c3f5a;
+        cursor: pointer;
+        font-size: 12px;
+      }
+      .action-menu button:hover { background: var(--brand-soft); }
+      .status { display: inline-flex; border-radius: 999px; padding: 3px 9px; font-size: 11px; font-weight: 700; color: #fff; }
+      .status.atrasado { background: var(--danger); }
+      .status.vence-hoje { background: var(--orange); }
+      .status.proxima { background: var(--warning); color: #1f2937; }
+      .status.em-dia { background: var(--success); }
+
+      .detail-modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(8, 20, 36, 0.42);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 55;
+      }
+      .detail-modal-overlay.open { display: flex; }
+      .detail-modal {
+        width: min(760px, 92vw);
+        max-height: 88vh;
+        overflow: auto;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 24px 34px rgba(9, 20, 35, 0.24);
+      }
+      .detail-modal-header {
+        border-bottom: 1px solid var(--line);
+        padding: 14px 16px;
+        position: sticky;
+        top: 0;
+        background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+        z-index: 2;
+      }
+      .detail-modal-title { margin: 0; font-size: 18px; color: #1a2d48; }
+      .detail-modal-subtitle { margin: 4px 0 0; color: var(--text-soft); font-size: 12px; }
+      .detail-modal-close {
+        position: absolute;
+        right: 12px;
+        top: 12px;
+        width: 30px;
+        height: 30px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        color: #43546b;
+        cursor: pointer;
+      }
+      .detail-modal-content { padding: 14px 16px 12px; display: grid; gap: 10px; }
+      .detail-block { border: 1px solid var(--line); border-radius: 10px; background: #fbfdff; padding: 10px; }
+      .detail-block h4 { margin: 0 0 8px; font-size: 12px; color: #405370; text-transform: uppercase; letter-spacing: 0.04em; }
+      .detail-block.responsibility {
+        border-color: rgba(24, 40, 73, 0.24);
+        background: rgba(24, 40, 73, 0.05);
+      }
+      .detail-grid { display: grid; grid-template-columns: repeat(2, minmax(140px, 1fr)); gap: 8px; }
+      .detail-item small { display: block; color: var(--text-soft); font-size: 10.5px; }
+      .detail-item strong { font-size: 12.5px; color: #1f304a; }
+      .timeline { margin: 0; padding: 0 0 0 18px; display: grid; gap: 6px; }
+      .timeline li { font-size: 12px; color: #324861; }
+      .detail-footer {
+        border-top: 1px solid var(--line);
+        padding: 11px 16px 14px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        background: #fff;
+      }
+
+      @media (max-width: 1100px) {
+        .filters-grid { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
+      }
+      @media (max-width: 900px) {
+        .app { grid-template-columns: 1fr; }
+        .sidebar { display: none; }
+        .container { width: min(1200px, calc(100% - 20px)); }
+        .page-header { flex-direction: column; }
+        .weekdays, .calendar-grid { gap: 6px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div>
+          <div class="brand">
+            <div class="brand-mark">C</div>
+            <div>
+              <strong>Central Contábil</strong>
+              <small>Operação Contábil Integrada</small>
+            </div>
+          </div>
+          <div class="nav-section">
+            <div class="nav-title">Operação</div>
+            <div class="nav-group">
+              <button class="nav-item" type="button"><svg viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg><span>Dashboard</span></button>
+              <button class="nav-item" type="button"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Obrigações</span></button>
+              <button class="nav-item active" type="button"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg><span>Calendário Operacional</span></button>
+            </div>
+          </div>
+        </div>
+        <div class="sidebar-footer">
+          <small>Ambiente piloto</small>
+          <strong>Protótipo HTML</strong>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div class="topbar-left">
+            <div class="search">
+              <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+              <input type="search" placeholder="Buscar cliente ou obrigação" />
+            </div>
+            <span class="pill">Calendário Operacional</span>
+          </div>
+          <div class="topbar-right"><div class="avatar">CC</div></div>
+        </header>
+
+        <div class="container">
+          <section class="page-header">
+            <div>
+              <h1>Calendário Operacional</h1>
+              <p class="subtitle">Visão mensal para planejar carga operacional, identificar dias críticos e priorizar prazos internos.</p>
+            </div>
+            <div class="month-nav">
+              <button class="btn btn-secondary" id="prev-month" type="button">Mês anterior</button>
+              <div class="month-label" id="month-label">Abril de 2026</div>
+              <button class="btn btn-secondary" id="next-month" type="button">Próximo mês</button>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="filter-header">
+              <strong>Filtrar por:</strong>
+              <button class="btn btn-secondary" type="button">Limpar filtros</button>
+            </div>
+            <div class="filters-grid">
+              <div class="field"><label>Responsável</label><select class="select"><option>Todos</option><option>Equipe Fiscal A</option><option>Equipe Fiscal B</option></select></div>
+              <div class="field"><label>Cliente</label><select class="select"><option>Todos</option><option>Comercial Sol Nascente</option><option>Grupo Vértice</option></select></div>
+              <div class="field"><label>Tipo de obrigação</label><select class="select"><option>Todos</option><option>Apuração mensal</option><option>Declaração acessória</option></select></div>
+              <div class="field"><label>Status</label><select class="select"><option>Todos</option><option>Atrasado</option><option>Vence hoje</option><option>Próximo</option><option>Em dia</option></select></div>
+              <div class="field"><label>Busca rápida</label><input class="input" type="text" placeholder="Cliente ou obrigação" /></div>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="weekdays" id="weekdays"></div>
+            <div class="calendar-grid" id="calendar-grid"></div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <div class="drawer-overlay" id="drawer-overlay"></div>
+    <aside class="drawer" id="day-drawer" aria-hidden="true">
+      <header class="drawer-header">
+        <h2 class="drawer-title" id="drawer-title">Obrigações do dia</h2>
+        <p class="drawer-subtitle" id="drawer-subtitle">Clique em um dia com dados para visualizar.</p>
+        <div class="drawer-summary" id="drawer-summary"></div>
+        <button class="drawer-close" id="drawer-close" type="button" aria-label="Fechar">✕</button>
+      </header>
+      <div class="drawer-content" id="drawer-content"></div>
+    </aside>
+
+    <div class="detail-modal-overlay" id="detail-modal-overlay" aria-hidden="true">
+      <section class="detail-modal" role="dialog" aria-modal="true" aria-labelledby="detail-modal-title">
+        <header class="detail-modal-header">
+          <h3 class="detail-modal-title" id="detail-modal-title">Detalhes da obrigação</h3>
+          <p class="detail-modal-subtitle" id="detail-modal-subtitle">Cliente • Competência</p>
+          <button class="detail-modal-close" id="detail-modal-close" type="button" aria-label="Fechar">✕</button>
+        </header>
+        <div class="detail-modal-content" id="detail-modal-content"></div>
+        <footer class="detail-footer">
+          <button class="btn btn-secondary" type="button">Alterar status</button>
+          <button class="btn btn-secondary" type="button">Abrir cliente</button>
+          <button class="btn btn-secondary" id="detail-modal-footer-close" type="button">Fechar</button>
+        </footer>
+      </section>
+    </div>
+
+    <script>
+      const weekdays = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+      const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+
+      // Mocks da versão piloto: estrutura separa indicador de prazo (automático) e status de execução (manual).
+      const monthsData = [
+        {
+          year: 2026,
+          month: 3,
+          days: {
+            2: buildDay(4, "03/2026", 1, 0, 1, 2),
+            4: buildDay(9, "03/2026", 2, 2, 3, 2),
+            8: buildDay(3, "03/2026", 0, 1, 1, 1),
+            10: buildDay(1, "03/2026", 0, 0, 1, 0),
+            15: buildDay(12, "03/2026", 4, 3, 3, 2),
+            18: buildDay(6, "03/2026", 0, 2, 2, 2),
+            21: buildDay(7, "03/2026", 2, 1, 2, 2),
+            24: buildDay(2, "03/2026", 0, 0, 1, 1),
+            27: buildDay(10, "03/2026", 3, 2, 3, 2),
+            30: buildDay(5, "03/2026", 0, 1, 2, 2)
+          }
+        },
+        {
+          year: 2026,
+          month: 4,
+          days: {
+            1: buildDay(5, "04/2026", 1, 1, 1, 2),
+            5: buildDay(2, "04/2026", 0, 1, 0, 1),
+            9: buildDay(8, "04/2026", 2, 2, 2, 2),
+            12: buildDay(1, "04/2026", 0, 0, 0, 1),
+            16: buildDay(11, "04/2026", 3, 3, 3, 2),
+            20: buildDay(4, "04/2026", 0, 1, 1, 2),
+            22: buildDay(6, "04/2026", 1, 1, 2, 2),
+            25: buildDay(3, "04/2026", 0, 0, 2, 1),
+            29: buildDay(9, "04/2026", 2, 2, 3, 2)
+          }
+        }
+      ];
+
+      function buildDay(total, competence, late, dueToday, upcoming, onTime) {
+        const obligations = createObligations(total, competence, late, dueToday, upcoming, onTime);
+        return {
+          obligations,
+          summary: aggregateDay(obligations)
+        };
+      }
+
+      function createObligations(total, competence, late, dueToday, upcoming, onTime) {
+        const deadlineIndicators = [
+          ...Array(late).fill("atrasado"),
+          ...Array(dueToday).fill("vence-hoje"),
+          ...Array(upcoming).fill("proxima"),
+          ...Array(onTime).fill("em-dia")
+        ];
+        const executionStatuses = ["nao-iniciada", "em-andamento", "em-revisao", "concluida", "nao-se-aplica"];
+
+        return Array.from({ length: total }, (_, i) => {
+          const deadlineIndicator = deadlineIndicators[i] || "em-dia";
+          const executionStatus = executionStatuses[i % executionStatuses.length];
+          const origin = i % 3 === 0 ? "Automática" : "Manual";
+          const assignmentOrigin = ["Herdado do cliente", "Definição manual", "Distribuição automática", "Reatribuição operacional"][i % 4];
+          const notes = i % 4 === 0 ? "Aguardando retorno do cliente para validar documento de suporte." : "";
+          return {
+            clientName: ["Comercial Sol Nascente", "Grupo Vértice", "Matriz Orion", "Logística Aurora"][i % 4],
+            obligationName: ["DCTFWeb", "EFD-Contribuições", "SPED Fiscal", "Apuração ICMS", "GIA Estadual"][i % 5],
+            competence,
+            internalDue: `${String((i % 27) + 1).padStart(2, "0")}/04/2026`,
+            fiscalDue: `${String(((i + 2) % 27) + 1).padStart(2, "0")}/04/2026`,
+            assignee: ["Equipe Fiscal A", "Equipe Fiscal B", "Equipe Contábil", "Equipe Compliance"][i % 4],
+            // Campos separados para evitar mistura de conceito entre execução manual e indicador de prazo automático.
+            executionStatus,
+            deadlineIndicator,
+            origin,
+            assignmentOrigin,
+            notes,
+            history: [
+              `Sistema gerou obrigação (${origin.toLowerCase()}).`,
+              `${["João", "Maria", "Ana", "Carlos"][i % 4]} alterou status para "${formatExecutionStatus(executionStatus)}".`,
+              executionStatus === "concluida" ? "Tarefa concluída e validada pelo responsável." : "Item segue no fluxo operacional."
+            ],
+            completion: executionStatus === "concluida"
+              ? (i % 2 === 0 ? { proof: "Comprovante enviado via protocolo interno #CC-2026-0" + (i + 10) } : { justification: "Concluída com ajuste manual registrado no fechamento do dia." })
+              : null
+          };
+        });
+      }
+
+      // Agregação por dia: deriva total e status de prazo a partir da lista de obrigações.
+      function aggregateDay(obligations) {
+        return obligations.reduce((acc, item) => {
+          acc.total += 1;
+          if (item.deadlineIndicator === "atrasado") acc.late += 1;
+          if (item.deadlineIndicator === "vence-hoje") acc.dueToday += 1;
+          if (item.deadlineIndicator === "proxima") acc.upcoming += 1;
+          if (item.deadlineIndicator === "em-dia") acc.onTime += 1;
+          return acc;
+        }, { total: 0, late: 0, dueToday: 0, upcoming: 0, onTime: 0 });
+      }
+
+      // Controle de renderização da estrutura do calendário mensal.
+      const weekdaysEl = document.getElementById("weekdays");
+      const calendarGrid = document.getElementById("calendar-grid");
+      const monthLabel = document.getElementById("month-label");
+      const prevMonthBtn = document.getElementById("prev-month");
+      const nextMonthBtn = document.getElementById("next-month");
+      const drawer = document.getElementById("day-drawer");
+      const drawerOverlay = document.getElementById("drawer-overlay");
+      const drawerTitle = document.getElementById("drawer-title");
+      const drawerSubtitle = document.getElementById("drawer-subtitle");
+      const drawerSummary = document.getElementById("drawer-summary");
+      const drawerContent = document.getElementById("drawer-content");
+      const drawerClose = document.getElementById("drawer-close");
+      const detailModalOverlay = document.getElementById("detail-modal-overlay");
+      const detailModalTitle = document.getElementById("detail-modal-title");
+      const detailModalSubtitle = document.getElementById("detail-modal-subtitle");
+      const detailModalContent = document.getElementById("detail-modal-content");
+      const detailModalClose = document.getElementById("detail-modal-close");
+      const detailModalFooterClose = document.getElementById("detail-modal-footer-close");
+
+      let monthIndex = 0;
+      let currentDrawerItems = [];
+      const today = new Date(2026, 3, 21); // mock fixo para revisão visual do protótipo.
+
+      weekdaysEl.innerHTML = weekdays.map((day) => `<div class="weekday">${day}</div>`).join("");
+
+      // Estrutura de mês/calendário: grade fixa 7xN com dias válidos e slots fora do mês para manter alinhamento.
+      function renderMonth() {
+        const current = monthsData[monthIndex];
+        monthLabel.textContent = `${monthNames[current.month]} de ${current.year}`;
+
+        const firstDay = new Date(current.year, current.month, 1);
+        const daysInMonth = new Date(current.year, current.month + 1, 0).getDate();
+        const leadingEmpty = firstDay.getDay();
+
+        const totalCells = Math.ceil((leadingEmpty + daysInMonth) / 7) * 7;
+        const cells = [];
+
+        for (let index = 0; index < totalCells; index += 1) {
+          const dayNumber = index - leadingEmpty + 1;
+          if (dayNumber < 1 || dayNumber > daysInMonth) {
+            cells.push(`<div class="day-cell outside-month" aria-hidden="true"></div>`);
+            continue;
+          }
+
+          const dayData = current.days[dayNumber];
+          const isToday = today.getFullYear() === current.year && today.getMonth() === current.month && today.getDate() === dayNumber;
+          const hasItems = Boolean(dayData);
+          const isCritical = hasItems && dayData.summary.late > 0;
+          const isAttention = hasItems && !isCritical && dayData.summary.dueToday > 0;
+          const isHighVolume = hasItems && dayData.summary.total >= 8;
+
+          const classList = ["day-cell", hasItems ? "has-items" : "", isToday ? "today" : "", isCritical ? "critical" : "", isAttention ? "attention" : "", isHighVolume ? "high-volume" : ""].join(" ");
+
+          cells.push(`
+            <button type="button" class="${classList}" data-day="${dayNumber}" ${hasItems ? "" : "disabled"}>
+              <div class="day-head">
+                <span class="day-num">${dayNumber}</span>
+                ${hasItems ? `<span class="day-total">${dayData.summary.total} obr.</span>` : ""}
+              </div>
+              ${hasItems ? `
+                <div class="kpis">
+                  ${dayData.summary.late ? `<span class="kpi late">${dayData.summary.late} atrasadas</span>` : ""}
+                  ${dayData.summary.dueToday ? `<span class="kpi today-due">${dayData.summary.dueToday} vencem hoje</span>` : ""}
+                  ${dayData.summary.upcoming ? `<span class="kpi upcoming">${dayData.summary.upcoming} próximas</span>` : ""}
+                  ${!dayData.summary.late && !dayData.summary.dueToday && dayData.summary.onTime ? `<span class="kpi ok">${dayData.summary.onTime} em dia</span>` : ""}
+                </div>
+              ` : `<span class="day-empty">Sem obrigações</span>`}
+            </button>
+          `);
+        }
+
+        calendarGrid.innerHTML = cells.join("");
+      }
+
+      // Preenchimento do drawer em tabela compacta (futuro: substituir mocks por payload real do backend).
+      function openDrawer(day, dayData) {
+        drawerTitle.textContent = `Dia ${day} • ${monthLabel.textContent}`;
+        drawerSubtitle.textContent = `${dayData.summary.total} obrigações planejadas para o dia`;
+        drawerSummary.innerHTML = `
+          ${dayData.summary.late ? `<span class="status atrasado">${dayData.summary.late} atrasadas</span>` : ""}
+          ${dayData.summary.dueToday ? `<span class="status vence-hoje">${dayData.summary.dueToday} vencem hoje</span>` : ""}
+          ${dayData.summary.upcoming ? `<span class="status proxima">${dayData.summary.upcoming} próximas</span>` : ""}
+          ${dayData.summary.onTime ? `<span class="status em-dia">${dayData.summary.onTime} em dia</span>` : ""}
+        `;
+
+        const ordered = [...dayData.obligations].sort((a, b) => {
+          const weight = { atrasado: 1, "vence-hoje": 2, proxima: 3, "em-dia": 4 };
+          return weight[a.deadlineIndicator] - weight[b.deadlineIndicator];
+        });
+        currentDrawerItems = ordered;
+
+        // Separação explícita de prazos: "Prazo interno" é operacional e "Prazo fiscal" é referência oficial.
+        drawerContent.innerHTML = `
+          <div class="drawer-grid-wrap">
+            <table class="drawer-grid">
+              <thead>
+                <tr>
+                  <th class="col-client">Cliente</th>
+                  <th class="col-obligation">Obrigação</th>
+                  <th class="col-competence">Competência</th>
+                  <th class="col-internal-due">Prazo interno</th>
+                  <th class="col-fiscal-due">Prazo fiscal</th>
+                  <th class="col-execution">Execução</th>
+                  <th class="col-deadline">Prazo</th>
+                  <th class="col-actions"></th>
+                </tr>
+              </thead>
+              <tbody>
+                ${ordered.map((item, index) => `
+                  <tr data-row-index="${index}">
+                    <td><span class="row-main">${item.clientName}</span><span class="row-sub">${item.assignee}</span></td>
+                    <td><span class="row-main">${item.obligationName}</span></td>
+                    <td>${item.competence}</td>
+                    <td><span class="row-main">${item.internalDue}</span><span class="row-sub">Operacional</span></td>
+                    <td><span class="row-main">${item.fiscalDue}</span><span class="row-sub">Oficial</span></td>
+                    <td>${formatExecutionStatus(item.executionStatus)}</td>
+                    <td><span class="status ${item.deadlineIndicator}">${formatDeadline(item.deadlineIndicator)}</span></td>
+                    <td class="action-cell">
+                      <button class="action-dot" type="button" data-action-toggle="${index}" aria-label="Ações">···</button>
+                      <div class="action-menu" data-action-menu="${index}">
+                        <button type="button">Abrir cliente</button>
+                        <button type="button">Alterar status</button>
+                        <button type="button" data-view-detail="${index}">Ver detalhes</button>
+                      </div>
+                    </td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>
+        `;
+
+        drawer.classList.add("open");
+        drawerOverlay.classList.add("open");
+        drawer.setAttribute("aria-hidden", "false");
+      }
+
+      function closeDrawer() {
+        drawer.classList.remove("open");
+        drawerOverlay.classList.remove("open");
+        drawer.setAttribute("aria-hidden", "true");
+        closeDetailModal();
+        closeActionMenus();
+      }
+
+      function closeActionMenus() {
+        drawerContent.querySelectorAll(".action-menu.open").forEach((menu) => menu.classList.remove("open"));
+      }
+
+      // Controle do modal de detalhes (abre sobre o drawer e mantém contexto do calendário).
+      function openDetailModal(item) {
+        detailModalTitle.textContent = item.obligationName;
+        detailModalSubtitle.textContent = `${item.clientName} • Competência ${item.competence}`;
+
+        // Conteúdo mockado pronto para integração futura com backend/auditoria real.
+        detailModalContent.innerHTML = `
+          <!-- Bloco de responsabilidade promovido na hierarquia: em cenários operacionais, gestor valida primeiro quem está com a obrigação e como foi atribuída. -->
+          <section class="detail-block responsibility">
+            <h4>Responsabilidade</h4>
+            <div class="detail-grid">
+              <div class="detail-item"><small>Responsável atual</small><strong>${item.assignee}</strong></div>
+              <div class="detail-item"><small>Origem da atribuição</small><strong>${item.assignmentOrigin}</strong></div>
+            </div>
+          </section>
+          <section class="detail-block">
+            <h4>Informações principais</h4>
+            <div class="detail-grid">
+              <div class="detail-item"><small>Cliente</small><strong>${item.clientName}</strong></div>
+              <div class="detail-item"><small>Obrigação</small><strong>${item.obligationName}</strong></div>
+              <div class="detail-item"><small>Competência</small><strong>${item.competence}</strong></div>
+              <div class="detail-item"><small>Origem da obrigação</small><strong>${item.origin}</strong></div>
+            </div>
+          </section>
+          <section class="detail-block">
+            <h4>Status e prazo</h4>
+            <div class="detail-grid">
+              <div class="detail-item"><small>Status de execução (manual)</small><strong>${formatExecutionStatus(item.executionStatus)}</strong></div>
+              <div class="detail-item"><small>Indicador de prazo (automático)</small><strong><span class="status ${item.deadlineIndicator}">${formatDeadline(item.deadlineIndicator)}</span></strong></div>
+            </div>
+          </section>
+          <section class="detail-block">
+            <h4>Prazos</h4>
+            <div class="detail-grid">
+              <div class="detail-item"><small>Prazo interno (operacional)</small><strong>${item.internalDue}</strong></div>
+              <div class="detail-item"><small>Prazo fiscal (oficial)</small><strong>${item.fiscalDue}</strong></div>
+            </div>
+          </section>
+          ${item.notes ? `
+            <section class="detail-block">
+              <h4>Observações</h4>
+              <div class="detail-item"><strong>${item.notes}</strong></div>
+            </section>
+          ` : ""}
+          <section class="detail-block">
+            <h4>Histórico</h4>
+            <ul class="timeline">
+              ${item.history.map((event) => `<li>${event}</li>`).join("")}
+            </ul>
+          </section>
+          ${item.completion ? `
+            <section class="detail-block">
+              <h4>Conclusão</h4>
+              <div class="detail-item">
+                <small>${item.completion.proof ? "Comprovante anexado" : "Justificativa"}</small>
+                <strong>${item.completion.proof || item.completion.justification}</strong>
+              </div>
+            </section>
+          ` : ""}
+        `;
+
+        detailModalOverlay.classList.add("open");
+        detailModalOverlay.setAttribute("aria-hidden", "false");
+      }
+
+      function closeDetailModal() {
+        detailModalOverlay.classList.remove("open");
+        detailModalOverlay.setAttribute("aria-hidden", "true");
+      }
+
+      function formatDeadline(status) {
+        return {
+          atrasado: "Atrasado",
+          "vence-hoje": "Vence hoje",
+          proxima: "Próxima",
+          "em-dia": "Em dia"
+        }[status];
+      }
+
+      function formatExecutionStatus(status) {
+        return {
+          "nao-iniciada": "Não iniciada",
+          "em-andamento": "Em andamento",
+          "em-revisao": "Em revisão",
+          concluida: "Concluída",
+          "nao-se-aplica": "Não se aplica"
+        }[status];
+      }
+
+      calendarGrid.addEventListener("click", (event) => {
+        const dayButton = event.target.closest(".day-cell.has-items");
+        if (!dayButton) return;
+        const day = Number(dayButton.dataset.day);
+        const dayData = monthsData[monthIndex].days[day];
+        if (dayData) openDrawer(day, dayData);
+      });
+
+      drawerContent.addEventListener("click", (event) => {
+        // Fluxo principal: clique na linha abre detalhes para reduzir cliques operacionais.
+        const row = event.target.closest("tr[data-row-index]");
+        if (row && !event.target.closest(".action-cell")) {
+          const index = Number(row.dataset.rowIndex);
+          const item = currentDrawerItems[index];
+          closeActionMenus();
+          if (item) openDetailModal(item);
+          return;
+        }
+
+        const detailButton = event.target.closest("[data-view-detail]");
+        if (detailButton) {
+          event.stopPropagation();
+          const index = Number(detailButton.dataset.viewDetail);
+          const item = currentDrawerItems[index];
+          closeActionMenus();
+          if (item) openDetailModal(item);
+          return;
+        }
+
+        // Fluxo secundário: menu "..." mantém atalhos rápidos (abrir cliente / alterar status / ver detalhes).
+        const toggleButton = event.target.closest("[data-action-toggle]");
+        if (!toggleButton) {
+          closeActionMenus();
+          return;
+        }
+
+        event.stopPropagation();
+        const index = toggleButton.dataset.actionToggle;
+        const targetMenu = drawerContent.querySelector(`[data-action-menu="${index}"]`);
+        if (!targetMenu) return;
+
+        const shouldOpen = !targetMenu.classList.contains("open");
+        closeActionMenus();
+        if (shouldOpen) targetMenu.classList.add("open");
+      });
+
+      drawerOverlay.addEventListener("click", closeDrawer);
+      drawerClose.addEventListener("click", closeDrawer);
+      detailModalOverlay.addEventListener("click", (event) => {
+        if (event.target === detailModalOverlay) closeDetailModal();
+      });
+      detailModalClose.addEventListener("click", closeDetailModal);
+      detailModalFooterClose.addEventListener("click", closeDetailModal);
+      document.addEventListener("click", (event) => {
+        if (!event.target.closest(".action-cell")) closeActionMenus();
+      });
+      prevMonthBtn.addEventListener("click", () => {
+        monthIndex = (monthIndex - 1 + monthsData.length) % monthsData.length;
+        closeDrawer();
+        renderMonth();
+      });
+      nextMonthBtn.addEventListener("click", () => {
+        monthIndex = (monthIndex + 1) % monthsData.length;
+        closeDrawer();
+        renderMonth();
+      });
+
+      renderMonth();
+    </script>
+  </body>
+</html>
