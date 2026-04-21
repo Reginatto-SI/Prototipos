@@ -1,0 +1,301 @@
+# PRD-13 — Calendário Operacional
+# Central Contábil
+
+---
+
+## 1. Objetivo
+
+Permitir que o usuário visualize as obrigações distribuídas ao longo do tempo (mês), facilitando:
+
+- planejamento operacional
+- organização da carga de trabalho
+- identificação de picos de demanda
+- visão clara de prazos por dia
+
+O calendário NÃO substitui o dashboard nem a lista operacional.
+
+---
+
+## 2. Conceito do Módulo (CRÍTICO)
+
+O calendário é uma:
+
+👉 visualização temporal das obrigações
+
+Ele deve responder:
+
+→ o que precisa ser feito em cada dia do mês
+
+---
+
+### Importante
+
+O calendário NÃO é:
+
+- agenda pessoal
+- ferramenta de criação manual
+- substituto do dashboard
+
+---
+
+### Relação com outros módulos
+
+- Dashboard → prioridade (o que fazer agora)
+- Lista operacional → execução
+- Calendário → planejamento (quando fazer)
+
+---
+
+## 3. Estrutura da Tela
+
+---
+
+### 3.1 Layout geral
+
+A tela deve conter:
+
+- Header com:
+  - seleção de mês/ano
+  - navegação (anterior / próximo)
+  - filtros
+
+- Grid mensal com:
+  - 7 colunas (domingo a sábado ou segunda a sexta conforme padrão definido)
+  - dias do mês
+
+---
+
+### 3.2 Estrutura de cada dia
+
+Cada célula do calendário deve conter:
+
+- número do dia
+- indicadores agregados de obrigações
+
+---
+
+## 4. Regra de Agregação (CRÍTICO)
+
+O sistema NÃO deve listar todas as obrigações dentro do dia.
+
+Deve exibir apenas:
+
+- quantidade total de obrigações
+- agrupamento por status de prazo
+
+---
+
+### Exemplo
+
+Dia 15:
+
+- 8 obrigações
+- 2 atrasadas
+- 3 vencendo hoje
+- 3 próximas
+
+---
+
+### Regra visual
+
+Prioridade de exibição:
+
+1. Atrasadas
+2. Vencendo hoje
+3. Próximas
+4. Em dia
+
+---
+
+## 5. Indicadores Visuais
+
+Seguir obrigatoriamente o padrão do sistema (PRD-07):
+
+- 🔴 Atrasado
+- 🟠 Vence hoje / Próximo
+- 🟢 Em dia
+
+---
+
+### Regras
+
+- cores devem ser fortes (status operacional)
+- leitura deve ser imediata
+- não usar badges neutras
+
+---
+
+## 6. Interação (CRÍTICO)
+
+---
+
+### 6.1 Clique no dia
+
+Ao clicar em um dia:
+
+👉 deve abrir um drawer lateral (padrão do sistema)
+
+---
+
+### 6.2 Conteúdo do drawer
+
+Lista de obrigações daquele dia contendo:
+
+- Cliente
+- Nome da obrigação
+- Competência
+- Prazo interno
+- Prazo fiscal
+- Status
+
+---
+
+### 6.3 Ações disponíveis
+
+Dentro do drawer:
+
+- abrir cliente
+- alterar status
+- visualizar detalhes
+
+---
+
+### Regra
+
+NUNCA navegar para outra página
+
+---
+
+## 7. Filtros
+
+O calendário deve permitir filtragem por:
+
+- Responsável
+- Cliente
+- Tipo de obrigação
+- Status
+
+---
+
+### Regras
+
+- aplicação rápida
+- sem reload pesado
+- manter consistência com outros módulos
+
+---
+
+## 8. Integração com Obrigações
+
+---
+
+### Fonte de dados
+
+O calendário deve consumir:
+
+- obrigações geradas (PRD-02)
+- prazos internos e fiscais (PRD-12)
+
+---
+
+### Regra
+
+A exibição deve considerar:
+
+- prazo interno
+- prazo fiscal
+- data atual
+
+---
+
+### Observação
+
+O calendário deve priorizar o prazo interno para visualização operacional.
+
+---
+
+## 9. Comportamento Operacional
+
+---
+
+### 9.1 Ordenação interna (no drawer)
+
+1. Atrasadas
+2. Vencendo hoje
+3. Próximas
+4. Em dia
+
+---
+
+### 9.2 Dia atual
+
+- deve possuir destaque visual claro
+
+---
+
+### 9.3 Dias sem obrigação
+
+- devem aparecer vazios
+- sem indicadores
+
+---
+
+## 10. Performance
+
+- carregamento rápido
+- limitar dados por mês
+- cálculo eficiente de agregação
+
+---
+
+## 11. UX (Experiência do Usuário)
+
+---
+
+### Princípios
+
+- simplicidade
+- leitura rápida
+- baixa poluição visual
+
+---
+
+### Regras
+
+- não listar tudo dentro do dia
+- evitar excesso de texto
+- foco em números e status
+
+---
+
+## 12. Fora de Escopo (IMPORTANTE)
+
+O calendário NÃO deve permitir:
+
+- criar obrigações
+- editar diretamente no grid
+- drag & drop
+- edição inline
+- duplicação de obrigações
+
+---
+
+## 13. Evolução Futura
+
+- visualização semanal
+- heatmap de carga de trabalho
+- integração com feriados
+- indicadores de volume por período
+- alertas visuais de sobrecarga
+
+---
+
+## 14. Regra de Ouro
+
+O calendário deve permitir que o usuário:
+
+→ olhe o mês  
+→ identifique rapidamente os dias críticos  
+→ clique e aja imediatamente  
+
+Sem precisar navegar ou interpretar informações complexas.
