@@ -41,8 +41,10 @@ O calendário NÃO é:
 ### Relação com outros módulos
 
 - Dashboard → prioridade (o que fazer agora)
-- Lista operacional → execução
+- Lista operacional → execução detalhada
 - Calendário → planejamento (quando fazer)
+
+Comentário de alinhamento: no calendário, o responsável destacado é o Responsável pela Execução da obrigação.
 
 ---
 
@@ -135,6 +137,8 @@ Ao clicar em um dia:
 
 👉 deve abrir um drawer lateral (padrão do sistema)
 
+Comentário de alinhamento: exceção oficial ao uso exclusivo do menu “...”, mantendo foco em reduzir cliques para triagem temporal.
+
 ---
 
 ### 6.2 Conteúdo do drawer
@@ -201,7 +205,7 @@ Exibir informações completas da obrigação:
 - Cliente
 - Obrigação
 - Competência
-- Responsável
+- Responsável pela Execução
 - Status de execução (manual)
 - Indicador de prazo (automático)
 
@@ -285,10 +289,12 @@ NUNCA navegar para outra página
 
 O calendário deve permitir filtragem por:
 
-- Responsável
+- Responsável pela Execução
 - Cliente
 - Tipo de obrigação
 - Status
+
+Comentário de alinhamento: no calendário (filtros e modal), “Responsável pela Execução” é o principal dado para análise operacional do trabalho.
 
 ---
 

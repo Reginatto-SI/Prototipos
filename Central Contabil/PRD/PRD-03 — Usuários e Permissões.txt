@@ -177,19 +177,27 @@ Selecionar:
 
 ---
 
-## 9. Responsável Principal do Cliente
+## 9. Responsável da Carteira do Cliente
 
 O cliente deve possuir:
 
-- assigned_user_id
+- assigned_user_id = Responsável da Carteira
 
 ---
 
 ### 9.1 Função
 
-- definir responsável principal
+- definir Responsável da Carteira
 - não interfere nas permissões de acesso
-- usado para organização e relatórios
+- usado para organização e relatórios gerenciais
+
+Comentário de alinhamento: “Responsável da Carteira” é atributo do cliente. O “Responsável pela Execução” é definido por obrigação no módulo operacional.
+
+### 9.2 Uso e diferença para execução (regra explícita)
+
+- Função no cliente: ownership de carteira e gestão contínua do relacionamento.
+- Uso operacional: referência para filtros gerenciais e distribuição inicial padrão.
+- Diferença crítica: o Responsável pela Execução pertence à obrigação/tarefa e pode ser redistribuído sem alterar o assigned_user_id do cliente.
 
 ---
 

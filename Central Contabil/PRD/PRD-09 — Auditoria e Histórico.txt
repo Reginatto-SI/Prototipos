@@ -108,7 +108,7 @@ Cada registro deve indicar:
 
 - criação
 - edição de dados
-- alteração de responsável
+- alteração de Responsável da Carteira
 
 ---
 
@@ -117,7 +117,7 @@ Cada registro deve indicar:
 - criação (manual ou automática)
 - alteração de status
 - alteração de prazo
-- alteração de responsável
+- alteração de Responsável pela Execução
 
 ---
 
@@ -207,6 +207,8 @@ Toda ação automática deve ser registrada:
 - "Sistema marcou obrigação como atrasada (prazo interno vencido)"
 
 ---
+
+Comentário de alinhamento: distinguir nos eventos de auditoria alterações de carteira (cliente) versus redistribuição de execução (obrigação).
 
 ## 10. Integração com Operação
 

@@ -33,6 +33,8 @@ Elas devem:
 
 ### 3.1 Obrigações
 
+Comentário de alinhamento: para eventos operacionais de obrigação, o destino principal da notificação é o Responsável pela Execução.
+
 - obrigação próxima do prazo interno
 - obrigação próxima do prazo fiscal
 - obrigação atrasada
@@ -200,7 +202,8 @@ ou
 ## 10. Regras de Envio
 
 - não notificar obrigações concluídas
-- respeitar responsável
+- respeitar Responsável pela Execução (principal na operação)
+- em eventos gerenciais de cliente/carteira, também notificar o Responsável da Carteira quando aplicável
 - respeitar permissões
 
 ---

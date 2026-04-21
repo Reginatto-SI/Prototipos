@@ -29,7 +29,7 @@ A automação atua em:
 
 - geração de obrigações
 - definição de prazos
-- definição de responsável
+- definição de responsável pela execução
 - identificação de atraso
 - disparo de notificações
 
@@ -90,19 +90,25 @@ Ao gerar obrigação:
 
 ---
 
-## 6. Definição automática de responsável
+## 6. Definição automática de responsável pela execução
 
 ---
 
 ### Regra
 
-- herdar do cliente (assigned_user_id)
+- iniciar pelo Responsável da Carteira do cliente (assigned_user_id), atribuindo como Responsável pela Execução inicial
+- a herança ocorre apenas na criação da obrigação
 
 ---
 
 ### Flexibilidade
 
-- permitir alteração manual
+- permitir redistribuição manual após geração
+- redistribuição não altera o Responsável da Carteira do cliente
+- após a criação, não existe vínculo automático de sincronização com o cliente
+- mudanças no Responsável da Carteira NÃO atualizam obrigações já geradas
+
+Comentário de alinhamento: herança da carteira é apenas padrão inicial de execução.
 
 ---
 
