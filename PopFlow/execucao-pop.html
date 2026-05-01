@@ -1,84 +1,477 @@
-<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>PopFlow</title><script src="https://cdn.tailwindcss.com"></script>
-<style>
-:root{--pf-bg:#F7F4EE;--pf-surface:#FFF;--pf-surface-muted:#F3F0EA;--pf-border:#E5DED2;--pf-text:#1F2933;--pf-muted:#667085;--pf-primary:#2563EB;--pf-primary-hover:#1D4ED8;--pf-primary-soft:#EFF6FF;--pf-primary-border:#BFDBFE;--pf-success:#2E7D5B;--pf-success-soft:#EAF6EF;--pf-success-border:#BFDCCB;--pf-success-text:#256F4D;--pf-warning:#B7791F;--pf-warning-soft:#FFF7E6;--pf-warning-border:#F1D59A;--pf-danger:#B42318;--pf-danger-soft:#FEF3F2;--pf-danger-border:#FDA29B}
-/* Temas em validação aceleram decisão visual; os mesmos tokens serão design tokens no React/Lovable. */
-body{background:var(--pf-bg);color:var(--pf-text)} .surface{background:var(--pf-surface);border-color:var(--pf-border)} .muted{color:var(--pf-muted)} .line{border-color:var(--pf-border)}
-.btn-primary{background:var(--pf-primary);color:#fff}.btn-primary:hover{background:var(--pf-primary-hover)} .btn-sec{border:1px solid var(--pf-border);background:var(--pf-surface)}
-.chip{border:1px solid var(--pf-border);background:var(--pf-surface);color:var(--pf-muted)} .chip-current{background:var(--pf-primary-soft);color:var(--pf-primary-hover);border-color:var(--pf-primary-border)}
-.chip-done{background:var(--pf-success-soft);color:var(--pf-success-text);border-color:var(--pf-success-border)} .chip-imp{background:var(--pf-warning-soft);color:var(--pf-warning);border-color:var(--pf-warning-border)}
-.badge-meta{background:var(--pf-surface-muted);color:var(--pf-muted);border:1px solid var(--pf-border)} .badge-run{background:var(--pf-warning-soft);color:var(--pf-warning);border:1px solid var(--pf-warning-border)}
-.badge-done{background:var(--pf-success-soft);color:var(--pf-success-text);border:1px solid var(--pf-success-border)}
-.progress-track{background:var(--pf-surface-muted)} .progress-fill{background:var(--pf-primary)} .danger{color:var(--pf-danger)}
-.theme-btn.active{background:var(--pf-primary-soft);border-color:var(--pf-primary-border);color:var(--pf-primary-hover)}
-</style></head>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PopFlow — Execução de POP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --pf-bg:#F7F4EE; --pf-surface:#FFFFFF; --pf-surface-muted:#F3F0EA; --pf-border:#E5DED2;
+      --pf-text:#1F2933; --pf-muted:#667085; --pf-primary:#2563EB; --pf-primary-hover:#1D4ED8;
+      --pf-primary-soft:#EFF6FF; --pf-primary-border:#BFDBFE; --pf-success:#2E7D5B;
+      --pf-success-soft:#EAF6EF; --pf-success-border:#BFDCCB; --pf-success-text:#256F4D;
+      --pf-warning:#B7791F; --pf-warning-soft:#FFF7E6; --pf-warning-border:#F1D59A;
+      --pf-danger:#B42318; --pf-danger-soft:#FEF3F2; --pf-danger-border:#FDA29B;
+    }
+    /* Protótipo em modo foco: sem sidebar global, com leitura contínua e conteúdo rico para validar visual real. */
+    body { background: var(--pf-bg); color: var(--pf-text); }
+    .surface { background: var(--pf-surface); border-color: var(--pf-border); }
+    .surface-muted { background: var(--pf-surface-muted); }
+    .muted { color: var(--pf-muted); }
+    .line { border-color: var(--pf-border); }
+    .btn-primary { background: var(--pf-primary); color: #fff; }
+    .btn-primary:hover { background: var(--pf-primary-hover); }
+    .btn-sec { border: 1px solid var(--pf-border); background: var(--pf-surface); color: var(--pf-text); }
+    .btn-sec:hover { background: var(--pf-surface-muted); }
+    .chip { border: 1px solid var(--pf-border); background: var(--pf-surface); color: var(--pf-muted); }
+    .chip-current { background: var(--pf-primary-soft); color: var(--pf-primary-hover); border-color: var(--pf-primary-border); }
+    .chip-done { background: var(--pf-success-soft); color: var(--pf-success-text); border-color: var(--pf-success-border); }
+    .chip-imp { background: var(--pf-warning-soft); color: var(--pf-warning); border-color: var(--pf-warning-border); }
+    .badge-meta { background: var(--pf-surface-muted); color: var(--pf-muted); border: 1px solid var(--pf-border); }
+    .badge-run { background: var(--pf-warning-soft); color: var(--pf-warning); border: 1px solid var(--pf-warning-border); }
+    .badge-done { background: var(--pf-success-soft); color: var(--pf-success-text); border: 1px solid var(--pf-success-border); }
+    .danger { color: var(--pf-danger); }
+    .danger-box { background: var(--pf-danger-soft); border-color: var(--pf-danger-border); color: var(--pf-danger); }
+    .success-box { background: var(--pf-success-soft); border-color: var(--pf-success-border); color: var(--pf-success-text); }
+    .progress-track { background: var(--pf-surface-muted); }
+    .progress-fill { background: var(--pf-primary); }
+    .theme-btn.active { background: var(--pf-primary-soft); border-color: var(--pf-primary-border); color: var(--pf-primary-hover); }
+    .media-chip:hover { border-color: var(--pf-primary-border); color: var(--pf-primary-hover); background: var(--pf-primary-soft); }
+    .step-card { box-shadow: 0 10px 30px rgba(15, 23, 42, 0.035); }
+    .step-card:hover { box-shadow: 0 14px 38px rgba(15, 23, 42, 0.06); }
+  </style>
+</head>
 <body class="min-h-screen">
-<header class="fixed top-0 inset-x-0 z-30 surface border-b"><div class="max-w-5xl mx-auto px-6 py-4 flex items-start justify-between gap-4"><div><p class="text-xs font-semibold tracking-wide" style="color:var(--pf-primary-hover)">PopFlow • Documento Operacional Vivo</p><h1 id="popTitulo" class="text-2xl font-bold"></h1><p id="popDescricao" class="text-sm muted mt-1"></p><div class="flex flex-wrap gap-2 mt-2 text-xs"><span id="popVersao" class="px-2 py-1 rounded-full badge-meta"></span><span id="execStatus" class="px-2 py-1 rounded-full badge-run">Em andamento</span><span class="px-2 py-1 rounded-full badge-meta">Visibilidade: Operação Fiscal</span><span class="px-2 py-1 rounded-full badge-meta">Responsável: Ana Ribeiro</span><span class="px-2 py-1 rounded-full badge-meta">Tempo estimado: 35 min</span></div></div><div class="flex flex-col items-end gap-2"><div id="themePicker" class="flex gap-1"></div><button class="px-3 py-2 text-sm rounded-lg btn-sec">Sair</button></div></div></header>
-<main class="max-w-5xl mx-auto px-6 pt-44 pb-16"><div id="layoutExecucao" class="grid grid-cols-1 gap-6"><section class="surface rounded-2xl p-4 border shadow-sm"><p id="progressText" class="text-sm muted"></p><div class="mt-2 h-2 progress-track rounded-full overflow-hidden"><div id="progressBar" class="h-full progress-fill"></div></div><p id="kpiLinha" class="mt-2 text-xs muted"></p></section><section class="surface rounded-2xl p-4 border shadow-sm"><div class="flex flex-col md:flex-row gap-2 md:items-center md:justify-between mb-3"><div class="flex gap-2"><button id="btnExpandirTudo" class="px-2.5 py-1.5 text-xs rounded-lg btn-sec">Expandir tudo</button><button id="btnRecolherConcluidas" class="px-2.5 py-1.5 text-xs rounded-lg btn-sec">Recolher concluídas</button></div><input id="buscaEtapa" type="text" placeholder="Buscar" class="w-full md:w-72 px-3 py-1.5 text-sm rounded-lg line border bg-transparent"/></div><p class="text-xs muted mb-2">Neste POP</p><nav id="indiceEtapas" class="flex flex-wrap gap-2"></nav></section><section id="listaEtapas" class="space-y-4"></section><section id="estadoFinal" class="hidden rounded-2xl p-5 badge-done"><h4 class="font-semibold">✅ Processo concluído</h4></section><aside id="painelMidiaWrapper" class="hidden lg:sticky lg:top-24"><section class="surface rounded-2xl p-4 border shadow-sm"><div class="flex justify-between items-center"><p class="text-sm font-semibold">Mini player de áudio</p><button id="fecharPainelMidia" class="text-xs muted">Fechar</button></div><p id="mediaTitulo" class="text-xs muted mt-2"></p><div id="mediaConteudo" class="mt-2"></div></section></aside></div></main>
-<div id="toast" class="hidden fixed bottom-5 right-5 z-50 px-3 py-2 rounded-lg" style="background:var(--pf-text);color:var(--pf-surface)"></div>
-<div id="mediaModal" class="hidden fixed inset-0 z-40 bg-black/50 flex items-center justify-center p-4"><div class="surface w-full max-w-3xl rounded-2xl border shadow-xl p-4"><div class="flex justify-between items-center mb-2"><div><h6 id="mediaModalTitulo" class="text-sm font-semibold"></h6><p id="mediaModalTipo" class="text-xs muted"></p></div><button id="closeModal" class="muted">✕</button></div><div id="mediaModalConteudo" class="max-h-[70vh] overflow-auto"></div></div></div>
+  <header class="fixed top-0 inset-x-0 z-30 surface border-b backdrop-blur">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-start justify-between gap-4">
+      <div class="min-w-0">
+        <p class="text-xs font-semibold tracking-wide" style="color:var(--pf-primary-hover)">PopFlow • Documento Operacional Vivo</p>
+        <h1 id="popTitulo" class="text-2xl font-bold leading-tight mt-1"></h1>
+        <p id="popDescricao" class="text-sm muted mt-1 max-w-3xl"></p>
+        <div class="flex flex-wrap gap-2 mt-3 text-xs">
+          <span id="popVersao" class="px-2 py-1 rounded-full badge-meta"></span>
+          <span id="execStatus" class="px-2 py-1 rounded-full badge-run">Em andamento</span>
+          <span class="px-2 py-1 rounded-full badge-meta">Visibilidade: Operação Financeira</span>
+          <span class="px-2 py-1 rounded-full badge-meta">Responsável: Ana Ribeiro</span>
+          <span class="px-2 py-1 rounded-full badge-meta">Tempo estimado: 45 min</span>
+        </div>
+      </div>
+      <div class="flex flex-col items-end gap-2 shrink-0">
+        <div id="themePicker" class="flex flex-wrap justify-end gap-1"></div>
+        <button class="px-3 py-2 text-sm rounded-lg btn-sec">Sair</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 pt-48 pb-16">
+    <section class="surface border rounded-3xl p-6 mb-6 step-card">
+      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5">
+        <div>
+          <p class="text-sm font-semibold" style="color:var(--pf-primary-hover)">Modo foco de execução</p>
+          <h2 class="text-3xl font-bold mt-1">Fechamento diário sem depender da memória de ninguém</h2>
+          <p class="muted text-sm mt-3 max-w-3xl leading-6">Este protótipo simula um POP com textos longos, mídias inline e documentos para validar o comportamento real da interface em cenários operacionais. Os dados são propositalmente ricos para testar leitura, busca, scroll, cards curtos, cards longos e anexos.</p>
+        </div>
+        <div class="surface-muted rounded-2xl p-4 border line min-w-[220px]">
+          <p id="progressText" class="text-sm font-medium"></p>
+          <div class="mt-3 h-2 progress-track rounded-full overflow-hidden"><div id="progressBar" class="h-full progress-fill transition-all"></div></div>
+          <p id="kpiLinha" class="mt-3 text-xs muted"></p>
+        </div>
+      </div>
+    </section>
+
+    <div id="layoutExecucao" class="grid grid-cols-1 gap-6">
+      <section class="surface rounded-2xl p-4 border step-card">
+        <div class="flex flex-col md:flex-row gap-3 md:items-center md:justify-between mb-4">
+          <div class="flex flex-wrap gap-2">
+            <button id="btnExpandirTudo" class="px-3 py-2 text-xs rounded-lg btn-sec">Expandir tudo</button>
+            <button id="btnRecolherConcluidas" class="px-3 py-2 text-xs rounded-lg btn-sec">Recolher concluídas</button>
+            <button id="btnResetar" class="px-3 py-2 text-xs rounded-lg btn-sec">Resetar estado</button>
+          </div>
+          <input id="buscaEtapa" type="text" placeholder="Buscar no POP" class="w-full md:w-80 px-3 py-2 text-sm rounded-lg line border bg-transparent outline-none" />
+        </div>
+        <div class="flex items-center justify-between gap-3 mb-2">
+          <p class="text-xs font-semibold muted uppercase tracking-wide">Neste POP</p>
+          <p id="resultadoBusca" class="text-xs muted"></p>
+        </div>
+        <nav id="indiceEtapas" class="flex flex-wrap gap-2"></nav>
+      </section>
+
+      <section id="listaEtapas" class="space-y-5"></section>
+
+      <section id="estadoFinal" class="hidden rounded-2xl p-5 badge-done">
+        <h4 class="font-semibold">✅ Processo concluído</h4>
+        <p class="text-sm mt-1">Todas as etapas foram marcadas como concluídas. O checklist permanece opcional.</p>
+      </section>
+
+      <aside id="painelMidiaWrapper" class="hidden lg:sticky lg:top-28">
+        <section class="surface rounded-2xl p-4 border step-card">
+          <div class="flex justify-between items-center gap-3">
+            <p class="text-sm font-semibold">Mini player de áudio</p>
+            <button id="fecharPainelMidia" class="text-xs muted hover:underline">Fechar</button>
+          </div>
+          <p id="mediaTitulo" class="text-xs muted mt-2"></p>
+          <div id="mediaConteudo" class="mt-3"></div>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <div id="toast" class="hidden fixed bottom-5 right-5 z-50 px-4 py-3 rounded-xl text-sm shadow-lg" style="background:var(--pf-text);color:var(--pf-surface)"></div>
+
+  <div id="mediaModal" class="hidden fixed inset-0 z-40 bg-black/50 flex items-center justify-center p-4">
+    <div class="surface w-full max-w-4xl rounded-2xl border shadow-xl p-4">
+      <div class="flex justify-between items-start gap-4 mb-3">
+        <div>
+          <h6 id="mediaModalTitulo" class="text-base font-semibold"></h6>
+          <p id="mediaModalTipo" class="text-xs muted mt-1"></p>
+        </div>
+        <button id="closeModal" class="muted text-lg leading-none hover:opacity-70">✕</button>
+      </div>
+      <div id="mediaModalConteudo" class="max-h-[72vh] overflow-auto"></div>
+    </div>
+  </div>
+
 <script>
-const THEMES={t1:{'--pf-bg':'#F7F4EE','--pf-surface':'#FFFFFF','--pf-surface-muted':'#F3F0EA','--pf-border':'#E5DED2','--pf-text':'#1F2933','--pf-muted':'#667085','--pf-primary':'#2563EB','--pf-primary-hover':'#1D4ED8','--pf-primary-soft':'#EFF6FF','--pf-primary-border':'#BFDBFE','--pf-success':'#2E7D5B','--pf-success-soft':'#EAF6EF','--pf-success-border':'#BFDCCB','--pf-success-text':'#256F4D','--pf-warning':'#B7791F','--pf-warning-soft':'#FFF7E6','--pf-warning-border':'#F1D59A','--pf-danger':'#B42318','--pf-danger-soft':'#FEF3F2','--pf-danger-border':'#FDA29B'},t2:{'--pf-bg':'#F3F4F6','--pf-surface':'#FFFFFF','--pf-surface-muted':'#F9FAFB','--pf-border':'#D1D5DB','--pf-text':'#111827','--pf-muted':'#6B7280','--pf-primary':'#334155','--pf-primary-hover':'#1E293B','--pf-primary-soft':'#F1F5F9','--pf-primary-border':'#CBD5E1','--pf-success':'#15803D','--pf-success-soft':'#F0FDF4','--pf-success-border':'#BBF7D0','--pf-success-text':'#166534','--pf-warning':'#A16207','--pf-warning-soft':'#FEFCE8','--pf-warning-border':'#FDE68A','--pf-danger':'#B91C1C','--pf-danger-soft':'#FEF2F2','--pf-danger-border':'#FECACA'},t3:{'--pf-bg':'#F5F7FB','--pf-surface':'#FFFFFF','--pf-surface-muted':'#EEF3FA','--pf-border':'#D8E0EA','--pf-text':'#172033','--pf-muted':'#5B667A','--pf-primary':'#1E40AF','--pf-primary-hover':'#1D3A8A','--pf-primary-soft':'#EAF0FF','--pf-primary-border':'#C7D2FE','--pf-success':'#247857','--pf-success-soft':'#E8F5EF','--pf-success-border':'#BFE3D2','--pf-success-text':'#1F6B4E','--pf-warning':'#B45309','--pf-warning-soft':'#FFF4E5','--pf-warning-border':'#F9C27A','--pf-danger':'#B42318','--pf-danger-soft':'#FEF3F2','--pf-danger-border':'#FDA29B'},t4:{'--pf-bg':'#FBF7EF','--pf-surface':'#FFFFFF','--pf-surface-muted':'#F4EEE3','--pf-border':'#E6D7C3','--pf-text':'#2B2118','--pf-muted':'#7A6A58','--pf-primary':'#8B5E34','--pf-primary-hover':'#6F4828','--pf-primary-soft':'#F4E8DA','--pf-primary-border':'#E8CDA8','--pf-success':'#3F7D58','--pf-success-soft':'#EEF7F0','--pf-success-border':'#CFE4D5','--pf-success-text':'#2F6647','--pf-warning':'#B7791F','--pf-warning-soft':'#FFF7E6','--pf-warning-border':'#F1D59A','--pf-danger':'#A43F32','--pf-danger-soft':'#FFF1EF','--pf-danger-border':'#F2B8B0'},t5:{'--pf-bg':'#0F172A','--pf-surface':'#111827','--pf-surface-muted':'#1F2937','--pf-border':'#334155','--pf-text':'#F8FAFC','--pf-muted':'#CBD5E1','--pf-primary':'#60A5FA','--pf-primary-hover':'#3B82F6','--pf-primary-soft':'#172554','--pf-primary-border':'#1D4ED8','--pf-success':'#34D399','--pf-success-soft':'#064E3B','--pf-success-border':'#065F46','--pf-success-text':'#A7F3D0','--pf-warning':'#FBBF24','--pf-warning-soft':'#451A03','--pf-warning-border':'#78350F','--pf-danger':'#F87171','--pf-danger-soft':'#450A0A','--pf-danger-border':'#7F1D1D'}};
-const THEME_KEY='popflow-theme';
-const STORAGE_KEY='popflow-execucao-pop-v3';
-// Dados mockados propositalmente ricos para validar cards curtos, médios e longos em situações reais de operação.
-const execucaoMock={pop:{id:'pop-001',titulo:'POP de Fechamento Diário Financeiro',descricao:'Guia operacional para fechamento diário com validação de evidências, exceções e rastreabilidade.',versao:'v2.1'},etapas:[
-{id:'e1',titulo:'Abrir rotina de fechamento diário',descricao:'Acesse o módulo financeiro e abra a rotina do dia. Confirme se a data-base está correta e se não existe execução em paralelo por outro operador. Esta etapa é curta e apenas garante contexto inicial.',resultadoEsperado:'Rotina aberta no dia correto.',erroComum:'',concluida:true,importante:false,colapsada:false,checklist:[{id:'c1',texto:'Abrir menu financeiro',concluido:true}],midias:[]},
-{id:'e2',titulo:'Conferir lançamentos pendentes',descricao:'Antes de iniciar qualquer consolidação, filtre lançamentos sem classificação.
+const THEMES = {
+  t1:{'--pf-bg':'#F7F4EE','--pf-surface':'#FFFFFF','--pf-surface-muted':'#F3F0EA','--pf-border':'#E5DED2','--pf-text':'#1F2933','--pf-muted':'#667085','--pf-primary':'#2563EB','--pf-primary-hover':'#1D4ED8','--pf-primary-soft':'#EFF6FF','--pf-primary-border':'#BFDBFE','--pf-success':'#2E7D5B','--pf-success-soft':'#EAF6EF','--pf-success-border':'#BFDCCB','--pf-success-text':'#256F4D','--pf-warning':'#B7791F','--pf-warning-soft':'#FFF7E6','--pf-warning-border':'#F1D59A','--pf-danger':'#B42318','--pf-danger-soft':'#FEF3F2','--pf-danger-border':'#FDA29B'},
+  t2:{'--pf-bg':'#F3F4F6','--pf-surface':'#FFFFFF','--pf-surface-muted':'#F9FAFB','--pf-border':'#D1D5DB','--pf-text':'#111827','--pf-muted':'#6B7280','--pf-primary':'#334155','--pf-primary-hover':'#1E293B','--pf-primary-soft':'#F1F5F9','--pf-primary-border':'#CBD5E1','--pf-success':'#15803D','--pf-success-soft':'#F0FDF4','--pf-success-border':'#BBF7D0','--pf-success-text':'#166534','--pf-warning':'#A16207','--pf-warning-soft':'#FEFCE8','--pf-warning-border':'#FDE68A','--pf-danger':'#B91C1C','--pf-danger-soft':'#FEF2F2','--pf-danger-border':'#FECACA'},
+  t3:{'--pf-bg':'#F5F7FB','--pf-surface':'#FFFFFF','--pf-surface-muted':'#EEF3FA','--pf-border':'#D8E0EA','--pf-text':'#172033','--pf-muted':'#5B667A','--pf-primary':'#1E40AF','--pf-primary-hover':'#1D3A8A','--pf-primary-soft':'#EAF0FF','--pf-primary-border':'#C7D2FE','--pf-success':'#247857','--pf-success-soft':'#E8F5EF','--pf-success-border':'#BFE3D2','--pf-success-text':'#1F6B4E','--pf-warning':'#B45309','--pf-warning-soft':'#FFF4E5','--pf-warning-border':'#F9C27A','--pf-danger':'#B42318','--pf-danger-soft':'#FEF3F2','--pf-danger-border':'#FDA29B'},
+  t4:{'--pf-bg':'#FBF7EF','--pf-surface':'#FFFFFF','--pf-surface-muted':'#F4EEE3','--pf-border':'#E6D7C3','--pf-text':'#2B2118','--pf-muted':'#7A6A58','--pf-primary':'#8B5E34','--pf-primary-hover':'#6F4828','--pf-primary-soft':'#F4E8DA','--pf-primary-border':'#E8CDA8','--pf-success':'#3F7D58','--pf-success-soft':'#EEF7F0','--pf-success-border':'#CFE4D5','--pf-success-text':'#2F6647','--pf-warning':'#B7791F','--pf-warning-soft':'#FFF7E6','--pf-warning-border':'#F1D59A','--pf-danger':'#A43F32','--pf-danger-soft':'#FFF1EF','--pf-danger-border':'#F2B8B0'},
+  t5:{'--pf-bg':'#0F172A','--pf-surface':'#111827','--pf-surface-muted':'#1F2937','--pf-border':'#334155','--pf-text':'#F8FAFC','--pf-muted':'#CBD5E1','--pf-primary':'#60A5FA','--pf-primary-hover':'#3B82F6','--pf-primary-soft':'#172554','--pf-primary-border':'#1D4ED8','--pf-success':'#34D399','--pf-success-soft':'#064E3B','--pf-success-border':'#065F46','--pf-success-text':'#A7F3D0','--pf-warning':'#FBBF24','--pf-warning-soft':'#451A03','--pf-warning-border':'#78350F','--pf-danger':'#F87171','--pf-danger-soft':'#450A0A','--pf-danger-border':'#7F1D1D'}
+};
 
-Confira o exemplo visual em @midia1 para garantir que o filtro foi aplicado no escopo correto.
+const THEME_KEY = 'popflow-theme-v4';
+const STORAGE_KEY = 'popflow-execucao-pop-v4';
 
-Se houver dúvida de regra contábil, consulte @midia2 e valide se o centro de custo está alinhado com a natureza da despesa.',resultadoEsperado:'Todos os lançamentos do período classificados por centro de custo e conta contábil, sem pendências manuais abertas.',erroComum:'O erro mais comum é concluir pela ausência de alerta visual, sem revisar lançamentos ocultos por filtros salvos de sessão anterior.',concluida:false,importante:false,colapsada:false,checklist:[{id:'c2',texto:'Filtrar pendências por data e unidade',concluido:false},{id:'c3',texto:'Classificar manualmente os lançamentos sem centro de custo',concluido:false}],midias:[{ref:'midia1',tipo:'imagem',titulo:'Tela de filtro de pendências',url:'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200'},{ref:'midia2',tipo:'documento',formato:'pdf',titulo:'Política de classificação contábil',url:'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'}]},
-{id:'e3',titulo:'Validar conciliação bancária automática',descricao:'Execute a conciliação em lote para todas as contas habilitadas.
+// Dados mockados ricos: eles existem para testar cards curtos, médios, longos, mídias inline, documentos e variações reais de POP.
+const execucaoMock = {
+  pop: {
+    id: 'pop-001',
+    titulo: 'POP de Fechamento Diário Financeiro',
+    descricao: 'Guia operacional para fechamento diário com validação de lançamentos, conciliação bancária, evidências, exceções e comunicação para gestão.',
+    versao: 'v2.1'
+  },
+  etapas: [
+    {
+      id:'e1', titulo:'Abrir rotina de fechamento diário', concluida:true, importante:false, colapsada:false,
+      descricao:`Acesse o módulo financeiro e abra a rotina de fechamento diário da unidade correta. Antes de avançar, confirme a data-base, o usuário responsável pela execução e se não existe outra pessoa operando a mesma rotina em paralelo.
 
-Acompanhe o fluxo técnico no vídeo @midia1 antes de disparar em produção.
+Esta etapa é propositalmente mais curta para validar como o card se comporta com pouco conteúdo. Mesmo sendo simples, ela evita um erro comum: iniciar o fechamento em competência errada e contaminar todos os indicadores seguintes.`,
+      resultadoEsperado:'Rotina aberta na data correta, com unidade validada e sem execução concorrente.',
+      erroComum:'Abrir o fechamento em data anterior por reaproveitar filtro salvo da sessão anterior.',
+      checklist:[{id:'c1',texto:'Confirmar data-base do fechamento',concluido:true},{id:'c2',texto:'Confirmar unidade/empresa selecionada',concluido:true}],
+      midias:[]
+    },
+    {
+      id:'e2', titulo:'Conferir lançamentos pendentes de classificação', concluida:false, importante:false, colapsada:false,
+      descricao:`Antes de iniciar qualquer consolidação, filtre os lançamentos sem centro de custo, sem conta contábil ou com histórico incompleto. Esta conferência deve ser feita antes da conciliação para evitar que divergências simples apareçam como exceções bancárias.
 
-Durante a execução, monitore mensagens de timeout e reconexão de API. Em caso de inconsistência, registre observação em ata operacional e ouça a orientação rápida em @midia2 para decisão de retry.
+Confira o exemplo visual em @midia1 para validar se os filtros foram aplicados corretamente. Se houver dúvida sobre a classificação contábil, consulte a política em @midia2 antes de corrigir manualmente.
 
-Somente avance quando a divergência líquida estiver dentro do limite aceito pela política interna.',resultadoEsperado:'Conciliação concluída com divergência líquida menor ou igual a 1%, e todas as exceções classificadas para revisão posterior.',erroComum:'Considerar o processo válido apenas porque não houve erro fatal, sem verificar registros ignorados por diferença de data de compensação.',concluida:false,importante:true,colapsada:false,checklist:[{id:'c4',texto:'Executar lote de conciliação',concluido:false},{id:'c5',texto:'Validar log de retorno por conta',concluido:false},{id:'c6',texto:'Registrar divergências e justificativas',concluido:false}],midias:[{ref:'midia1',tipo:'video',titulo:'Tutorial de conciliação',url:'https://www.w3schools.com/html/mov_bbb.mp4'},{ref:'midia2',tipo:'audio',titulo:'Nota operacional de contingência',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'}]},
-{id:'e4',titulo:'Conferir anexos e evidências do fechamento',descricao:'Nesta etapa rica, valide o pacote de evidências obrigatórias.
+Ao identificar um lançamento recorrente, não corrija apenas o item atual. Registre a origem do problema para que o cadastro ou integração seja ajustado posteriormente.`,
+      resultadoEsperado:'Todos os lançamentos do período devem estar classificados por centro de custo, conta contábil e histórico operacional, sem pendências manuais abertas para o dia.',
+      erroComum:'Concluir a etapa apenas porque não há alerta visual, sem conferir se existem filtros salvos ocultando lançamentos pendentes.',
+      checklist:[{id:'c3',texto:'Filtrar pendências por data, unidade e conta',concluido:false},{id:'c4',texto:'Classificar lançamentos manuais sem centro de custo',concluido:false},{id:'c5',texto:'Registrar origem das pendências recorrentes',concluido:false}],
+      midias:[{ref:'midia1',tipo:'imagem',titulo:'Tela de filtro de pendências',url:'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200'},{ref:'midia2',tipo:'documento',formato:'pdf',titulo:'Política de classificação contábil',url:'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'}]
+    },
+    {
+      id:'e3', titulo:'Validar conciliação bancária automática', concluida:false, importante:true, colapsada:false,
+      descricao:`Execute a conciliação automática somente depois que os lançamentos pendentes forem tratados. A rotina deve ser disparada por banco e por conta, respeitando o período de compensação definido pela tesouraria.
 
-Use @midia1 para referência visual de comprovante aceitável, @midia2 para orientação em áudio, @midia3 para fluxo de upload em vídeo, @midia4 para norma oficial em PDF, @midia5 para observações em TXT e @midia6/@midia7 para modelos externos (planilha e termo).
+Antes de rodar em produção, revise o fluxo demonstrado em @midia1. Durante o processamento, monitore mensagens de timeout, falha de API, duplicidade de documento ou divergência por data de compensação.
 
-Garanta nomenclatura padrão e legibilidade dos documentos antes de anexar.',resultadoEsperado:'Pacote de evidências completo, legível e nomeado conforme padrão corporativo.',erroComum:'Anexar arquivo sem padrão de nomenclatura ou com imagem ilegível, exigindo retrabalho na auditoria.',concluida:false,importante:false,colapsada:false,checklist:[{id:'c7',texto:'Validar imagem de comprovante',concluido:false},{id:'c8',texto:'Anexar norma e observações',concluido:false},{id:'c9',texto:'Subir planilha de suporte',concluido:false},{id:'c10',texto:'Subir termo de fechamento',concluido:false},{id:'c11',texto:'Conferir legibilidade final',concluido:false},{id:'c12',texto:'Confirmar nomenclatura padrão',concluido:false}],midias:[{ref:'midia1',tipo:'imagem',titulo:'Comprovante legível',url:'https://images.unsplash.com/photo-1554224155-1696413565d3?w=1200'},{ref:'midia2',tipo:'audio',titulo:'Orientação de anexos',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'},{ref:'midia3',tipo:'video',titulo:'Demonstração de upload',url:'https://www.w3schools.com/html/movie.mp4'},{ref:'midia4',tipo:'documento',formato:'pdf',titulo:'Norma de evidências',url:'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'},{ref:'midia5',tipo:'documento',formato:'txt',titulo:'Notas operacionais',conteudoSimulado:'Checklist de evidências
-- Nome padrão
-- Data correta
-- Legibilidade mínima'},{ref:'midia6',tipo:'documento',formato:'xlsx',titulo:'Planilha de suporte',url:'#'},{ref:'midia7',tipo:'documento',formato:'docx',titulo:'Termo de fechamento',url:'#'}]},
-{id:'e5',titulo:'Validar divergências fiscais e financeiras',descricao:'Revise divergências classificadas e confirme impacto financeiro. Esta etapa não possui checklist para validar comportamento do layout sem lista de marcação.',resultadoEsperado:'',erroComum:'',concluida:false,importante:false,colapsada:true,checklist:[],midias:[]},
-{id:'e6',titulo:'Revisar relatório de exceções',descricao:'Abra o relatório consolidado de exceções, compare com o fechamento anterior e destaque variações acima do limite definido.
+Se o sistema retornar inconsistência parcial, ouça a orientação rápida em @midia2 para decidir se deve executar retry, registrar exceção ou encaminhar para análise manual. O objetivo desta etapa não é zerar toda divergência a qualquer custo, mas separar divergência legítima de falha operacional.
 
-Use @midia1 para revisar a estrutura padrão do relatório e registrar somente exceções que demandam ação corretiva.',resultadoEsperado:'Relatório de exceções revisado e priorizado por criticidade.',erroComum:'Ignorar exceções recorrentes por considerar “já conhecidas”, sem revalidar impacto no período atual.',concluida:false,importante:false,colapsada:false,checklist:[{id:'c13',texto:'Comparar com o fechamento anterior',concluido:false}],midias:[{ref:'midia1',tipo:'documento',formato:'txt',titulo:'Estrutura de exceções',conteudoSimulado:'Critérios de criticidade
-- Alto impacto
-- Médio impacto
-- Baixo impacto'}]},
-{id:'e7',titulo:'Registrar observações operacionais',descricao:'Documente no diário operacional decisões tomadas, desvios aceitos e pendências encaminhadas.
+Não avance apenas pela ausência de erro fatal. Verifique o relatório final, os itens ignorados e os lançamentos conciliados automaticamente com baixa confiança.`,
+      resultadoEsperado:'Conciliação concluída com divergência líquida menor ou igual a 1%, registros ignorados documentados e exceções classificadas para revisão posterior.',
+      erroComum:'Considerar o processo válido apenas porque a rotina terminou sem erro fatal, sem revisar itens ignorados por diferença de data ou baixa confiança de matching.',
+      checklist:[{id:'c6',texto:'Executar conciliação por conta bancária',concluido:false},{id:'c7',texto:'Validar log de retorno por conta',concluido:false},{id:'c8',texto:'Classificar divergências por motivo',concluido:false},{id:'c9',texto:'Registrar exceções que dependem de análise manual',concluido:false}],
+      midias:[{ref:'midia1',tipo:'video',titulo:'Tutorial de conciliação automática',url:'https://www.w3schools.com/html/mov_bbb.mp4'},{ref:'midia2',tipo:'audio',titulo:'Nota operacional de contingência',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'}]
+    },
+    {
+      id:'e4', titulo:'Conferir anexos e evidências do fechamento', concluida:false, importante:false, colapsada:false,
+      descricao:`Esta etapa valida o pacote de evidências que será arquivado junto ao fechamento. O operador deve conferir se todos os documentos estão legíveis, nomeados corretamente e vinculados ao período correto.
 
-Se houver decisão fora do padrão, explicite motivo, aprovador e horário para garantir rastreabilidade posterior.',resultadoEsperado:'Observações registradas com contexto suficiente para auditoria interna.',erroComum:'',concluida:false,importante:false,colapsada:false,checklist:[{id:'c14',texto:'Registrar decisão e justificativa',concluido:false},{id:'c15',texto:'Registrar aprovador responsável',concluido:false},{id:'c16',texto:'Registrar horário da decisão',concluido:false}],midias:[]},
-{id:'e8',titulo:'Enviar resumo executivo para gestão',descricao:'Consolide os principais indicadores do fechamento e envie no canal oficial da gestão.
+Use @midia1 para referência visual de comprovante aceitável. Em caso de dúvida sobre qualidade mínima do arquivo, ouça @midia2. Para entender o fluxo de upload, assista @midia3.
 
-O resumo deve conter status geral, divergências críticas, pendências remanescentes e previsão de normalização.',resultadoEsperado:'Resumo enviado ao canal oficial com confirmação de leitura.',erroComum:'Enviar resumo sem anexar referência das exceções críticas.',concluida:false,importante:true,colapsada:false,checklist:[{id:'c17',texto:'Consolidar indicadores',concluido:false},{id:'c18',texto:'Enviar no canal oficial',concluido:false}],midias:[]},
-{id:'e9',titulo:'Assinar e arquivar fechamento',descricao:'Finalize a rotina com assinatura digital e arquivamento dos artefatos obrigatórios.
+A norma oficial está em @midia4. As observações rápidas do time de auditoria estão em @midia5. Os modelos externos de planilha e termo ficam em @midia6 e @midia7.
 
-Antes de concluir, confira @midia1 para o modelo de termo e @midia2 para o checklist final em PDF.',resultadoEsperado:'Fechamento arquivado com assinatura válida e trilha de evidências completa.',erroComum:'Encerrar rotina sem assinatura eletrônica ou com termo incompleto.',concluida:false,importante:false,colapsada:false,checklist:[{id:'c19',texto:'Coletar assinatura digital',concluido:false},{id:'c20',texto:'Arquivar artefatos no repositório oficial',concluido:false}],midias:[{ref:'midia1',tipo:'documento',formato:'docx',titulo:'Termo de fechamento',url:'#'},{ref:'midia2',tipo:'documento',formato:'pdf',titulo:'Checklist final de arquivamento',url:'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'}]}
-]};
-const els={popTitulo:popTitulo,popDescricao:popDescricao,popVersao:popVersao,execStatus:execStatus,progressText:progressText,progressBar:progressBar,kpiLinha:kpiLinha,indiceEtapas:indiceEtapas,listaEtapas:listaEtapas,estadoFinal:estadoFinal,layoutExecucao:layoutExecucao,painelMidiaWrapper:painelMidiaWrapper,mediaTitulo:mediaTitulo,mediaConteudo:mediaConteudo,fecharPainelMidia:fecharPainelMidia,mediaModal:mediaModal,closeModal:closeModal,mediaModalTitulo:mediaModalTitulo,mediaModalTipo:mediaModalTipo,mediaModalConteudo:mediaModalConteudo,buscaEtapa:buscaEtapa,btnExpandirTudo:btnExpandirTudo,btnRecolherConcluidas:btnRecolherConcluidas,toast:toast,themePicker:themePicker};
-let buscaTexto='';let currentAudio=null;
-function applyTheme(k){Object.entries(THEMES[k]).forEach(([t,v])=>document.documentElement.style.setProperty(t,v));localStorage.setItem(THEME_KEY,k);document.querySelectorAll('.theme-btn').forEach(b=>b.classList.toggle('active',b.dataset.theme===k));}
-function renderThemePicker(){els.themePicker.innerHTML=['t1','t2','t3','t4','t5'].map((t,i)=>`<button class='theme-btn px-2 py-1 text-xs rounded border line muted' data-theme='${t}'>Tema ${i+1}</button>`).join('');}
-const persistir=()=>localStorage.setItem(STORAGE_KEY,JSON.stringify(execucaoMock.etapas));
-function carregar(){const raw=localStorage.getItem(STORAGE_KEY);if(raw)try{const saved=JSON.parse(raw);saved.forEach(s=>{const e=execucaoMock.etapas.find(x=>x.id===s.id);if(e)Object.assign(e,s);});}catch{}}
-const icon=(m)=>m.tipo==='imagem'?'Imagem':m.tipo==='audio'?'Áudio':m.tipo==='video'?'Vídeo':m.formato==='pdf'?'PDF':'Doc';
-const showToast=(m)=>{els.toast.textContent=m;els.toast.classList.remove('hidden');setTimeout(()=>els.toast.classList.add('hidden'),1700)};
-const primeiraPendente=()=>execucaoMock.etapas.find(e=>!e.concluida);
-const renderDesc=(e)=>e.descricao.replace(/@([a-zA-Z0-9_]+)/g,(_,r)=>{const m=e.midias.find(x=>x.ref===r);if(!m)return`@${r}`;return`<button class='chip px-2 py-1 rounded-md text-xs' data-etapa-id='${e.id}' data-media-ref='${m.ref}'>${icon(m)} • @${m.ref}</button>`});
-function abrirMidia(m){if(m.tipo==='audio'){els.painelMidiaWrapper.classList.remove('hidden');els.layoutExecucao.classList.add('lg:grid-cols-[minmax(0,1fr)_260px]');els.mediaTitulo.textContent=m.titulo;els.mediaConteudo.innerHTML=`<audio controls class='w-full'><source src='${m.url}' type='audio/mpeg'></audio>`;currentAudio=els.mediaConteudo.querySelector('audio');return;}els.mediaModalTitulo.textContent=m.titulo;els.mediaModalTipo.textContent=icon(m);els.mediaModalConteudo.innerHTML=m.tipo==='imagem'?`<img src='${m.url}' class='w-full rounded-lg'/>`:m.tipo==='video'?`<video controls class='w-full rounded-lg'><source src='${m.url}' type='video/mp4'></video>`:`<iframe src='${m.url||''}' class='w-full h-[55vh] rounded-lg'></iframe>`;els.mediaModal.classList.remove('hidden');}
-function closeAudio(){if(currentAudio){currentAudio.pause();currentAudio.currentTime=0;}els.painelMidiaWrapper.classList.add('hidden');els.layoutExecucao.classList.remove('lg:grid-cols-[minmax(0,1fr)_260px]');els.mediaConteudo.innerHTML='';}
-const closeModalFn=()=>{els.mediaModal.classList.add('hidden');els.mediaModalConteudo.innerHTML='';};
-function renderIndice(etapas,atual){els.indiceEtapas.innerHTML=etapas.map((e,i)=>`<button class='px-2.5 py-1 rounded-full text-xs border ${e.id===atual?.id?'chip-current':e.concluida?'chip-done':e.importante?'chip-imp':'chip'}' data-scroll-step='${e.id}'>${i+1}</button>`).join('');}
-function renderProgresso(){const t=execucaoMock.etapas.length,c=execucaoMock.etapas.filter(e=>e.concluida).length,p=Math.round((c/t)*100),imp=execucaoMock.etapas.filter(e=>e.importante).length;els.progressText.textContent=`${c} de ${t} etapas concluídas`;els.progressBar.style.width=`${p}%`;els.kpiLinha.textContent=`${t-c} pendentes • ${imp} importantes`;els.execStatus.className=`px-2 py-1 rounded-full text-xs border ${c===t?'badge-done':'badge-run'}`;els.execStatus.textContent=c===t?'Concluída':'Em andamento';els.estadoFinal.classList.toggle('hidden',c!==t);}
-function renderEtapas(){const atual=primeiraPendente();const filtered=execucaoMock.etapas.filter(e=>(`${e.titulo} ${e.descricao}`).toLowerCase().includes(buscaTexto.toLowerCase()));els.listaEtapas.innerHTML=filtered.map((e,i)=>{const open=!e.colapsada||e.id===atual?.id||e.importante;const ori=(e.resultadoEsperado||e.erroComum)?`<div class='text-sm muted border-l-2 line pl-3 mb-3'>${e.resultadoEsperado?`<p><strong>Resultado esperado:</strong> ${e.resultadoEsperado}</p>`:''}${e.erroComum?`<p class='danger mt-1'><strong>Erro comum:</strong> ${e.erroComum}</p>`:''}</div>`:'';return`<article id='${e.id}' class='surface border rounded-2xl p-5 shadow-sm ${e.id===atual?.id?'border-l-4':''}' style='border-left-color:${e.id===atual?.id?'var(--pf-primary)':'transparent'}'><div class='flex justify-between'><div><p class='text-xs muted'>Etapa ${i+1}</p><h3 class='text-base font-semibold'>${e.concluida?'✅ ':''}${e.titulo}</h3></div><div class='flex gap-2'><button data-fav-etapa='${e.id}' class='text-sm ${e.importante?'chip-imp':'muted'}'>${e.importante?'★':'☆'}</button><button data-toggle-colapso='${e.id}' class='text-xs muted'>${open?'Recolher':'Expandir'}</button></div></div>${open?`<div class='text-sm muted mt-3 mb-3 leading-6'>${renderDesc(e)}</div>${ori}${e.checklist.length?`<ul class='space-y-1.5 mb-3'>${e.checklist.map(c=>`<li class='flex items-center gap-2 text-sm'><input type='checkbox' ${c.concluido?'checked':''} data-etapa-id='${e.id}' data-check-id='${c.id}'/><span>${c.texto}</span></li>`).join('')}</ul>`:''}<button data-concluir-etapa='${e.id}' class='btn-primary px-3 py-1.5 rounded-lg text-sm'>${e.concluida?'Concluída':'Marcar como concluída'}</button>`:`<p class='mt-2 text-xs muted'>${e.concluida?'Concluída':'Pendente'}</p>`}</article>`}).join('');renderIndice(filtered,atual);}
-function render(){els.popTitulo.textContent=execucaoMock.pop.titulo;els.popDescricao.textContent=execucaoMock.pop.descricao;els.popVersao.textContent=execucaoMock.pop.versao;renderProgresso();renderEtapas();persistir();}
-addEventListener('click',(ev)=>{const t=ev.target.closest('[data-theme]');if(t)applyTheme(t.dataset.theme);const s=ev.target.closest('[data-scroll-step]');if(s)document.getElementById(s.dataset.scrollStep)?.scrollIntoView({behavior:'smooth'});const m=ev.target.closest('[data-media-ref]');if(m){const e=execucaoMock.etapas.find(x=>x.id===m.dataset.etapaId);const media=e?.midias.find(x=>x.ref===m.dataset.mediaRef);if(media)abrirMidia(media);}const ck=ev.target.closest('[data-check-id]');if(ck){const e=execucaoMock.etapas.find(x=>x.id===ck.dataset.etapaId);const c=e?.checklist.find(x=>x.id===ck.dataset.checkId);if(c)c.concluido=ck.checked;persistir();}const cc=ev.target.closest('[data-concluir-etapa]');if(cc){const e=execucaoMock.etapas.find(x=>x.id===cc.dataset.concluirEtapa);if(e){e.concluida=!e.concluida;render();}}const f=ev.target.closest('[data-fav-etapa]');if(f){const e=execucaoMock.etapas.find(x=>x.id===f.dataset.favEtapa);if(e){e.importante=!e.importante;e.colapsada=false;render();showToast(e.importante?'Etapa marcada como importante':'Etapa removida dos importantes');}}const c=ev.target.closest('[data-toggle-colapso]');if(c){const e=execucaoMock.etapas.find(x=>x.id===c.dataset.toggleColapso);if(e){e.colapsada=!e.colapsada;render();}}});
-els.btnExpandirTudo.onclick=()=>{execucaoMock.etapas.forEach(e=>e.colapsada=false);render()};els.btnRecolherConcluidas.onclick=()=>{const a=primeiraPendente();execucaoMock.etapas.forEach(e=>{if(e.concluida&&!e.importante&&e.id!==a?.id)e.colapsada=true});render()};
-els.buscaEtapa.oninput=e=>{buscaTexto=e.target.value;renderEtapas()};els.fecharPainelMidia.onclick=closeAudio;els.closeModal.onclick=closeModalFn;els.mediaModal.onclick=e=>{if(e.target===els.mediaModal)closeModalFn()};
-renderThemePicker();applyTheme(localStorage.getItem(THEME_KEY)||'t1');carregar();render();
-</script></body></html>
+Esta etapa é propositalmente rica em mídias para validar o comportamento do protótipo quando várias referências aparecem dentro do mesmo card.`,
+      resultadoEsperado:'Pacote de evidências completo, legível, com nomenclatura padronizada e vinculado ao fechamento correto.',
+      erroComum:'Anexar arquivo ilegível, sem padrão de nome ou com referência a competência diferente da executada.',
+      checklist:[{id:'c10',texto:'Validar legibilidade dos comprovantes',concluido:false},{id:'c11',texto:'Confirmar nomenclatura padrão dos arquivos',concluido:false},{id:'c12',texto:'Anexar norma ou relatório obrigatório',concluido:false},{id:'c13',texto:'Anexar planilha de suporte',concluido:false},{id:'c14',texto:'Anexar termo de fechamento',concluido:false},{id:'c15',texto:'Conferir vínculo com competência correta',concluido:false}],
+      midias:[{ref:'midia1',tipo:'imagem',titulo:'Comprovante legível',url:'https://images.unsplash.com/photo-1554224155-1696413565d3?w=1200'},{ref:'midia2',tipo:'audio',titulo:'Orientação sobre qualidade dos anexos',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'},{ref:'midia3',tipo:'video',titulo:'Demonstração de upload',url:'https://www.w3schools.com/html/movie.mp4'},{ref:'midia4',tipo:'documento',formato:'pdf',titulo:'Norma de evidências',url:'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'},{ref:'midia5',tipo:'documento',formato:'txt',titulo:'Notas operacionais da auditoria',conteudoSimulado:'Checklist de evidências\n- Nome padrão\n- Data correta\n- Legibilidade mínima\n- Competência do fechamento\n- Aprovação quando aplicável'},{ref:'midia6',tipo:'documento',formato:'xlsx',titulo:'Planilha padrão de suporte',url:'#'},{ref:'midia7',tipo:'documento',formato:'docx',titulo:'Termo de fechamento',url:'#'}]
+    },
+    {
+      id:'e5', titulo:'Validar divergências fiscais e financeiras', concluida:false, importante:false, colapsada:true,
+      descricao:`Revise as divergências classificadas nas etapas anteriores e confirme se há impacto fiscal, financeiro ou apenas operacional. Esta etapa não possui checklist para testar o comportamento do layout sem lista de marcação.
+
+Quando houver divergência de valor, sempre registre a diferença bruta, a diferença líquida e o motivo provável. Se a divergência depender de terceiro, marque como pendência acompanhável e não como erro resolvido.`,
+      resultadoEsperado:'Divergências separadas por criticidade e impacto, sem misturar erro operacional com diferença legítima de conciliação.',
+      erroComum:'Tratar toda diferença como erro de conciliação sem verificar se há efeito fiscal, financeiro ou apenas documental.',
+      checklist:[],
+      midias:[]
+    },
+    {
+      id:'e6', titulo:'Revisar relatório de exceções', concluida:false, importante:false, colapsada:false,
+      descricao:`Abra o relatório consolidado de exceções e compare com o fechamento anterior. O foco não é apenas identificar novas exceções, mas entender se há recorrência, agravamento ou mudança de causa.
+
+Use @midia1 para revisar a estrutura esperada do relatório. As exceções devem ser agrupadas por criticidade, responsável e prazo de tratamento. Evite registrar observações genéricas como “verificar depois”, pois isso não cria rastreabilidade útil para gestão.`,
+      resultadoEsperado:'Relatório de exceções revisado, priorizado por criticidade e com responsáveis definidos para cada pendência relevante.',
+      erroComum:'Ignorar exceções recorrentes por considerar que “já são conhecidas”, sem revalidar impacto no fechamento atual.',
+      checklist:[{id:'c16',texto:'Comparar exceções com fechamento anterior',concluido:false},{id:'c17',texto:'Classificar criticidade',concluido:false},{id:'c18',texto:'Definir responsável por pendência',concluido:false}],
+      midias:[{ref:'midia1',tipo:'documento',formato:'txt',titulo:'Estrutura de exceções',conteudoSimulado:'Critérios de criticidade\n- Alto impacto: bloqueia fechamento\n- Médio impacto: exige correção posterior\n- Baixo impacto: registrar para histórico'}]
+    },
+    {
+      id:'e7', titulo:'Registrar observações operacionais', concluida:false, importante:false, colapsada:false,
+      descricao:`Documente no diário operacional todas as decisões tomadas durante o fechamento. Registre desvios aceitos, aprovações recebidas, pendências encaminhadas e qualquer ocorrência que possa explicar variação futura nos indicadores.
+
+Se uma decisão saiu do fluxo padrão, informe motivo, aprovador, horário e evidência relacionada. Essa etapa cria memória institucional e evita que o fechamento dependa da lembrança individual do operador.`,
+      resultadoEsperado:'Observações registradas com contexto suficiente para auditoria, revisão gerencial ou investigação posterior.',
+      erroComum:'Registrar apenas “ok” ou “validado”, sem explicar o que foi validado e qual evidência sustentou a decisão.',
+      checklist:[{id:'c19',texto:'Registrar decisões fora do padrão',concluido:false},{id:'c20',texto:'Informar aprovador quando houver exceção',concluido:false},{id:'c21',texto:'Vincular evidência ou relatório quando aplicável',concluido:false}],
+      midias:[]
+    },
+    {
+      id:'e8', titulo:'Enviar resumo executivo para gestão', concluida:false, importante:true, colapsada:false,
+      descricao:`Consolide os principais indicadores do fechamento e envie no canal oficial da gestão. O resumo deve ser claro o suficiente para que um gestor entenda o cenário sem abrir todos os relatórios.
+
+Inclua status geral, divergências críticas, pendências remanescentes, risco financeiro estimado e previsão de normalização. Quando houver exceção crítica, explique o motivo de forma objetiva e indique o responsável pelo próximo passo.
+
+Esta etapa é marcada como importante porque representa comunicação oficial e pode gerar decisão de negócio.`,
+      resultadoEsperado:'Resumo enviado no canal oficial com indicadores principais, pendências críticas e confirmação de leitura quando exigida.',
+      erroComum:'Enviar resumo sem anexar referência das exceções críticas ou sem indicar prazo de normalização.',
+      checklist:[{id:'c22',texto:'Consolidar indicadores principais',concluido:false},{id:'c23',texto:'Listar pendências críticas',concluido:false},{id:'c24',texto:'Enviar no canal oficial',concluido:false},{id:'c25',texto:'Registrar confirmação de leitura quando necessário',concluido:false}],
+      midias:[]
+    },
+    {
+      id:'e9', titulo:'Assinar e arquivar fechamento', concluida:false, importante:false, colapsada:false,
+      descricao:`Finalize a rotina com assinatura digital e arquivamento dos artefatos obrigatórios. Antes de concluir, confira o modelo de termo em @midia1 e o checklist final em @midia2.
+
+O arquivamento deve permitir consulta futura por competência, unidade, responsável e status. Se algum documento obrigatório estiver pendente, não oculte a pendência; registre a justificativa e encaminhe ao responsável.`,
+      resultadoEsperado:'Fechamento arquivado com assinatura válida, trilha de evidências completa e pendências justificadas quando existirem.',
+      erroComum:'Encerrar rotina sem assinatura eletrônica ou com termo incompleto, gerando fragilidade em auditoria futura.',
+      checklist:[{id:'c26',texto:'Coletar assinatura digital',concluido:false},{id:'c27',texto:'Arquivar artefatos no repositório oficial',concluido:false},{id:'c28',texto:'Registrar justificativa para pendências remanescentes',concluido:false}],
+      midias:[{ref:'midia1',tipo:'documento',formato:'docx',titulo:'Termo de fechamento',url:'#'},{ref:'midia2',tipo:'documento',formato:'pdf',titulo:'Checklist final de arquivamento',url:'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'}]
+    }
+  ]
+};
+
+const els = {
+  popTitulo, popDescricao, popVersao, execStatus, progressText, progressBar, kpiLinha, indiceEtapas,
+  listaEtapas, estadoFinal, layoutExecucao, painelMidiaWrapper, mediaTitulo, mediaConteudo,
+  fecharPainelMidia, mediaModal, closeModal, mediaModalTitulo, mediaModalTipo, mediaModalConteudo,
+  buscaEtapa, btnExpandirTudo, btnRecolherConcluidas, btnResetar, toast, themePicker, resultadoBusca
+};
+let buscaTexto = '';
+let currentAudio = null;
+
+function applyTheme(key) {
+  const theme = THEMES[key] || THEMES.t1;
+  Object.entries(theme).forEach(([token, value]) => document.documentElement.style.setProperty(token, value));
+  localStorage.setItem(THEME_KEY, key);
+  document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.theme === key));
+}
+function renderThemePicker() {
+  els.themePicker.innerHTML = ['t1','t2','t3','t4','t5'].map((key, index) => `<button class="theme-btn px-2 py-1 text-xs rounded border line muted" data-theme="${key}">Tema ${index + 1}</button>`).join('');
+}
+function persistir() {
+  const state = execucaoMock.etapas.map(e => ({
+    id:e.id, concluida:e.concluida, importante:e.importante, colapsada:e.colapsada,
+    checklist:e.checklist.map(c => ({id:c.id, concluido:c.concluido}))
+  }));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+function carregar() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return;
+  try {
+    const saved = JSON.parse(raw);
+    saved.forEach(item => {
+      const etapa = execucaoMock.etapas.find(e => e.id === item.id);
+      if (!etapa) return;
+      etapa.concluida = !!item.concluida;
+      etapa.importante = !!item.importante;
+      etapa.colapsada = !!item.colapsada;
+      item.checklist?.forEach(savedCheck => {
+        const check = etapa.checklist.find(c => c.id === savedCheck.id);
+        if (check) check.concluido = !!savedCheck.concluido;
+      });
+    });
+  } catch (error) {
+    console.warn('Estado local ignorado por estar inválido.', error);
+  }
+}
+function resetarEstado() {
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+function icon(midia) {
+  if (midia.tipo === 'imagem') return 'Imagem';
+  if (midia.tipo === 'audio') return 'Áudio';
+  if (midia.tipo === 'video') return 'Vídeo';
+  if (midia.formato === 'pdf') return 'PDF';
+  if (midia.formato === 'txt') return 'TXT';
+  if (midia.formato === 'xlsx') return 'Planilha';
+  if (midia.formato === 'docx') return 'Word';
+  return 'Documento';
+}
+function showToast(message) {
+  els.toast.textContent = message;
+  els.toast.classList.remove('hidden');
+  setTimeout(() => els.toast.classList.add('hidden'), 1800);
+}
+function primeiraPendente() {
+  return execucaoMock.etapas.find(e => !e.concluida);
+}
+function renderDescricaoComMidias(etapa) {
+  return etapa.descricao.replace(/@([a-zA-Z0-9_]+)/g, (_, ref) => {
+    const midia = etapa.midias.find(m => m.ref === ref);
+    if (!midia) return `@${ref}`;
+    return `<button class="chip media-chip px-2 py-1 rounded-md text-xs inline-flex items-center gap-1 transition" data-etapa-id="${etapa.id}" data-media-ref="${midia.ref}">${icon(midia)} • @${midia.ref}</button>`;
+  });
+}
+function abrirMidia(midia) {
+  if (midia.tipo === 'audio') {
+    els.painelMidiaWrapper.classList.remove('hidden');
+    els.layoutExecucao.classList.add('lg:grid-cols-[minmax(0,1fr)_300px]');
+    els.mediaTitulo.textContent = `${midia.titulo} (${icon(midia)})`;
+    els.mediaConteudo.innerHTML = `<audio controls class="w-full"><source src="${midia.url}" type="audio/mpeg"></audio>`;
+    currentAudio = els.mediaConteudo.querySelector('audio');
+    return;
+  }
+  els.mediaModalTitulo.textContent = midia.titulo;
+  els.mediaModalTipo.textContent = icon(midia);
+  if (midia.tipo === 'imagem') {
+    els.mediaModalConteudo.innerHTML = `<img src="${midia.url}" class="w-full rounded-xl" alt="${midia.titulo}" />`;
+  } else if (midia.tipo === 'video') {
+    els.mediaModalConteudo.innerHTML = `<video controls class="w-full rounded-xl"><source src="${midia.url}" type="video/mp4"></video>`;
+  } else if (midia.formato === 'pdf') {
+    els.mediaModalConteudo.innerHTML = `<iframe src="${midia.url}" class="w-full h-[65vh] rounded-xl"></iframe>`;
+  } else if (midia.formato === 'txt') {
+    els.mediaModalConteudo.innerHTML = `<pre class="text-sm surface-muted border line rounded-xl p-4 whitespace-pre-wrap">${midia.conteudoSimulado || ''}</pre>`;
+  } else {
+    els.mediaModalConteudo.innerHTML = `<div class="surface-muted border line rounded-xl p-5"><p class="text-sm muted mb-3">Este formato deve ser baixado para abertura externa.</p><a href="${midia.url || '#'}" class="btn-primary px-3 py-2 rounded-lg text-sm inline-block">Baixar arquivo</a></div>`;
+  }
+  els.mediaModal.classList.remove('hidden');
+}
+function fecharAudio() {
+  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; }
+  currentAudio = null;
+  els.painelMidiaWrapper.classList.add('hidden');
+  els.layoutExecucao.classList.remove('lg:grid-cols-[minmax(0,1fr)_300px]');
+  els.mediaConteudo.innerHTML = '';
+}
+function fecharModal() {
+  els.mediaModal.classList.add('hidden');
+  els.mediaModalConteudo.innerHTML = '';
+}
+function renderIndice(etapas, atual) {
+  els.indiceEtapas.innerHTML = etapas.map((etapa, index) => {
+    const cls = etapa.id === atual?.id ? 'chip-current' : etapa.concluida ? 'chip-done' : etapa.importante ? 'chip-imp' : 'chip';
+    return `<button class="px-3 py-1.5 rounded-full text-xs border ${cls}" data-scroll-step="${etapa.id}" title="${etapa.titulo}">${index + 1}. ${etapa.titulo.slice(0, 26)}</button>`;
+  }).join('');
+}
+function renderProgresso() {
+  const total = execucaoMock.etapas.length;
+  const concluidas = execucaoMock.etapas.filter(e => e.concluida).length;
+  const importantes = execucaoMock.etapas.filter(e => e.importante).length;
+  const percentual = Math.round((concluidas / total) * 100);
+  els.progressText.textContent = `${concluidas} de ${total} etapas concluídas`;
+  els.progressBar.style.width = `${percentual}%`;
+  els.kpiLinha.textContent = `${total - concluidas} pendentes • ${importantes} importantes • checklist opcional`;
+  els.execStatus.className = `px-2 py-1 rounded-full text-xs ${concluidas === total ? 'badge-done' : 'badge-run'}`;
+  els.execStatus.textContent = concluidas === total ? 'Concluída' : 'Em andamento';
+  els.estadoFinal.classList.toggle('hidden', concluidas !== total);
+}
+function renderEtapas() {
+  const atual = primeiraPendente();
+  const filtradas = execucaoMock.etapas.filter(e => `${e.titulo} ${e.descricao} ${e.resultadoEsperado} ${e.erroComum}`.toLowerCase().includes(buscaTexto.toLowerCase()));
+  els.resultadoBusca.textContent = buscaTexto ? `${filtradas.length} resultado(s)` : `${execucaoMock.etapas.length} etapas`;
+  els.listaEtapas.innerHTML = filtradas.map((etapa, index) => {
+    const aberta = !etapa.colapsada || etapa.id === atual?.id || etapa.importante;
+    const orientacoes = (etapa.resultadoEsperado || etapa.erroComum) ? `<div class="grid md:grid-cols-2 gap-3 mb-4">
+      ${etapa.resultadoEsperado ? `<div class="success-box border rounded-xl p-3 text-sm"><strong>Resultado esperado</strong><p class="mt-1 leading-6">${etapa.resultadoEsperado}</p></div>` : ''}
+      ${etapa.erroComum ? `<div class="danger-box border rounded-xl p-3 text-sm"><strong>Erro comum</strong><p class="mt-1 leading-6">${etapa.erroComum}</p></div>` : ''}
+    </div>` : '';
+    const checklist = etapa.checklist.length ? `<div class="surface-muted border line rounded-xl p-3 mb-4"><p class="text-xs font-semibold muted mb-2 uppercase tracking-wide">Checklist opcional</p><ul class="space-y-2">${etapa.checklist.map(check => `<li class="flex items-start gap-2 text-sm"><input type="checkbox" ${check.concluido ? 'checked' : ''} data-etapa-id="${etapa.id}" data-check-id="${check.id}" class="mt-1 h-4 w-4"/><span>${check.texto}</span></li>`).join('')}</ul></div>` : '';
+    return `<article id="${etapa.id}" class="surface border rounded-2xl p-5 step-card transition ${etapa.importante ? 'border-[var(--pf-warning-border)]' : ''} ${etapa.id === atual?.id ? 'border-l-4' : ''}" style="border-left-color:${etapa.id === atual?.id ? 'var(--pf-primary)' : 'var(--pf-border)'}">
+      <div class="flex justify-between gap-4">
+        <div class="min-w-0">
+          <div class="flex items-center gap-2 flex-wrap">
+            <p class="text-xs muted">Etapa ${index + 1}</p>
+            ${etapa.concluida ? '<span class="px-2 py-0.5 rounded-full text-[11px] badge-done">Concluída</span>' : '<span class="px-2 py-0.5 rounded-full text-[11px] badge-run">Pendente</span>'}
+            ${etapa.importante ? '<span class="px-2 py-0.5 rounded-full text-[11px] chip-imp">Importante</span>' : ''}
+          </div>
+          <h3 class="text-lg font-semibold mt-1">${etapa.titulo}</h3>
+        </div>
+        <div class="flex items-start gap-2 shrink-0">
+          <button data-fav-etapa="${etapa.id}" class="text-lg leading-none ${etapa.importante ? 'chip-imp px-1 rounded' : 'muted'}" title="Marcar como importante">${etapa.importante ? '★' : '☆'}</button>
+          <button data-toggle-colapso="${etapa.id}" class="text-xs muted hover:underline">${aberta ? 'Recolher' : 'Expandir'}</button>
+        </div>
+      </div>
+      ${aberta ? `<div class="text-sm muted mt-4 mb-4 leading-7 whitespace-pre-wrap">${renderDescricaoComMidias(etapa)}</div>${orientacoes}${checklist}<button data-concluir-etapa="${etapa.id}" class="btn-primary px-3 py-2 rounded-lg text-sm">${etapa.concluida ? 'Desmarcar conclusão' : 'Marcar como concluída'}</button>` : `<p class="mt-3 text-xs muted">${etapa.concluida ? 'Etapa concluída e recolhida.' : 'Etapa recolhida.'}</p>`}
+    </article>`;
+  }).join('');
+  renderIndice(filtradas, atual);
+}
+function render() {
+  els.popTitulo.textContent = execucaoMock.pop.titulo;
+  els.popDescricao.textContent = execucaoMock.pop.descricao;
+  els.popVersao.textContent = execucaoMock.pop.versao;
+  renderProgresso();
+  renderEtapas();
+  persistir();
+}
+
+document.addEventListener('click', (event) => {
+  const themeBtn = event.target.closest('[data-theme]');
+  if (themeBtn) applyTheme(themeBtn.dataset.theme);
+  const scrollBtn = event.target.closest('[data-scroll-step]');
+  if (scrollBtn) document.getElementById(scrollBtn.dataset.scrollStep)?.scrollIntoView({behavior:'smooth', block:'center'});
+  const mediaBtn = event.target.closest('[data-media-ref]');
+  if (mediaBtn) {
+    const etapa = execucaoMock.etapas.find(e => e.id === mediaBtn.dataset.etapaId);
+    const midia = etapa?.midias.find(m => m.ref === mediaBtn.dataset.mediaRef);
+    if (midia) abrirMidia(midia);
+  }
+  const checkInput = event.target.closest('[data-check-id]');
+  if (checkInput) {
+    const etapa = execucaoMock.etapas.find(e => e.id === checkInput.dataset.etapaId);
+    const check = etapa?.checklist.find(c => c.id === checkInput.dataset.checkId);
+    if (check) { check.concluido = checkInput.checked; persistir(); }
+  }
+  const concluirBtn = event.target.closest('[data-concluir-etapa]');
+  if (concluirBtn) {
+    const etapa = execucaoMock.etapas.find(e => e.id === concluirBtn.dataset.concluirEtapa);
+    if (etapa) { etapa.concluida = !etapa.concluida; render(); showToast(etapa.concluida ? 'Etapa marcada como concluída' : 'Conclusão removida'); }
+  }
+  const favBtn = event.target.closest('[data-fav-etapa]');
+  if (favBtn) {
+    const etapa = execucaoMock.etapas.find(e => e.id === favBtn.dataset.favEtapa);
+    if (etapa) { etapa.importante = !etapa.importante; etapa.colapsada = false; render(); showToast(etapa.importante ? 'Etapa marcada como importante' : 'Etapa removida dos importantes'); }
+  }
+  const toggleBtn = event.target.closest('[data-toggle-colapso]');
+  if (toggleBtn) {
+    const etapa = execucaoMock.etapas.find(e => e.id === toggleBtn.dataset.toggleColapso);
+    if (etapa) { etapa.colapsada = !etapa.colapsada; render(); }
+  }
+});
+
+els.btnExpandirTudo.onclick = () => { execucaoMock.etapas.forEach(e => e.colapsada = false); render(); };
+els.btnRecolherConcluidas.onclick = () => { const atual = primeiraPendente(); execucaoMock.etapas.forEach(e => { if (e.concluida && !e.importante && e.id !== atual?.id) e.colapsada = true; }); render(); };
+els.btnResetar.onclick = resetarEstado;
+els.buscaEtapa.oninput = e => { buscaTexto = e.target.value; renderEtapas(); };
+els.fecharPainelMidia.onclick = fecharAudio;
+els.closeModal.onclick = fecharModal;
+els.mediaModal.onclick = e => { if (e.target === els.mediaModal) fecharModal(); };
+
+renderThemePicker();
+applyTheme(localStorage.getItem(THEME_KEY) || 't1');
+carregar();
+render();
+setTimeout(() => primeiraPendente() && document.getElementById(primeiraPendente().id)?.scrollIntoView({behavior:'smooth', block:'center'}), 250);
+</script>
+</body>
+</html>
