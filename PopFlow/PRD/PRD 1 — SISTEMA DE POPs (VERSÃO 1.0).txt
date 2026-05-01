@@ -76,6 +76,23 @@ Criar um sistema onde:
 
 ---
 
+
+
+## 🧩 5.1 MODOS DE USO
+
+### Modo Consulta
+
+- Navegação livre
+- Scroll completo por todas as etapas
+- Sem obrigatoriedade de interação
+- Foco em leitura rápida
+
+### Modo Execução
+
+- Marcação de etapas
+- Uso opcional de checklist
+- Registro de progresso
+
 ## 🧱 6. FUNCIONALIDADES (MVP)
 
 ### 📌 POPs
