@@ -234,3 +234,29 @@ Isso transforma seu produto em:
 
 👉 Documentação ❌  
 👉 Plataforma de treinamento interativa ✔️
+---
+
+## 🗂️ 16. EXTENSÃO — DOCUMENTOS INLINE
+
+### Tipos suportados
+
+- imagem
+- áudio
+- vídeo
+- documento
+
+### Formatos de documento
+
+- PDF
+- TXT
+- DOC/DOCX
+- XLS/XLSX
+- outros
+
+### Regras de exibição
+
+- imagem/vídeo: modal central
+- áudio: painel lateral ou player persistente
+- PDF/TXT: visualização no modal
+- DOC/DOCX e XLS/XLSX: download/abertura externa
+
