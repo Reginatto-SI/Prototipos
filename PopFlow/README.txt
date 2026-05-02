@@ -249,3 +249,13 @@ POPFlow não é apenas um sistema de documentação.
 
 ---
 
+
+## Protótipos visuais
+
+Os protótipos visuais do PopFlow estão organizados no arquivo:
+
+`00-mapa-dos-prototipos.md`
+
+Eles servem como referência visual e de UX. As regras funcionais continuam sendo definidas exclusivamente nos PRDs da pasta `/PRD`.
+
+Em caso de conflito entre protótipo e PRD, o PRD prevalece.
