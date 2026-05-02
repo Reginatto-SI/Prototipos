@@ -115,15 +115,18 @@ POPFlow permite inserir mídia diretamente no texto das etapas usando referênci
 - 🖼️ Imagem
 - 🎧 Áudio
 - 🎥 Vídeo
+- 📄 Documento/PDF
 
 ### Exemplo:
 
 > "Preencha os campos conforme @midia1 e ouça a explicação em @midia2"
 
 ### Comportamento:
-- Clique → exibe mídia no painel lateral
-- Áudio → player integrado
-- Vídeo → player embutido
+- Clique na referência inline → abre mídia de forma contextual, sem drawer lateral fixo
+- Imagem e vídeo → modal central (lightbox/player)
+- Documento/PDF → modal central de visualização ou nova aba quando tecnicamente necessário
+- Áudio → mini-player flutuante discreto (reproduzir, pausar e fechar)
+- A tela de execução permanece focada na etapa atual, sem compressão lateral do conteúdo principal
 
 👉 Isso transforma o POP em um **tutorial interativo multimídia**
 

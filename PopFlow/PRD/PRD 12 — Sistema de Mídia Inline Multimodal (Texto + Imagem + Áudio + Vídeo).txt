@@ -4,7 +4,7 @@
 
 ## 🧠 1. VISÃO
 
-Este módulo permite que diferentes tipos de mídia (imagem, áudio, vídeo) sejam inseridos e referenciados diretamente dentro do texto das etapas de um POP, criando uma experiência interativa e contextualizada.
+Este módulo permite que diferentes tipos de mídia (imagem, áudio, vídeo e documento/PDF) sejam inseridos e referenciados diretamente dentro do texto das etapas de um POP, criando uma experiência interativa e contextualizada.
 
 O objetivo é transformar o POP em um guia multimídia, onde o usuário acessa conteúdos complementares no momento exato da execução.
 
@@ -32,6 +32,7 @@ Cada mídia pode ser:
 - imagem
 - áudio
 - vídeo
+- documento/PDF
 
 ---
 
@@ -43,6 +44,7 @@ Cada mídia pode ser:
    - upload de imagem
    - upload de áudio (MP3)
    - upload de vídeo
+   - upload de documento/PDF
 
 2. Sistema gera identificadores:
    - midia1
@@ -71,6 +73,7 @@ Cada mídia pode ser:
 - Imagem
 - Áudio (MP3)
 - Vídeo
+- Documento/PDF
 
 ---
 
@@ -95,28 +98,33 @@ ou
 ### 📌 Comportamento por tipo
 
 #### 🖼️ Imagem
-- Exibir no painel lateral
-- ou modal
+- Exibir em modal central/lightbox
 
 ---
 
 #### 🎧 Áudio
-- Exibir player
-- Reprodução direta
+- Exibir mini-player flutuante discreto
+- Ações: reproduzir, pausar e fechar
 
 ---
 
 #### 🎥 Vídeo
-- Player incorporado
+- Exibir em modal central com player
 - Controles básicos
 
 ---
 
-### 📌 Painel lateral dinâmico (RECOMENDADO)
+#### 📄 Documento/PDF
+- Exibir em modal central de visualização
+- Permitir nova aba quando tecnicamente mais adequado
 
-- Ao clicar na mídia:
-  - painel lateral atualiza
-  - mantém contexto do texto
+---
+
+### 📌 Visualização contextual sem drawer lateral (RECOMENDADO)
+
+- Ao clicar na mídia inline, abrir o conteúdo de forma contextual, sem drawer lateral permanente
+- Manter foco do usuário na etapa atual da execução
+- Evitar poluição visual e compressão lateral da tela principal
 
 ---
 
@@ -125,7 +133,7 @@ ou
 ### MidiaEtapa
 - id
 - etapa_id
-- tipo (imagem, audio, video)
+- tipo (imagem, audio, video, documento)
 - nome_referencia (midia1, midia2)
 - url
 - ordem
@@ -256,7 +264,7 @@ Isso transforma seu produto em:
 ### Regras de exibição
 
 - imagem/vídeo: modal central
-- áudio: painel lateral ou player persistente
+- áudio: mini-player flutuante discreto (reproduzir, pausar e fechar)
 - PDF/TXT: visualização no modal
 - DOC/DOCX e XLS/XLSX: download/abertura externa
 

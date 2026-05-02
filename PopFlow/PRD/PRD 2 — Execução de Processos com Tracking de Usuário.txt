@@ -154,6 +154,7 @@ Interface simplificada focada em:
 - Destaque visual da etapa atual
 - Feedback imediato ao concluir etapa
 - Progressão clara e intuitiva
+- Abertura de mídia inline de forma contextual (modal/mini-player), sem drawer lateral fixo comprimindo a tela
 
 ---
 
