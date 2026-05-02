@@ -104,7 +104,7 @@ Criar um sistema onde:
 ### 📌 Etapas
 
 * Ordem sequencial
-* Texto + anexos
+* Texto com referências inline de mídia/anexos (ex.: @midia1, @imagem1, @audio1, @video1, @documento1)
 * Checklist interno
 * Campo “erro comum”
 * Campo “resultado esperado”
@@ -172,6 +172,7 @@ Criar um sistema onde:
 * Visual de progresso claro
 * Etapas bem destacadas
 * Conteúdo fácil de consumir
+* Mídia inline contextual sem impor drawer lateral fixo
 
 ---
 
