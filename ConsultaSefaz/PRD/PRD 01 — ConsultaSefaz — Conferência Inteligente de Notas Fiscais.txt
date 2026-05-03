@@ -1,0 +1,349 @@
+# PRD 01 — ConsultaSefaz — Conferência Inteligente de Notas Fiscais (Versão Revisada)
+
+---
+
+## 1. Objetivo
+
+Criar um sistema que permita importar relatórios da SEFAZ (fonte de verdade) e relatórios de ERP (complementares), realizando automaticamente a conferência de notas fiscais de entrada, identificando:
+
+- Notas faltantes de escrituração
+- Notas escrituradas indevidamente (canceladas/rejeitadas)
+- Notas desconsideradas manualmente (exceções)
+
+O sistema deve substituir o processo manual atual feito via Excel, trazendo agilidade, confiabilidade e visibilidade operacional.
+
+---
+
+## 2. Escopo
+
+### Inclui
+
+- Cadastro de empresas (destinatários)
+- Importação de relatórios SEFAZ (múltiplos arquivos)
+- Importação de relatórios ERP (múltiplos arquivos)
+- Detecção automática de cabeçalho em arquivos Excel
+- Normalização de dados (chave, IE)
+- Conferência automática após importação
+- Classificação das notas por status
+- Cadastro de exceções (notas desconsideradas)
+- Visualização em tabela com filtros
+- Drawer com detalhes completos da nota (dados SEFAZ)
+- Suporte a múltiplas empresas (multiempresa)
+
+---
+
+### Não inclui (V1)
+
+- Integração direta com API da SEFAZ
+- Automação de download de relatórios
+- Controle de layout avançado
+- Auditoria por usuário/perfil
+- Controle por competência obrigatório
+- Controle de acesso multiusuário avançado
+
+---
+
+## 3. Premissas
+
+- SEFAZ é a fonte única de verdade
+- ERP serve apenas para confirmar escrituração
+- Dados são processados no modelo snapshot (substituição total a cada importação)
+- Chaves no ERP são consideradas válidas (validação feita no sistema de origem)
+- Sistema deve ser simples e operacional
+- O sistema deve funcionar para múltiplas empresas simultaneamente
+- ERP NÃO define empresa — SEFAZ define empresa
+
+---
+
+## 4. Conceito de Multiempresa
+
+### 4.1 Definição
+
+Cada empresa representa um destinatário de notas fiscais identificado por:
+
+- CNPJ
+- Inscrição Estadual
+
+---
+
+### 4.2 Regra de Isolamento
+
+Todos os dados devem estar vinculados a uma empresa:
+
+- Notas SEFAZ → obrigatoriamente vinculadas
+- Exceções → obrigatoriamente vinculadas
+- Resultados → sempre no contexto da empresa
+
+---
+
+### 4.3 Identificação automática
+
+A empresa é identificada exclusivamente via:
+
+- CNPJ do destinatário no relatório SEFAZ
+
+---
+
+### 4.4 ERP (Regra crítica)
+
+- Dados do ERP NÃO possuem empresa
+- O matching sempre ocorre a partir da nota SEFAZ
+- O ERP apenas confirma existência da nota
+
+---
+
+### 4.5 Visualização
+
+O sistema deve permitir:
+
+- Filtrar por empresa específica
+- Visualizar todas as empresas (consolidado)
+
+---
+
+## 5. Entidades
+
+### Empresa
+- id
+- nome
+- cnpj
+- inscricao_estadual
+
+---
+
+### Nota SEFAZ
+- id
+- empresa_id
+- chave_nfe
+- inscricao_estadual
+- status_sefaz
+- data_emissao
+- payload_completo (dados completos do relatório)
+
+---
+
+### Nota ERP
+- id
+- chave_nfe
+- inscricao_estadual
+
+---
+
+### Exceção
+- id
+- empresa_id
+- chave_nfe
+- motivo
+- observacao
+- usuario
+- data_registro
+
+---
+
+## 6. Regras de Negócio
+
+### 6.1 Importação SEFAZ
+
+- Permitir múltiplos arquivos
+- Identificar empresa automaticamente via CNPJ
+- Substituir dados anteriores (snapshot por empresa)
+- Importar todas as colunas (payload completo)
+- Estruturar apenas campos essenciais
+
+---
+
+### 6.2 Importação ERP
+
+- Permitir múltiplos arquivos
+- Detectar automaticamente:
+  - chave_nfe
+  - inscricao_estadual
+- Solicitar confirmação se necessário
+- Substituir base ERP anterior
+
+---
+
+### 6.3 Normalização
+
+Antes do matching:
+
+- Remover máscara da chave
+- Remover máscara da IE
+- Padronizar formatos
+
+---
+
+## 7. Classificação de Status
+
+### OK
+- Nota válida na SEFAZ
+- Encontrada no ERP
+
+---
+
+### FALTANTE
+- Nota válida na SEFAZ
+- Não encontrada no ERP
+
+---
+
+### IRREGULAR
+- Nota inválida na SEFAZ
+- Encontrada no ERP
+
+---
+
+### DESCONSIDERADA
+- Nota marcada manualmente
+- Ignorada na conferência
+
+---
+
+## 8. Regras de Status SEFAZ
+
+### Válidas
+- Autorizada
+- Autorizada fora do prazo
+
+---
+
+### Inválidas
+- Cancelada
+- Rejeitada
+- Denegada
+- Inutilizada
+
+---
+
+## 9. Exceções
+
+- Podem ser criadas manualmente
+- Valem permanentemente
+- Podem ser revertidas
+- Sempre vinculadas à empresa
+- Sobrescrevem qualquer regra automática
+
+---
+
+## 10. Fluxo do Sistema
+
+### 1. Importação
+
+Usuário importa:
+
+- múltiplos arquivos SEFAZ
+- múltiplos arquivos ERP
+
+---
+
+### 2. Processamento
+
+Sistema:
+
+- identifica empresas automaticamente
+- normaliza dados
+- substitui base anterior
+- executa conferência automaticamente
+
+---
+
+### 3. Resultado
+
+Sistema apresenta:
+
+- Total de notas
+- OK
+- Faltantes
+- Irregulares
+
+---
+
+### 4. Interação
+
+Usuário pode:
+
+- filtrar por empresa
+- visualizar consolidado
+- abrir detalhes da nota
+- marcar/desmarcar exceções
+
+---
+
+## 11. Interface (UX)
+
+### Tela Principal
+
+Filtros:
+
+- Empresa
+- Status
+- Data (DD/MM/AAAA)
+- Busca por chave
+
+---
+
+### Cards
+
+- Total
+- OK
+- Faltantes
+- Irregulares
+
+---
+
+### Tabela
+
+- Lista de notas
+- Paginação
+- Ordenação
+- Ações via menu “...”
+
+---
+
+### Drawer
+
+- Exibe todos os dados da SEFAZ
+- Permite desconsiderar nota
+
+---
+
+### Importação
+
+- Upload múltiplo
+- Preview
+- Ajuste de cabeçalho
+- Feedback por arquivo
+
+---
+
+## 12. Critérios de Sucesso
+
+- Sistema funciona com múltiplas empresas simultaneamente
+- Importação em lote sem erro
+- Identificação automática correta das empresas
+- Conferência automática confiável
+- Redução significativa do trabalho manual
+- Interface simples e direta
+
+---
+
+## 13. Restrições
+
+- Não valida valores financeiros
+- Não controla competência obrigatória
+- Não valida relacionamento entre empresas
+- Não possui controle avançado de usuários
+
+---
+
+## 14. Evoluções Futuras
+
+- Multiusuário com permissões
+- Produto SaaS
+- Auditoria completa
+- Alertas automáticos
+- Integração com SEFAZ
+- Regras avançadas
+- Dashboard analítico
+
+---

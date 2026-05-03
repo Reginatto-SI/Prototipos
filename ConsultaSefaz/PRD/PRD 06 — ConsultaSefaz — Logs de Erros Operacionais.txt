@@ -1,0 +1,175 @@
+# PRD 06 — ConsultaSefaz — Logs de Erros Operacionais
+
+---
+
+## 1. Objetivo
+
+Registrar e exibir erros operacionais relevantes ao usuário durante:
+
+- Importação de arquivos
+- Processamento de dados
+
+Garantindo:
+
+- Visibilidade clara de falhas
+- Facilidade de correção
+- Apoio ao uso diário do sistema
+
+---
+
+## 2. Escopo
+
+### Inclui
+
+- Registro de erros por arquivo
+- Exibição de erros após importação
+- Mensagens claras e orientativas
+- Histórico simples de erros
+
+---
+
+### Não inclui (V1)
+
+- Logs técnicos detalhados
+- Stack trace
+- Auditoria completa
+- Logs por linha processada
+
+---
+
+## 3. Tipos de Log
+
+### 3.1 Erros de Importação
+
+Casos:
+
+- Arquivo não reconhecido
+- Cabeçalho não identificado
+- Coluna obrigatória não encontrada
+- Arquivo vazio
+- Formato inválido
+
+---
+
+### 3.2 Avisos (Warnings)
+
+Casos:
+
+- Coluna IE não encontrada (ERP)
+- Linhas ignoradas por inconsistência
+- Dados parcialmente importados
+
+---
+
+### 3.3 Erros de Processamento
+
+Casos:
+
+- Chave inválida
+- IE inválida
+- Falha de normalização
+
+---
+
+## 4. Estrutura do Log
+
+Campos:
+
+- tipo: `importacao` | `processamento`
+- nivel: `erro` | `aviso`
+- arquivo_nome (se aplicável)
+- mensagem (legível para usuário)
+- data_hora (DD/MM/AAAA HH:MM)
+
+---
+
+## 5. Regras de Registro
+
+- Registrar apenas eventos relevantes
+- Evitar duplicidade de mensagens
+- Não registrar eventos de sucesso
+- Mensagens devem ser claras e acionáveis
+
+---
+
+## 6. Exibição de Logs
+
+### 6.1 Pós-importação (principal)
+
+Após importação:
+
+Exibir resumo:
+
+- ✔ Arquivos processados com sucesso
+- ⚠ Arquivos com aviso
+- ❌ Arquivos com erro
+
+---
+
+### 6.2 Detalhamento
+
+Botão: “Ver detalhes”
+
+Exibir lista:
+
+- Nome do arquivo
+- Tipo de erro
+- Mensagem clara
+
+---
+
+### 6.3 Mensagens (padrão)
+
+Exemplos:
+
+- “Arquivo não possui coluna de chave NFe”
+- “Cabeçalho não identificado automaticamente”
+- “Selecione manualmente a coluna de chave”
+- “Arquivo vazio ou sem dados válidos”
+
+---
+
+## 7. Persistência
+
+- Logs devem ser armazenados temporariamente
+- Histórico curto (ex: últimos 7 dias ou últimas execuções)
+- Sem necessidade de armazenamento permanente
+
+---
+
+## 8. Integração com PRD 02
+
+Durante importação:
+
+- Cada arquivo gera seu próprio resultado
+- Logs vinculados ao arquivo
+- Importação continua mesmo com falhas parciais
+
+---
+
+## 9. Critérios de Sucesso
+
+- Usuário entende rapidamente o erro
+- Usuário consegue corrigir sem suporte técnico
+- Redução de falhas repetidas
+- Feedback claro após cada importação
+
+---
+
+## 10. Restrições
+
+- Não substituir logs técnicos do Lovable
+- Não registrar eventos irrelevantes
+- Não gerar sobrecarga de informação
+
+---
+
+## 11. Evoluções Futuras
+
+- Tela dedicada de logs
+- Filtros por tipo de erro
+- Exportação de logs
+- Alertas automáticos
+- Integração com notificações
+
+---
