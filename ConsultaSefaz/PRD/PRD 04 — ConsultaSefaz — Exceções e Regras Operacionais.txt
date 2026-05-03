@@ -1,222 +1,49 @@
 # PRD 04 — ConsultaSefaz — Exceções e Regras Operacionais
 
----
-
 ## 1. Objetivo
+Definir exceções manuais que sobrescrevem o comportamento automático do motor.
 
-Definir como o sistema deve tratar exceções operacionais e regras que alteram o comportamento padrão da conferência, garantindo:
+## 2. Fonte de verdade deste PRD
+Este documento é a fonte de verdade sobre criação, persistência, reversão e precedência de exceções.
 
-- Controle sobre notas que não devem ser cobradas
-- Registro explícito de decisões humanas
-- Evitar erros operacionais recorrentes
-- Manter rastreabilidade mínima sem complexidade excessiva
+## 3. Regra central
+Exceção ativa sempre vence qualquer classificação automática.
 
----
+## 4. Tipo de exceção (V1)
+- DESCONSIDERAÇÃO de nota
 
-## 2. Escopo
-
-### Inclui
-
-- Cadastro de exceções (notas desconsideradas)
-- Aplicação de exceções no motor de conferência
-- Reversão de exceções
-- Regras de classificação de status
-- Prioridade de regras (ordem de decisão)
-
----
-
-### Não inclui (V1)
-
-- Workflow de aprovação
-- Auditoria avançada por usuário
-- Histórico completo de alterações
-- Permissões por perfil
-
----
-
-## 3. Conceito Central
-
-Exceção =  
-> Uma decisão manual que sobrepõe o comportamento automático do sistema
-
----
-
-## 4. Tipos de Exceção
-
-### 4.1 Nota Desconsiderada
-
-Caso:
-- Nota autorizada na SEFAZ
-- Empresa informou desconhecimento da operação
-
-Comportamento:
-- Nota NÃO deve ser cobrada
-- Nota NÃO aparece como faltante
-
----
-
-## 5. Estrutura da Exceção
-
-Campos:
-
+## 5. Campos mínimos
 - empresa_id
 - chave_nfe
-- motivo:
-  - desconhecimento da operação
-  - operação não realizada
-  - outros
-- observação (opcional)
-- usuário
-- data_registro
-
----
-
-## 6. Regras de Aplicação (ORDEM IMPORTANTE)
-
-Para cada nota da SEFAZ:
-
----
-
-### Regra 1 — Exceção
-
-Se a nota estiver marcada como desconsiderada:
-
-→ status = **DESCONSIDERADA**  
-→ parar processamento
-
----
-
-### Regra 2 — Status SEFAZ inválido
-
-Se status for:
-- cancelada
-- rejeitada
-- denegada
-- inutilizada
-
-E existir no ERP:
-
-→ status = **IRREGULAR**
-
-Se NÃO existir no ERP:
-
-→ status = ignorada (não aparece como erro)
-
----
-
-### Regra 3 — Status SEFAZ válido
-
-Se status for:
-- autorizada
-- autorizada fora do prazo
-
-Então:
-
-- existe no ERP → **OK**
-- não existe → **FALTANTE**
-
----
-
-## 7. Prioridade de Regras
-
-Ordem obrigatória:
-
-1. Exceções (sempre primeiro)
-2. Status SEFAZ
-3. Matching com ERP
-
----
-
-## 8. Comportamento de Exceções
-
-### 8.1 Persistência
-
-- Exceção é permanente
-- Continua válida mesmo após novos imports (snapshot)
-
----
-
-### 8.2 Reversão
-
-Usuário pode:
-
-- remover exceção
-
-Resultado:
-
-- nota volta ao fluxo normal de conferência
-
----
-
-### 8.3 Impacto
-
-Exceção:
-
-- remove nota da cobrança
-- altera status para DESCONSIDERADA
-- não interfere nos dados da SEFAZ
-
----
-
-## 9. Interface de Exceções
-
-### Entrada
-
-Via:
-
-- Drawer da nota
-- Botão: “Desconsiderar nota”
-
----
-
-### Ação
-
-Usuário deve informar:
-
 - motivo
-- (opcional) observação
+- observacao (opcional)
+- usuario (opcional V1)
+- data_registro
+- ativa (true/false)
 
----
+## 6. Ordem obrigatória de decisão
+1) Verificar exceção ativa
+2) Verificar validade de status SEFAZ
+3) Verificar matching com ERP
 
-### Reversão
+## 7. Comportamentos obrigatórios
+- Exceção é permanente até reversão manual.
+- Exceção continua existindo após novos snapshots.
+- Reversão reativa fluxo normal de conferência.
+- Não permitir duplicidade de exceção ativa para mesma empresa+chave.
 
-Disponível:
+## 8. Exceção órfã
+Se a exceção existir mas a nota não estiver no snapshot SEFAZ atual:
+- manter exceção cadastrada;
+- não gerar linha na tabela principal;
+- não falhar processamento.
 
-- botão “Reverter desconsideração”
+## 9. Limites V1
+- Sem aprovação por workflow.
+- Sem trilha de auditoria completa.
 
----
-
-## 10. Validações
-
-- Não permitir exceção sem chave válida
-- Exceção deve estar vinculada a empresa
-- Evitar duplicidade de exceção (mesma chave + empresa)
-
----
-
-## 11. Critérios de Sucesso
-
-- Usuário consegue remover notas indevidas da cobrança rapidamente
-- Sistema não volta a cobrar notas já tratadas
-- Fluxo de exceção é simples e rápido
-- Redução de retrabalho manual
-
----
-
-## 12. Restrições
-
-- Não há controle de aprovação
-- Não há auditoria detalhada de alterações
-- Não há diferenciação por usuário
-
----
-
-## 13. Evoluções Futuras
-
-- Aprovação de exceções
-- Histórico completo de alterações
-- Motivos customizáveis
-- Regras automáticas baseadas em padrões
-- Alertas para exceções recorrentes
-
----
+## 10. Conexão com outros PRDs
+- PRD 01: princípio de precedência.
+- PRD 03: ações de UI.
+- PRD 05: aplicação no algoritmo.
+- PRD 07: contrato estrutural da exceção.
