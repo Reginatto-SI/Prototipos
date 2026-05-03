@@ -1,286 +1,48 @@
-# PRD 02 — ConsultaSefaz — Módulo de Importação de Arquivos
-
----
+# PRD 02 — ConsultaSefaz — Importação de Arquivos
 
 ## 1. Objetivo
-
-Definir o funcionamento do módulo de importação de arquivos Excel (SEFAZ e ERP), garantindo:
-
-- Entrada de dados confiável
-- Processamento em lote (múltiplos arquivos)
-- Detecção automática de estrutura (cabeçalho e colunas)
-- Baixa fricção para o usuário
-- Base consistente para o motor de conferência (PRD 01)
-
----
-
-## 2. Escopo
-
-### Inclui
-
-- Upload múltiplo de arquivos (drag and drop)
-- Suporte a arquivos Excel (.xlsx, .xls)
-- Importação de relatórios SEFAZ
-- Importação de relatórios ERP (complementares)
-- Detecção automática de cabeçalho
-- Detecção automática de colunas relevantes
-- Preview do arquivo antes do processamento
-- Ajuste manual de cabeçalho (fallback)
-- Feedback detalhado por arquivo
-- Processamento automático após importação
-
----
-
-### Não inclui (V1)
-
-- Integração com APIs externas
-- Importação automática agendada
-- Persistência de layouts configuráveis
-- Suporte a múltiplos formatos além de Excel
-- Tratamento avançado de encoding/arquivos corrompidos
-
----
-
-## 3. Premissas
-
-- Usuário pode importar múltiplos arquivos em uma única ação
-- Arquivos SEFAZ contêm CNPJ destinatário (para identificação da empresa)
-- Arquivos ERP contêm chave NFe e IE
-- Sistema deve funcionar com arquivos não padronizados
-- Processo deve ser resiliente a variações de layout
-
----
-
-## 4. Tipos de Importação
-
-### 4.1 Importação SEFAZ (Base)
-
-Responsável por:
-- Definir universo de notas
-- Identificar empresas automaticamente
-- Alimentar base principal do sistema
-
----
-
-### 4.2 Importação ERP (Complementar)
-
-Responsável por:
-- Fornecer dados para matching
-- Confirmar escrituração das notas
-- Não define empresa (conforme PRD 01)
-
----
-
-## 5. Fluxo de Importação
-
-### 5.1 Upload
-
-Usuário:
-- seleciona tipo (SEFAZ ou ERP)
-- arrasta múltiplos arquivos
-
----
-
-### 5.2 Leitura Inicial
-
-Sistema:
-- lê estrutura do arquivo
-- identifica possíveis linhas de cabeçalho
-- extrai primeiras linhas para preview
-
----
-
-### 5.3 Detecção de Cabeçalho
-
-Sistema tenta identificar automaticamente:
-
-Critérios:
-- presença de palavras-chave:
-  - "chave"
-  - "nfe"
-  - "nota"
-  - "acesso"
-  - "inscrição"
-  - "ie"
-
-Se identificado:
-- define linha como cabeçalho
-- dados começam na linha seguinte
-
----
-
-### 5.4 Preview e Validação
-
-Sistema exibe:
-- primeiras linhas do arquivo
-- linha detectada como cabeçalho
-
-Usuário pode:
-- confirmar
-- ajustar manualmente (caso necessário)
-
----
-
-## 6. Detecção de Colunas
-
-### 6.1 SEFAZ
-
-Sistema identifica automaticamente:
-
-Campos obrigatórios:
-- chave_nfe
-- cnpj_destinatario
-- status_sefaz
-
-Campos adicionais:
-- todos os demais são armazenados como payload
-
----
-
-### 6.2 ERP
-
-Sistema tenta identificar:
-
-- chave_nfe
-- inscricao_estadual
-
-Se não conseguir:
-- solicita seleção manual das colunas
-
----
-
-## 7. Processamento de Dados
-
-### 7.1 Normalização
-
-Antes de salvar:
-
-- remover caracteres especiais da chave
-- remover formatação da IE
-- padronizar texto (trim, uppercase)
-
----
-
-### 7.2 Modelo Snapshot (convergente com PRD 01)
-
-Para cada importação:
-
-#### SEFAZ
-- remove todos os registros anteriores relacionados às empresas impactadas
-- insere novo conjunto
-
-#### ERP
-- remove base anterior
-- insere novo conjunto
-
----
-
-## 8. Processamento em Lote
-
-Sistema deve:
-
-- processar múltiplos arquivos independentemente
-- manter controle individual por arquivo
-
----
-
-### Resultado esperado:
-
-Para cada arquivo:
-
-- sucesso
-- erro
-- aviso
-
----
-
-## 9. Feedback ao Usuário
-
-Após importação:
-
-Exibir:
-
-- total de arquivos processados
-- quantidade de sucesso
-- quantidade de erro
-- detalhes por arquivo
-
-Exemplo:
-
-- ✔ 8 arquivos importados com sucesso  
-- ⚠ 1 arquivo com inconsistência  
-- ❌ 1 arquivo não processado  
-
----
-
-## 10. Tratamento de Erros
-
-### Casos previstos:
-
-- arquivo sem cabeçalho detectável
-- ausência de coluna chave
-- ausência de IE (ERP)
-- arquivo vazio
-- formato inválido
-
-Sistema deve:
-
-- bloquear importação daquele arquivo
-- permitir continuidade dos demais
-
----
-
-## 11. Integração com PRD 01
-
-Após conclusão da importação:
-
-- sistema executa automaticamente o motor de conferência
-- atualização imediata da base de resultados
-- refletir dados na tela principal
-
----
-
-## 12. Interface (UX)
-
-### Popup de Importação
-
-Componentes:
-
-- seleção de tipo (SEFAZ / ERP)
-- área de upload (drag and drop)
-- lista de arquivos selecionados
-- preview do arquivo
-- ajuste de cabeçalho (opcional)
-- botão confirmar importação
-
----
-
-## 13. Critérios de Sucesso
-
-- Usuário consegue importar múltiplos arquivos sem dificuldade
-- Sistema identifica corretamente o cabeçalho na maioria dos casos (>90%)
-- Detecção automática de colunas funciona sem intervenção na maioria dos casos
-- Usuário recebe feedback claro do resultado
-- Base de dados é consistente após importação
-
----
-
-## 14. Restrições
-
-- Sistema depende da qualidade mínima dos arquivos Excel
-- Não há persistência de layouts customizados
-- Não há validação cruzada avançada de dados
-- Não há controle de versão dos arquivos importados
-
----
-
-## 15. Evoluções Futuras
-
-- Salvamento de layouts por empresa
-- Identificação automática avançada por padrões
-- Importação via API
-- Histórico de importações
-- Logs detalhados por linha
-- Suporte a CSV e outros formatos
-
----
+Definir a importação de arquivos SEFAZ e ERP com baixa fricção e consistência para o motor de conferência.
+
+## 2. Fonte de verdade deste PRD
+Este documento é a fonte de verdade de upload, parsing, validação de arquivo e snapshot de entrada.
+
+## 3. Entradas suportadas (V1)
+- Excel .xlsx e .xls
+- Upload múltiplo por lote
+- Tipos: SEFAZ e ERP
+
+## 4. Regras obrigatórias
+- Detectar cabeçalho automaticamente, com ajuste manual quando necessário.
+- Detectar colunas obrigatórias.
+- Processar arquivos de forma independente no lote.
+- Falha de um arquivo não deve bloquear os demais.
+- Ao finalizar lote válido, disparar conferência automática (PRD 05).
+
+## 5. Campos mínimos por tipo
+SEFAZ: chave_nfe, cnpj_destinatario, status_sefaz, data_emissao.
+ERP: chave_nfe (obrigatório), inscricao_estadual (opcional na V1).
+
+Regra obrigatória: ausência de IE no ERP não bloqueia importação nem matching.
+A importação não deve reprovar arquivo ERP por IE ausente; apenas registrar aviso operacional (PRD 06).
+
+## 6. Normalização obrigatória
+- chave_nfe sem máscara e sem espaços.
+- cnpj/ie sem máscara.
+- textos com trim e padronização de caixa.
+
+## 7. Snapshot
+- SEFAZ: substitui dados anteriores das empresas impactadas.
+- ERP: substitui base ERP vigente.
+- Exceções não são apagadas pelo snapshot (PRD 04).
+
+## 8. Erros e avisos
+Erros bloqueantes por arquivo: formato inválido, arquivo vazio, ausência de chave, cabeçalho inválido.
+Avisos: IE ausente ERP, linhas descartadas por inconsistência.
+
+Mensagens e histórico curto seguem PRD 06.
+
+## 9. Conexão com outros PRDs
+- PRD 01: princípios globais e multiempresa.
+- PRD 05: consumo das entradas.
+- PRD 06: exibição de feedback operacional.
+- PRD 07: contrato de dados mínimo.

@@ -1,281 +1,57 @@
 # PRD 05 — ConsultaSefaz — Motor de Conferência
 
----
-
 ## 1. Objetivo
-
-Definir o funcionamento do motor de conferência responsável por:
-
-- Processar dados importados (SEFAZ e ERP)
-- Aplicar regras de negócio (PRD 01)
-- Aplicar exceções (PRD 04)
-- Classificar corretamente todas as notas
-- Gerar resultado consistente, rápido e determinístico
-
----
-
-## 2. Escopo
-
-### Inclui
-
-- Execução automática após importação
-- Consolidação de dados SEFAZ e ERP
-- Aplicação de regras em ordem definida
-- Classificação final das notas
-- Geração de dataset para UI (PRD 03)
-
----
-
-### Não inclui (V1)
-
-- Execução manual (botão)
-- Processamento assíncrono complexo
-- Versionamento de execuções
-- Logs detalhados por linha
-
----
-
-## 3. Premissas
-
-- SEFAZ é a fonte única de verdade
-- ERP é apenas fonte de confirmação
-- Exceções sobrescrevem qualquer regra
-- Dados seguem modelo snapshot (sem histórico acumulado)
-- Processamento deve ser rápido (<200ms ideal para dataset médio)
-
----
-
-## 4. Entrada de Dados
-
-### 4.1 Dados SEFAZ
-
-- Lista de notas com:
-  - chave_nfe
-  - empresa_id
-  - status_sefaz
-  - inscricao_estadual
-  - payload completo
-
----
-
-### 4.2 Dados ERP
-
-- Lista de registros com:
-  - chave_nfe
-  - inscricao_estadual
-
----
-
-### 4.3 Exceções
-
-- Lista de chaves desconsideradas por empresa
-
----
-
-## 5. Pré-processamento
-
-Antes da conferência:
-
-### 5.1 Normalização
-
-- chave_nfe:
-  - remover máscara
-  - trim
-- inscricao_estadual:
-  - remover máscara
-  - trim
-
----
-
-### 5.2 Agrupamento ERP
-
-- Agrupar por:
-  - chave_nfe
-  - inscricao_estadual
-
-Objetivo:
-- eliminar duplicidade
-- evitar falso negativo por múltiplas linhas
-
----
-
-## 6. Classificação de Status SEFAZ
-
-### Válidos:
-- autorizada
-- autorizada fora do prazo
-
----
-
-### Inválidos:
-- cancelada
-- rejeitada
-- denegada
-- inutilizada
-
----
-
-## 7. Algoritmo de Conferência
-
-Para cada nota da SEFAZ:
-
----
-
-### PASSO 1 — Verificar Exceção
-
-Se existir exceção para:
-
-- empresa_id + chave_nfe
-
-→ status = **DESCONSIDERADA**  
-→ continuar próxima nota
-
----
-
-### PASSO 2 — Verificar Status SEFAZ
-
-Se status for **inválido**:
-
-- verificar se existe no ERP
-
-#### Se existir:
-→ status = **IRREGULAR**
-
-#### Se NÃO existir:
-→ status = **IGNORADA**
-(não aparece como erro)
-
-→ continuar próxima nota
-
----
-
-### PASSO 3 — Status SEFAZ válido
-
-Verificar existência no ERP:
-
-Critério:
-- chave_nfe igual
-- inscricao_estadual igual
-
-#### Se existir:
-→ status = **OK**
-
-#### Se NÃO existir:
-→ status = **FALTANTE**
-
----
-
-## 8. Resultado Final
-
-Para cada nota:
-
-- empresa_id
-- chave_nfe
-- status_final:
-  - OK
-  - FALTANTE
-  - IRREGULAR
-  - DESCONSIDERADA
-  - (IGNORADA não exibida na UI)
-
----
-
-## 9. Geração de Dataset
-
-Sistema deve gerar:
-
-### 9.1 Dataset principal
-
-Lista de notas com:
-- status
-- dados resumidos (tabela)
-- payload completo (drawer)
-
----
-
-### 9.2 Métricas
-
-- total_notas
-- total_ok
-- total_faltantes
-- total_irregulares
-
----
-
-## 10. Performance
-
-### Requisitos:
-
-- Processamento em memória
-- Complexidade linear (O(n))
-- Evitar loops aninhados
-
----
-
-### Estratégia:
-
-- Indexar ERP em estrutura de busca rápida (map/dicionário)
-- Chave:
-  - chave_nfe + IE
-
----
-
-## 11. Execução
-
-### Quando executar:
-
-- automaticamente após importação
-- sempre que houver:
-  - nova importação SEFAZ
-  - nova importação ERP
-  - alteração de exceção
-
----
-
-## 12. Consistência
-
-Sistema deve garantir:
-
-- mesma entrada → mesmo resultado
-- sem aleatoriedade
-- sem dependência de ordem de arquivos
-
----
-
-## 13. Tratamento de Erros
-
-### Cenários:
-
-- chave inválida → ignorar registro
-- IE ausente no ERP → não realizar match
-- dados inconsistentes → log interno
-
----
-
-## 14. Critérios de Sucesso
-
-- Classificação correta em todos os cenários definidos
-- Resultado consistente entre execuções
-- Tempo de resposta rápido
-- Nenhum falso positivo crítico
-
----
-
-## 15. Restrições
-
-- Não valida valores financeiros
-- Não valida duplicidade de notas entre empresas
-- Não utiliza IA ou heurística complexa
-- Não mantém histórico de execuções
-
----
-
-## 16. Evoluções Futuras
-
-- Execução incremental (sem reset completo)
-- Logs detalhados por nota
-- Auditoria de decisões
-- Validações adicionais (valor, CFOP, etc.)
-- Alertas automáticos
-
----
+Definir o algoritmo determinístico de conferência entre base SEFAZ, base ERP e exceções.
+
+## 2. Fonte de verdade deste PRD
+Este documento é a fonte de verdade do processamento, da ordem das regras e da geração do resultado final.
+
+## 3. Entradas
+- notas_sefaz (com empresa_id)
+- registros_erp (sem empresa)
+- excecoes_ativas (empresa_id + chave_nfe)
+
+Contrato detalhado: PRD 07.
+
+## 4. Pré-processamento obrigatório
+- Normalizar chave/IE.
+- Descartar registros sem chave válida (com log operacional).
+- Indexar ERP para busca rápida.
+
+## 5. Regras de classificação
+
+**Matching segue regra oficial definida no PRD 07.**
+
+Regra operacional aplicada no motor:
+- ERP com IE preenchida: comparar `chave_nfe + inscricao_estadual`.
+- ERP sem IE: comparar apenas `chave_nfe`.
+- Múltiplos registros ERP para a mesma chave: tratar somente como confirmação de existência.
+
+Para cada nota SEFAZ:
+
+1) Se há exceção ativa → DESCONSIDERADA.
+2) Se status SEFAZ inválido:
+   - existe no ERP → IRREGULAR
+   - não existe no ERP → IGNORADA (não exibida na UI)
+3) Se status SEFAZ válido:
+   - existe no ERP → OK
+   - não existe no ERP → FALTANTE
+
+## 6. Determinismo
+- Mesma entrada produz mesma saída.
+- Resultado não depende da ordem de arquivos.
+- Sem aleatoriedade.
+
+## 7. Disparos de execução
+- Após importação SEFAZ.
+- Após importação ERP.
+- Após criação/reversão de exceção.
+
+## 8. Saída
+Dataset final por nota contendo status final, indicadores de matching e payload para UI.
+Contrato de saída: PRD 07.
+
+## 9. Limites V1
+- Sem histórico completo de execuções.
+- Sem processamento distribuído.
+- Sem validações fiscais financeiras avançadas.

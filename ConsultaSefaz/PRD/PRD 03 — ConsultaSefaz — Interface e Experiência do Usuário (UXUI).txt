@@ -1,279 +1,58 @@
 # PRD 03 — ConsultaSefaz — Interface e Experiência do Usuário (UX/UI)
 
----
-
 ## 1. Objetivo
+Definir a interface operacional para importar, conferir, filtrar e tratar exceções.
 
-Definir a interface do sistema ConsultaSefaz, garantindo:
+## 2. Fonte de verdade deste PRD
+Este documento é a fonte de verdade de comportamento de UI/UX, estados de tela e fluxo do usuário.
 
-- Navegação simples e intuitiva
-- Visualização rápida de inconsistências
-- Baixa fricção operacional
-- Acesso fácil às informações completas das notas
-- Aderência ao fluxo real do usuário (importar → conferir → agir)
+## 3. Fluxo oficial de uso
+1) Importar arquivos (PRD 02)
+2) Conferir resumo e lista
+3) Investigar detalhes
+4) Aplicar/reverter exceções (PRD 04)
+5) Reavaliar resultado recalculado (PRD 05)
 
----
+## 4. Componentes V1
+- Botão principal “Importar Arquivos”
+- Card de filtros
+- Cards de resumo (Total, OK, Faltantes, Irregulares)
+- Tabela paginada
+- Drawer de detalhes
+- Feedback pós-importação com erros/avisos (PRD 06)
 
-## 2. Escopo
-
-### Inclui
-
-- Tela principal de conferência
-- Filtros e navegação
-- Cards de resumo
-- Tabela de notas
-- Drawer de detalhes da nota
-- Ações do usuário (ex: desconsiderar nota)
-- Popup de importação (integração com PRD 02)
-
----
-
-### Não inclui (V1)
-
-- Dashboard analítico avançado
-- Gráficos complexos
-- Customização de layout pelo usuário
-- Multi-perfil de acesso
-
----
-
-## 3. Princípios de UX
-
-- Priorizar clareza sobre complexidade
-- Reduzir cliques desnecessários
-- Destacar problemas antes de dados neutros
-- Evitar rolagem excessiva
-- Manter padrão visual consistente
-- Ação sempre próxima da informação
-
----
-
-## 4. Estrutura da Tela Principal
-
-### 4.1 Cabeçalho
-
-Elementos:
-
-- Nome do sistema: **ConsultaSefaz**
-- Subtítulo: *Conferência Inteligente de Notas Fiscais*
-- Botão principal:
-  - “Importar Arquivos”
-
----
-
-### 4.2 Filtros (Card padrão do projeto)
-
-Seguir padrão definido:
-
-- Layout em grid responsivo
-- Label acima do campo
-- Ícone + texto
-
-Campos:
-
-- Empresa (dropdown com busca)
-- Status (multi-select):
-  - OK
-  - Faltante
-  - Irregular
-  - Desconsiderada
-- Data inicial (DD/MM/AAAA)
-- Data final (DD/MM/AAAA)
+## 5. Filtros obrigatórios
+- Empresa
+- Status
+- Período (data inicial/final)
 - Busca por chave NFe
 
-Ações:
+## 6. Regras de exibição
+- UI não depende de IE para calcular ou inferir status.
+- Status exibido vem exclusivamente do resultado do motor de conferência (PRD 05).
+- Mostrar visão por empresa e consolidado multiempresa.
+- Status DESCONSIDERADA deve ficar explícito.
+- Status IGNORADA não entra na tabela principal.
+- Linha deve abrir drawer com payload completo da SEFAZ.
 
-- Botão “Limpar filtros”
-
----
-
-## 5. Cards de Resumo
-
-Exibir no topo:
-
-- Total de notas
-- OK
-- Faltantes
-- Irregulares
-
-Comportamento:
-
-- Cards clicáveis
-- Ao clicar → aplica filtro automaticamente
-
-Prioridade visual:
-
-- Irregulares (maior destaque)
-- Faltantes (segundo destaque)
-- OK (neutro)
-
----
-
-## 6. Tabela de Notas
-
-### 6.1 Estrutura
-
-Colunas recomendadas:
-
-- Status
-- Chave NFe
-- Empresa
-- Fornecedor (se disponível)
-- Data de emissão
-- UF
-- Valor (se disponível)
-- Ações (menu “…”)
-
----
-
-### 6.2 Comportamento
-
-- Paginação obrigatória
-- Ordenação por colunas
-- Linha clicável → abre drawer
-- Status com badge visual
-
----
-
-### 6.3 Ações (menu “…")
-
-Opções:
-
+## 7. Ações de usuário
 - Ver detalhes
-- Desconsiderar nota (se aplicável)
-- Reverter desconsideração (se já marcada)
+- Desconsiderar nota
+- Reverter desconsideração
 
----
+## 8. Estados da tela
+- Sem dados
+- Carregando
+- Erro com orientação de correção
 
-## 7. Drawer de Detalhes da Nota
+## 9. Limites V1
+- Sem dashboard avançado.
+- Sem personalização estrutural de layout.
+- Sem perfis avançados de acesso.
 
-### 7.1 Objetivo
-
-Exibir todas as informações completas da nota (dados SEFAZ)
-
----
-
-### 7.2 Estrutura
-
-Organizado em seções:
-
-#### Identificação
-- Chave
-- Status SEFAZ
-- Data emissão
-
-#### Destinatário
-- Empresa
-- CNPJ
-- IE
-
-#### Emitente
-- Nome
-- CNPJ
-- UF
-
-#### Valores
-- Valor total
-- ICMS (se disponível)
-
-#### Informações adicionais
-- Todos os demais campos do payload
-
----
-
-### 7.3 Ações no Drawer
-
-- Botão: “Desconsiderar nota”
-- Campo para:
-  - motivo
-  - observação
-
----
-
-## 8. Popup de Importação (integração PRD 02)
-
-### Componentes:
-
-- Seleção de tipo:
-  - SEFAZ
-  - ERP
-- Área drag and drop
-- Lista de arquivos
-- Preview do arquivo
-- Ajuste de cabeçalho (se necessário)
-- Botão “Importar”
-
----
-
-### Pós-importação:
-
-- Exibir feedback:
-  - sucesso
-  - erro
-  - aviso
-
----
-
-## 9. Estados do Sistema
-
-### 9.1 Sem dados
-
-- Mensagem:
-  “Nenhum dado importado”
-- CTA:
-  “Importar arquivos”
-
----
-
-### 9.2 Carregando
-
-- Indicador de loading claro
-- Bloqueio de ações críticas
-
----
-
-### 9.3 Erro
-
-- Mensagem clara
-- Indicação do problema
-- Possível ação de correção
-
----
-
-## 10. Responsividade
-
-- Desktop como foco principal
-- Layout adaptável
-- Tabela com colunas ajustáveis
-- Evitar scroll horizontal excessivo
-
----
-
-## 11. Critérios de Sucesso
-
-- Usuário identifica problemas em menos de 10 segundos
-- Fluxo completo sem necessidade de treinamento
-- Acesso rápido aos detalhes da nota
-- Interação simples para desconsiderar exceções
-- Interface consistente e previsível
-
----
-
-## 12. Restrições
-
-- Interface deve seguir padrões existentes do projeto
-- Não criar novos componentes desnecessários
-- Reutilizar padrões de tabela, filtros e menu
-- Evitar múltiplos padrões visuais
-
----
-
-## 13. Evoluções Futuras
-
-- Dashboard com gráficos
-- Alertas visuais automáticos
-- Personalização de colunas
-- Modo “auditoria avançada”
-- Exportação de relatórios
-
----
+## 10. Conexão com outros PRDs
+- PRD 02: importação.
+- PRD 04: ações de exceção.
+- PRD 05: resultado exibido.
+- PRD 06: mensagens de erro/aviso.
+- PRD 07: contrato do dataset exibido.

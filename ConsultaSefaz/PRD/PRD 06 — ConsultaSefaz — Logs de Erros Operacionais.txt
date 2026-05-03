@@ -1,175 +1,48 @@
 # PRD 06 — ConsultaSefaz — Logs de Erros Operacionais
 
----
-
 ## 1. Objetivo
+Registrar e exibir erros/avisos operacionais para facilitar correção durante importação e conferência.
 
-Registrar e exibir erros operacionais relevantes ao usuário durante:
+## 2. Fonte de verdade deste PRD
+Este documento é a fonte de verdade para categorias, formato e exibição de logs operacionais.
 
-- Importação de arquivos
-- Processamento de dados
+## 3. Tipos
+- importacao
+- processamento
 
-Garantindo:
+Níveis:
+- erro
+- aviso
 
-- Visibilidade clara de falhas
-- Facilidade de correção
-- Apoio ao uso diário do sistema
+## 4. Campos mínimos do log
+- tipo
+- nivel
+- arquivo_nome (quando aplicável)
+- codigo_evento (padronizado)
+- mensagem_usuario
+- contexto_resumido
+- data_hora
 
----
+## 5. Regras obrigatórias
+- Mensagens claras e acionáveis.
+- Não registrar sucesso como log.
+- Evitar duplicidade no mesmo arquivo/lote.
+- Persistência curta (janela operacional).
 
-## 2. Escopo
+## 6. Exibição mínima
+Pós-importação:
+- total sucesso
+- total avisos
+- total erros
+- botão “Ver detalhes” por arquivo/evento
 
-### Inclui
+## 7. Integração
+- PRD 02: origem principal dos logs de importação.
+- PRD 05: logs de processamento.
+- PRD 03: ponto de visualização ao usuário.
+- PRD 07: contexto de pipeline para padronizar eventos.
 
-- Registro de erros por arquivo
-- Exibição de erros após importação
-- Mensagens claras e orientativas
-- Histórico simples de erros
-
----
-
-### Não inclui (V1)
-
-- Logs técnicos detalhados
-- Stack trace
-- Auditoria completa
-- Logs por linha processada
-
----
-
-## 3. Tipos de Log
-
-### 3.1 Erros de Importação
-
-Casos:
-
-- Arquivo não reconhecido
-- Cabeçalho não identificado
-- Coluna obrigatória não encontrada
-- Arquivo vazio
-- Formato inválido
-
----
-
-### 3.2 Avisos (Warnings)
-
-Casos:
-
-- Coluna IE não encontrada (ERP)
-- Linhas ignoradas por inconsistência
-- Dados parcialmente importados
-
----
-
-### 3.3 Erros de Processamento
-
-Casos:
-
-- Chave inválida
-- IE inválida
-- Falha de normalização
-
----
-
-## 4. Estrutura do Log
-
-Campos:
-
-- tipo: `importacao` | `processamento`
-- nivel: `erro` | `aviso`
-- arquivo_nome (se aplicável)
-- mensagem (legível para usuário)
-- data_hora (DD/MM/AAAA HH:MM)
-
----
-
-## 5. Regras de Registro
-
-- Registrar apenas eventos relevantes
-- Evitar duplicidade de mensagens
-- Não registrar eventos de sucesso
-- Mensagens devem ser claras e acionáveis
-
----
-
-## 6. Exibição de Logs
-
-### 6.1 Pós-importação (principal)
-
-Após importação:
-
-Exibir resumo:
-
-- ✔ Arquivos processados com sucesso
-- ⚠ Arquivos com aviso
-- ❌ Arquivos com erro
-
----
-
-### 6.2 Detalhamento
-
-Botão: “Ver detalhes”
-
-Exibir lista:
-
-- Nome do arquivo
-- Tipo de erro
-- Mensagem clara
-
----
-
-### 6.3 Mensagens (padrão)
-
-Exemplos:
-
-- “Arquivo não possui coluna de chave NFe”
-- “Cabeçalho não identificado automaticamente”
-- “Selecione manualmente a coluna de chave”
-- “Arquivo vazio ou sem dados válidos”
-
----
-
-## 7. Persistência
-
-- Logs devem ser armazenados temporariamente
-- Histórico curto (ex: últimos 7 dias ou últimas execuções)
-- Sem necessidade de armazenamento permanente
-
----
-
-## 8. Integração com PRD 02
-
-Durante importação:
-
-- Cada arquivo gera seu próprio resultado
-- Logs vinculados ao arquivo
-- Importação continua mesmo com falhas parciais
-
----
-
-## 9. Critérios de Sucesso
-
-- Usuário entende rapidamente o erro
-- Usuário consegue corrigir sem suporte técnico
-- Redução de falhas repetidas
-- Feedback claro após cada importação
-
----
-
-## 10. Restrições
-
-- Não substituir logs técnicos do Lovable
-- Não registrar eventos irrelevantes
-- Não gerar sobrecarga de informação
-
----
-
-## 11. Evoluções Futuras
-
-- Tela dedicada de logs
-- Filtros por tipo de erro
-- Exportação de logs
-- Alertas automáticos
-- Integração com notificações
-
----
+## 8. Limites V1
+- Sem stack trace técnico na UI operacional.
+- Sem observabilidade avançada.
+- Sem retenção longa.
